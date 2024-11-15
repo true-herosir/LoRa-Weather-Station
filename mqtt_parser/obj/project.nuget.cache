@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "FvXyGrcHT1WsAoNn6KrxxGGAYyAD8asYHfi3iN/M9/4APrsFZv+Rl62lrIiIXEovLtRh1RXcT01qGfynBgbsnw==",
+  "success": true,
+  "projectFilePath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\mqtt demo\\mqtt_parser\\mqtt_parser.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\PeterS-PC\\.nuget\\packages\\mqttnet\\4.3.7.1207\\mqttnet.4.3.7.1207.nupkg.sha512"
+  ],
+  "logs": []
+}

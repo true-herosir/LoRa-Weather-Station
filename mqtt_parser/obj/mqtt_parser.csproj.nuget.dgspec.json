@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Saxion\\2nd_year\\Project Software Engineering\\mqtt demo\\mqtt_parser\\mqtt_parser.csproj": {}
+    "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj": {}
   },
   "projects": {
-    "D:\\Saxion\\2nd_year\\Project Software Engineering\\mqtt demo\\mqtt_parser\\mqtt_parser.csproj": {
+    "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Saxion\\2nd_year\\Project Software Engineering\\mqtt demo\\mqtt_parser\\mqtt_parser.csproj",
+        "projectUniqueName": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj",
         "projectName": "mqtt_parser",
-        "projectPath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\mqtt demo\\mqtt_parser\\mqtt_parser.csproj",
+        "projectPath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj",
         "packagesPath": "C:\\Users\\PeterS-PC\\.nuget\\packages\\",
-        "outputPath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\mqtt demo\\mqtt_parser\\obj\\",
+        "outputPath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -53,6 +53,10 @@
             "MQTTnet": {
               "target": "Package",
               "version": "[4.3.7.1207, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             }
           },
           "imports": [

@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\",
+  "WorkspaceRootPath": "D:\\saxion\\ACS\\2nd\\5_PSE\\project\\LoRa-Weather-Station\\mqtt_parser\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\lora-weather-station\\mqtt_parser\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\acs\\2nd\\5_pse\\project\\lora-weather-station\\mqtt_parser\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\lora-weather-station\\mqtt_parser\\parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\acs\\2nd\\5_pse\\project\\lora-weather-station\\mqtt_parser\\parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -24,25 +24,24 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "parser.cs",
-              "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\parser.cs",
+              "DocumentMoniker": "D:\\saxion\\ACS\\2nd\\5_PSE\\project\\LoRa-Weather-Station\\mqtt_parser\\parser.cs",
               "RelativeDocumentMoniker": "parser.cs",
-              "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\parser.cs",
+              "ToolTip": "D:\\saxion\\ACS\\2nd\\5_PSE\\project\\LoRa-Weather-Station\\mqtt_parser\\parser.cs",
               "RelativeToolTip": "parser.cs",
               "ViewState": "AQIAACIAAAAAAAAAAIA+wCgAAAAkAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-19T08:11:38.41Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\Program.cs",
+              "DocumentMoniker": "D:\\saxion\\ACS\\2nd\\5_PSE\\project\\LoRa-Weather-Station\\mqtt_parser\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\LoRa-Weather-Station\\mqtt_parser\\Program.cs",
+              "ToolTip": "D:\\saxion\\ACS\\2nd\\5_PSE\\project\\LoRa-Weather-Station\\mqtt_parser\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAD0AAAAAAAAAAAAQwEkAAAA0AAAA",
+              "ViewState": "AQIAACsAAAAAAAAAAAAAAEkAAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-15T08:00:40.694Z",
               "EditorCaption": ""

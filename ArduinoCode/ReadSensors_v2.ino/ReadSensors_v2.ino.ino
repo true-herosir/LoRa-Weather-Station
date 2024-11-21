@@ -10,7 +10,7 @@ LoRaModem modem;
 void setup() {
   //setting up serial communication for debbuging
   Serial.begin(9600);
-  while (!Serial);
+  while (!Serial && millis() < 5000);// only wait 5 sec
 
   if (!ENV.begin()) {
     Serial.println("Failed to initialize MKR ENV Shield!");
@@ -45,7 +45,7 @@ void loop() {
   uint8_t payload[8];
   int temp = (int)(temperature * 100);  // Multiply to avoid floats
   int hum = (int)(humidity * 100);
-  int press = (int)(pressure * 100);
+  int press = (int)(pressure * 1000);
   int illum = (int)(illuminance * 100);
 
   //OxFF is 11111111

@@ -17,21 +17,22 @@ namespace mqtt_parser
             mkr.Root root = JsonConvert.DeserializeObject<mkr.Root>(JSON);
             mkr.DecodedPayload results_mkr = root.uplink_message.decoded_payload;
             List<mkr.RxMetadatum> location_mkr = root.uplink_message.rx_metadata;
-
+            mkr.EndDeviceIds loc = root.end_device_ids;
             parsed.Add("sensor type", "MKR");
             string city = "unavailable";
             try
             {
                 int index = location_mkr[0].gateway_ids.gateway_id == "packetbroker" ? 1 : 0;
                 city = location_mkr[index].gateway_ids.gateway_id;
+                
             }
             catch
             {
-                mkr.EndDeviceIds loc = root.end_device_ids;
                 city = loc.device_id;
             }
+            if (loc.device_id == "weather-thingy-g4-2024") city = "Enschede";
 
-            string[] gibberish = { "mkr-", "lht-", "centrum", "slot", "lora", "-" };
+             string[] gibberish = { "mkr-", "lht-", "centrum", "slot", "lora", "-" };
 
             // Remove substrings
             foreach (var item in gibberish)

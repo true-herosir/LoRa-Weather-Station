@@ -52,7 +52,7 @@
               "RelativeDocumentMoniker": "JSON_parser.cs",
               "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\JSON_parser.cs",
               "RelativeToolTip": "JSON_parser.cs",
-              "ViewState": "AQIAAI4AAAAAAAAAAAAMwJUAAAAhAAAA",
+              "ViewState": "AQIAAHkAAAAAAAAAAADgv5UAAAAhAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-19T08:11:38.41Z"
             },
@@ -64,10 +64,9 @@
               "RelativeDocumentMoniker": "LHT_parse.cs",
               "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\LHT_parse.cs",
               "RelativeToolTip": "LHT_parse.cs",
-              "ViewState": "AQIAACoAAAAAAAAAAAAnwDUAAAB6AAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAIA2wDUAAAB6AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-21T07:52:38.526Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-21T07:52:38.526Z"
             },
             {
               "$type": "Document",
@@ -77,7 +76,7 @@
               "RelativeDocumentMoniker": "MKR_parse.cs",
               "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\MKR_parse.cs",
               "RelativeToolTip": "MKR_parse.cs",
-              "ViewState": "AQIAAB8AAAAAAAAAAAAYwDIAAABKAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAD0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-21T07:52:53.112Z",
               "EditorCaption": ""
@@ -90,7 +89,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAGAAAAAAAAAAAAAYwGYAAAAQAAAA",
+              "ViewState": "AQIAAJkAAAAAAAAAAAAYwKMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-15T08:00:40.694Z",
               "EditorCaption": ""

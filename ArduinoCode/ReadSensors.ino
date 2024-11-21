@@ -1,6 +1,7 @@
 #include <Arduino_MKRENV.h>
 #include <MKRWAN.h>
 
+#define DEBUG false
 #define DEVEUI  "A8610A3233368603"
 #define APPEUI "0000000000000001"
 #define APPKEY "25DEEF447FED62FBEF41F3758428ADDA"
@@ -8,39 +9,60 @@
 LoRaModem modem;
 
 void setup() {
+  delay(2000);
   //setting up serial communication for debbuging
-  Serial.begin(9600);
-  while (!Serial);
+  if (DEBUG) Serial.begin(9600);
 
-  if (!ENV.begin()) {
-    Serial.println("Failed to initialize MKR ENV Shield!");
-    while (1);
+  unsigned long start = millis();
+  while (!Serial && millis() - start < 5000);
+
+  while(!ENV.begin()) {
+    if (DEBUG) Serial.println("Failed to initialize MKR ENV Shield!");
+    delay(1000);
   }
+
+  // if (!ENV.begin()) {
+  //   if (DEBUG) Serial.println("Failed to initialize MKR ENV Shield!");
+  //   while (1);
+  // }
 
   //Starting LoRa module
-  if(!modem.begin(EU868)){
-    Serial.println("Failed to initialise LoRa module!");
-    while(1);
+  while(!modem.begin(EU868)){
+    if(DEBUG) Serial.println("Failed to initialise LoRa module!");
+    delay(1000);
   }
+  // if(!modem.begin(EU868)){
+  //   if (DEBUG) Serial.println("Failed to initialise LoRa module!");
+  //   while(1);
+  // }
 
   //Setting up our own device to the network:
   int connected = modem.joinOTAA(APPEUI,APPKEY,DEVEUI);
-  if (!connected){
-    Serial.println("Something went wrong with connecting to the node. Are you near a window? Move closer and try again :)");
-    while(1);
+  while (!connected){
+    if(DEBUG) Serial.println("Something went wrong with connecting to the node. Are you near a window? Move closer and try again :)");
+    connected = modem.joinOTAA(APPEUI,APPKEY,DEVEUI);
+    delay(1000);
   }
+  // if (!connected){
+  //   if (DEBUG) Serial.println("Something went wrong with connecting to the node. Are you near a window? Move closer and try again :)");
+  // }
    
 
   //setting poll interval to 60 seconds. Max is one message every 2 minutes
-  modem.minPollInterval(60);
+  modem.minPollInterval(300);
 }
 
 void loop() {
+
+long int last_sending_time = 0;
+if(millis()- last_sending_time >= 300000){ //sec
+last_sending_time = millis();
+  
   // read all the sensor values
-  float temperature = ENV.readTemperature();
-  float humidity    = ENV.readHumidity();
-  float pressure    = ENV.readPressure();
-  float illuminance = ENV.readIlluminance();
+float temperature = ENV.readTemperature();
+float humidity    = ENV.readHumidity();
+float pressure    = ENV.readPressure();
+float illuminance = ENV.readIlluminance();
 
 uint8_t payload[8];
 int temp = (int)(temperature * 100);  // Multiply to avoid floats
@@ -64,7 +86,12 @@ modem.beginPacket();
 modem.write(payload, sizeof(payload)); // Send binary data
 int err = modem.endPacket(true); 
 
-// print each of the sensor values
+if (DEBUG)
+{
+  if(err) Serial.println("Message sent successfully!");
+  else Serial.println("Error sending message.");
+  
+  // print each of the sensor values
   Serial.print("Temperature = ");
   Serial.print(temperature);
   Serial.println(" °C");
@@ -83,9 +110,10 @@ int err = modem.endPacket(true);
 
   // print an empty line
   Serial.println();
-
+}
+}
   // wait 1 second to print again
-  delay(1000);
+  // delay(1000);
 }
 
 

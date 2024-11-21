@@ -100,7 +100,7 @@ class Program
             received = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
             //Console.WriteLine($"Received message:\n{received}");
             try
-            {
+            {   
                 if (received.Contains("mkr-"))
                 {
                     Console.WriteLine($"Received message from MKR sensor:");
@@ -149,12 +149,13 @@ class Program
             //Console.WriteLine($"Received message:\n{received}");
             try
             {
-                    Console.WriteLine($"Received message from G4 MKR sensor:");
-                    IMKR_parse MKR_Parsed = new MKR_parse();
-                    Dictionary<string, object> MKR = MKR_Parsed.data(received);
-                Console.WriteLine(us_received);
+                Console.WriteLine($"Received message from G4 MKR sensor:");
+                
+                IMKR_parse MKR_Parsed_G4 = new MKR_parse();
+                Dictionary<string, object> MKR_g4 = MKR_Parsed_G4.data(us_received);
+                //Console.WriteLine(us_received);
 
-                foreach (var item in MKR)
+                foreach (var item in MKR_g4)
                 {
                     Console.WriteLine($"{item.Key} is: {item.Value}");
                 }

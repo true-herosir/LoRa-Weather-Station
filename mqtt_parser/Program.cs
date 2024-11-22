@@ -7,6 +7,7 @@ using SQL_Interface;
 
 class Program
 {
+    private static ILogger logger = new logger();
     static async Task Main(string[] args)
     {
 
@@ -61,31 +62,33 @@ class Program
         if (connectResult.ResultCode == MqttClientConnectResultCode.Success)
         {
             Console.WriteLine("Connected to MQTT broker successfully.");
-
+            logger.log_time("Connected to MQTT broker successfully.");
             // Subscribe to a topic
             await mqttClient.SubscribeAsync(topic);
         }
         else
         {
             Console.WriteLine($"Failed to connect to MQTT broker: {connectResult.ResultCode}");
+            logger.log_time($"Failed to connect to MQTT broker: {connectResult.ResultCode}");
         }
 
         if (connectResult_g4.ResultCode == MqttClientConnectResultCode.Success)
         {
             Console.WriteLine("Connected to G4 MQTT broker successfully.");
-
+            logger.log_time("Connected to G4 MQTT broker successfully.");
             // Subscribe to a topic
             await mqttClient_g4.SubscribeAsync(topic_g4);
         }
         else
         {
             Console.WriteLine($"Failed to connect to G4 MQTT broker: {connectResult_g4.ResultCode}");
+            logger.log_time($"Failed to connect to G4 MQTT broker: {connectResult.ResultCode}");
         }
 
         Console.WriteLine("Listening for messages. Press Ctrl+C to exit.");
         // Callback for when a message is received
         string received = " ";
-        mqttClient.ApplicationMessageReceivedAsync += e =>
+        mqttClient.ApplicationMessageReceivedAsync += async e =>
         {
             received = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
             //Console.WriteLine($"Received message:\n{received}");
@@ -93,96 +96,121 @@ class Program
             {   
                 if (received.Contains("mkr-"))
                 {
-                    Console.WriteLine($"Received message from MKR sensor:");
+                    //Console.WriteLine($"Received message from MKR sensor:");
+                    logger.log_time("Received message from MKR sensor:");
                     INode_parse MKR_Parsed = new MKR_parse();
-                    Dictionary<string, object> MKR = MKR_Parsed.data(received);
+                    Dictionary<string, object?> MKR = MKR_Parsed.data(received);
 
                     foreach (var item in MKR)
                     {
-                        Console.WriteLine($"{item.Key}: {item.Value}");
+                        //Console.WriteLine($"{item.Key}: {item.Value}");
+                        logger.log($"{item.Key}: {item.Value}");
                     }
 
-                    ISQL_QueryBuilder database = new Inserter();
-                    string returned = database.build((string)MKR["Node_ID"], (string)MKR["Location"], (double?)MKR["Battery_status"]);
-                    Console.WriteLine(returned);
+                    //ISQL_QueryBuilder database = new Inserter();
+                    ISQL_communicator database = new sql_com();
+                    await database.build((string)MKR["Node_ID"], (string)MKR["Location"], (double?)MKR["Battery_status"]);
+                    
 
-                    returned = database.build((string)MKR["Node_ID"], (DateTime)MKR["Time"], (double?)MKR["Pressure"], (double?)MKR["Illumination"], (double?)MKR["Humidity"],
+                    await database.build((string)MKR["Node_ID"], (DateTime)MKR["Time"], (double?)MKR["Pressure"], (double?)MKR["Illumination"], (double?)MKR["Humidity"],
                         (string)MKR["Location"], (double)MKR["Temperature_indor"], (double?)MKR["Temperature_outdor"]);
-                    Console.WriteLine(returned);
+                    
 
                 }
 
                 if (received.Contains("lht-"))
                 {
-                    Console.WriteLine($"Received message from LHT sensor:");
-                    //Console.WriteLine(received);
+                    //Console.WriteLine($"Received message from LHT sensor:");
+                    logger.log_time("Received message from LHT sensor:");
+
                     INode_parse LHT_Parsed = new LHT_parse();
-                    Dictionary<string, object> LHT = LHT_Parsed.data(received);
+                    Dictionary<string, object?> LHT = LHT_Parsed.data(received);
                     foreach (var item in LHT)
                     {
-                        Console.WriteLine($"{item.Key}: {item.Value}");
+                        //Console.WriteLine($"{item.Key}: {item.Value}");
+                        logger.log($"{item.Key}: {item.Value}");
                     }
 
-                    ISQL_QueryBuilder database = new Inserter();
-                    string returned = database.build((string)LHT["Node_ID"], (string)LHT["Location"], (double?)LHT["Battery_status"]);
-                    Console.WriteLine(returned);
+                    //ISQL_QueryBuilder database = new Inserter();
+                    ISQL_communicator database = new sql_com();
+                    await database.build((string)LHT["Node_ID"], (string)LHT["Location"], (double?)LHT["Battery_status"]);
 
-                    returned = database.build( (string)LHT["Node_ID"], (DateTime)LHT["Time"], (double?)LHT["Pressure"], (double?)LHT["Illumination"], (double?)LHT["Humidity"],
+
+                    await database.build( (string)LHT["Node_ID"], (DateTime)LHT["Time"], (double?)LHT["Pressure"], (double?)LHT["Illumination"], (double?)LHT["Humidity"],
                         (string)LHT["Location"], (double)LHT["Temperature_indor"], (double?)LHT["Temperature_outdor"]);
-                    Console.WriteLine(returned);
+                    
 
                     
                 }
 
-                Console.WriteLine($"success.\n");
-                
+                //Console.WriteLine("\n+++success.+++\n");
+                logger.log_time("\n+++success.+++\n");
+
+
             }
             catch (Exception ex)
             {
+                /*
                 Console.WriteLine("Error Type: " + ex.GetType().Name);
                 Console.WriteLine("Message: " + ex.Message);
                 Console.WriteLine("Stack Trace: " + ex.StackTrace);
                 Console.WriteLine(received);
+                */
+                logger.log_time("Error Type: " + ex.GetType().Name);
+                logger.log("Message: " + ex.Message);
+                logger.log("Stack Trace: " + ex.StackTrace);
+                logger.log(received);
             }
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         };
 
 
         string us_received = " ";
-        mqttClient_g4.ApplicationMessageReceivedAsync += e =>
+        mqttClient_g4.ApplicationMessageReceivedAsync += async e =>
         {
             us_received = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-            //Console.WriteLine($"Received message:\n{received}");
+
             try
             {
-                Console.WriteLine($"Received message from G4 MKR sensor:");
-                
+                //Console.WriteLine($"Received message from G4 MKR sensor:");
+                logger.log_time($"Received message from G4 MKR sensor:");
+
                 INode_parse MKR_Parsed_G4 = new MKR_parse();
-                Dictionary<string, object> MKR_g4 = MKR_Parsed_G4.data(us_received);
-                //Console.WriteLine(us_received);
+                Dictionary<string, object?> MKR_g4 = MKR_Parsed_G4.data(us_received);
+
 
                 foreach (var item in MKR_g4)
                 {
-                    Console.WriteLine($"{item.Key}: {item.Value}");
+                    //Console.WriteLine($"{item.Key}: {item.Value}");
+                    logger.log($"{item.Key}: {item.Value}");
                 }
 
-                ISQL_QueryBuilder database = new Inserter();
-                string returned = database.build((string)MKR_g4["Node_ID"], (string)MKR_g4["Location"], (double?)MKR_g4["Battery_status"]);
-                Console.WriteLine(returned);
+                //ISQL_QueryBuilder database = new Inserter();
+                ISQL_communicator database = new sql_com();
+                await database.build((string)MKR_g4["Node_ID"], (string)MKR_g4["Location"], (double?)MKR_g4["Battery_status"]);
+                
 
-                returned = database.build((string)MKR_g4["Node_ID"], (DateTime)MKR_g4["Time"], (double?)MKR_g4["Pressure"], (double?)MKR_g4["Illumination"], (double?)MKR_g4["Humidity"],
+                await database.build((string)MKR_g4["Node_ID"], (DateTime)MKR_g4["Time"], (double?)MKR_g4["Pressure"], (double?)MKR_g4["Illumination"], (double?)MKR_g4["Humidity"],
                     (string)MKR_g4["Location"], (double)MKR_g4["Temperature_indor"], (double?)MKR_g4["Temperature_outdor"]);
-                Console.WriteLine(returned);
+
+                //Console.WriteLine("\n+++success.+++\n");
+                logger.log_time("\n+++success.+++\n");
 
             }
             catch (Exception ex)
             {
+                /*
                 Console.WriteLine("Error Type: " + ex.GetType().Name);
                 Console.WriteLine("Message: " + ex.Message);
                 Console.WriteLine("Stack Trace: " + ex.StackTrace);
-                Console.WriteLine(us_received);
+                Console.WriteLine(received);
+                */
+                logger.log_time("Error Type: " + ex.GetType().Name);
+                logger.log("Message: " + ex.Message);
+                logger.log("Stack Trace: " + ex.StackTrace);
+                logger.log(us_received);
             }
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         };
 
         await Task.Delay(-1); // Infinite delay to keep the application running

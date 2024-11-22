@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\sql_inserter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:sql_inserter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\json_parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:json_parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\sql_com.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:sql_com.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\mkr_parse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -21,6 +21,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\interfaces.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:interfaces.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\sql_inserter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:sql_inserter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\json_parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|solutionrelative:json_parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AD9C96B7-C397-4EFF-8B4B-9E8B654CD63C}|mqtt_parser.csproj|d:\\saxion\\2nd_year\\project software engineering\\lora-weather-station\\mqtt_parser\\lht_parse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,19 +42,45 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "JSON_parser.cs",
-              "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\JSON_parser.cs",
-              "RelativeDocumentMoniker": "JSON_parser.cs",
-              "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\JSON_parser.cs",
-              "RelativeToolTip": "JSON_parser.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Title": "logger.cs",
+              "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\logger.cs",
+              "RelativeDocumentMoniker": "logger.cs",
+              "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\logger.cs",
+              "RelativeToolTip": "logger.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB4AAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-19T08:11:38.41Z",
+              "WhenOpened": "2024-11-22T16:25:21.673Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SQL_Inserter.cs",
+              "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\SQL_Inserter.cs",
+              "RelativeDocumentMoniker": "SQL_Inserter.cs",
+              "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\SQL_Inserter.cs",
+              "RelativeToolTip": "SQL_Inserter.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAAA0AAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:47:47.525Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "sql_com.cs",
+              "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\sql_com.cs",
+              "RelativeDocumentMoniker": "sql_com.cs",
+              "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\sql_com.cs",
+              "RelativeToolTip": "sql_com.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAQwEEAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:28:14.451Z",
               "EditorCaption": ""
             },
             {
@@ -57,14 +91,26 @@
               "RelativeDocumentMoniker": "interfaces.cs",
               "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\interfaces.cs",
               "RelativeToolTip": "interfaces.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAsAAAAqAAAA",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAowBoAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-21T07:40:56.998Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
+              "Title": "JSON_parser.cs",
+              "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\JSON_parser.cs",
+              "RelativeDocumentMoniker": "JSON_parser.cs",
+              "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\JSON_parser.cs",
+              "RelativeToolTip": "JSON_parser.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-19T08:11:38.41Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "LHT_parse.cs",
               "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\LHT_parse.cs",
               "RelativeDocumentMoniker": "LHT_parse.cs",
@@ -72,8 +118,7 @@
               "RelativeToolTip": "LHT_parse.cs",
               "ViewState": "AQIAACgAAAAAAAAAAAAQwBMAAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-21T07:52:38.526Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-21T07:52:38.526Z"
             },
             {
               "$type": "Document",
@@ -91,25 +136,12 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "SQL_Inserter.cs",
-              "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\SQL_Inserter.cs",
-              "RelativeDocumentMoniker": "SQL_Inserter.cs",
-              "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\SQL_Inserter.cs",
-              "RelativeToolTip": "SQL_Inserter.cs",
-              "ViewState": "AQIAAD4AAAAAAAAAAIA/wE4AAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-22T11:48:48.826Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAowLsAAAAIAAAA",
+              "ViewState": "AQIAAKAAAAAAAAAAAAAQwK4AAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-15T08:00:40.694Z",
               "EditorCaption": ""

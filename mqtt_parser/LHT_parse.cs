@@ -6,14 +6,30 @@ namespace mqtt_parser
 {
     internal class LHT_parse : INode_parse
     {
-        public Dictionary<string, object> data(string JSON)
+        double maximum_lux = 1850.00;
+        public Dictionary<string, object?> data(string JSON)
         {
-            Dictionary<string, object> parsed = new Dictionary<string, object>();
+            Dictionary<string, object?> parsed = new Dictionary<string, object?>();
+
             lht.Root root = JsonConvert.DeserializeObject<lht.Root>(JSON);
             lht.DecodedPayload results_lht = root.uplink_message.decoded_payload;
             List<lht.RxMetadatum> location_lht = root.uplink_message.rx_metadata;
+            lht.EndDeviceIds loc = root.end_device_ids;
 
-            parsed.Add("sensor type", "LHT");
+            parsed.Add("Node_ID", loc.device_id);
+            parsed.Add("Time", DateTime.Now);
+            parsed.Add("Pressure", null);
+
+            if (results_lht.ILL_lx != null)
+            {
+                double light_percent = double.Round((double)results_lht.ILL_lx / (maximum_lux / 100), 2);
+                light_percent = light_percent > 100 ? 100 : light_percent;
+                parsed.Add("Illumination", light_percent);
+            }
+            else parsed.Add("Illumination", null);
+
+            parsed.Add("Humidity", results_lht.Hum_SHT);
+
             string city = "unavailable";
             try
             {
@@ -21,8 +37,7 @@ namespace mqtt_parser
                 city = location_lht[index].gateway_ids.gateway_id;
             }
             catch
-            {
-                lht.EndDeviceIds loc = root.end_device_ids;
+            {                
                 city = loc.device_id;
             }
 
@@ -34,21 +49,17 @@ namespace mqtt_parser
                 city = city.Replace(item, "", StringComparison.OrdinalIgnoreCase);
             }
             city = char.ToUpper(city[0]) + city.Substring(1);
-
-            parsed.Add("City", city);
+            parsed.Add("Location", city);
             //parsed.Add("time_stamp", DateTime.Parse(location_lht[0].time));
-            parsed.Add("Gateway_lon", location_lht[0].location.longitude);
-            parsed.Add("Gateway_lat", location_lht[0].location.latitude);
-            parsed.Add("Time_stamp", DateTime.Now);
+            //parsed.Add("Gateway_lon", location_lht[0].location.longitude);
+            //parsed.Add("Gateway_lat", location_lht[0].location.latitude);
+            
+            parsed.Add("Temperature_indor", results_lht.TempC_SHT);
+            parsed.Add("Temperature_outdor", results_lht.TempC_DS);
+                    
 
-
-            parsed.Add("Temp_in", results_lht.TempC_SHT);
-            if (results_lht.TempC_DS != null) parsed.Add("Temp_out", results_lht.TempC_DS);
-            else parsed.Add("Temp_out", null);
-            parsed.Add("Humidity", results_lht.Hum_SHT);
-            if (results_lht.ILL_lx != null) parsed.Add("Light_intensity_%", double.Round((double)results_lht.ILL_lx / 18.5, 2));
             parsed.Add("Bat_v", results_lht.BatV);
-            parsed.Add("Bat_stat", results_lht.Bat_status);
+            parsed.Add("Battery_status", results_lht.Bat_status);
 
 
             return parsed;

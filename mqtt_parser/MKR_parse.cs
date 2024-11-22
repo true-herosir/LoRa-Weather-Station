@@ -6,14 +6,27 @@ namespace mqtt_parser
 {
     internal class MKR_parse : INode_parse
     {
-        public Dictionary<string, object> data(string JSON)
+        public Dictionary<string, object?> data(string JSON)
         {
-            Dictionary<string, object> parsed = new Dictionary<string, object>();
+            Dictionary<string, object?> parsed = new Dictionary<string, object?>();
             mkr.Root root = JsonConvert.DeserializeObject<mkr.Root>(JSON);
             mkr.DecodedPayload results_mkr = root.uplink_message.decoded_payload;
             List<mkr.RxMetadatum> location_mkr = root.uplink_message.rx_metadata;
             mkr.EndDeviceIds loc = root.end_device_ids;
-            parsed.Add("sensor type", "MKR");
+            
+
+            parsed.Add("Node_ID", loc.device_id);
+            parsed.Add("Time", DateTime.Now);
+            parsed.Add("Pressure", results_mkr.pressure);
+
+            if (results_mkr.light != null)
+            {
+                parsed.Add("Illumination", double.Round((double)(results_mkr.light / 2.55), 2));
+            }
+            else parsed.Add("Illumination", null);
+
+            parsed.Add("Humidity", results_mkr.humidity);
+
             string city = "unavailable";
             try
             {
@@ -36,16 +49,20 @@ namespace mqtt_parser
             }
             city = char.ToUpper(city[0]) + city.Substring(1);
 
-            parsed.Add("City", city);
+            parsed.Add("Location", city);
             //parsed.Add("time_stamp", DateTime.Parse(location_lht[0].time));
-            parsed.Add("Gateway lon", location_mkr[0].location.longitude);
-            parsed.Add("Gateway lat", location_mkr[0].location.latitude);
-            parsed.Add("Time_stamp", DateTime.Now);
+            //parsed.Add("Gateway lon", location_mkr[0].location.longitude);
+            //parsed.Add("Gateway lat", location_mkr[0].location.latitude);
 
-            parsed.Add("Temp_in", results_mkr.temperature);
-            parsed.Add("Humidity", results_mkr.humidity);
-            parsed.Add("Light_intensity_%", double.Round((double)(results_mkr.light / 2.55), 2));
-            parsed.Add("Pressure", results_mkr.pressure);
+
+            parsed.Add("Temperature_indor", results_mkr.temperature);
+            parsed.Add("Temperature_outdor", null);
+
+
+            parsed.Add("Bat_v", null);
+            parsed.Add("Battery_status", null);
+
+
 
 
             return parsed;

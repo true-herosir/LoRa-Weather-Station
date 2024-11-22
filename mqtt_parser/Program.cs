@@ -3,6 +3,7 @@ using MQTTnet;
 using MQTTnet.Client;
 using static mqtt_parser.interfaces;
 using mqtt_parser;
+using SQL_Interface;
 
 class Program
 {
@@ -98,9 +99,16 @@ class Program
 
                     foreach (var item in MKR)
                     {
-                        Console.WriteLine($"{item.Key} is: {item.Value}");
+                        Console.WriteLine($"{item.Key}: {item.Value}");
                     }
 
+                    ISQL_QueryBuilder database = new Inserter();
+                    string returned = database.build((string)MKR["Node_ID"], (string)MKR["Location"], (double?)MKR["Battery_status"]);
+                    Console.WriteLine(returned);
+
+                    returned = database.build((string)MKR["Node_ID"], (DateTime)MKR["Time"], (double?)MKR["Pressure"], (double?)MKR["Illumination"], (double?)MKR["Humidity"],
+                        (string)MKR["Location"], (double)MKR["Temperature_indor"], (double?)MKR["Temperature_outdor"]);
+                    Console.WriteLine(returned);
 
                 }
 
@@ -112,9 +120,18 @@ class Program
                     Dictionary<string, object> LHT = LHT_Parsed.data(received);
                     foreach (var item in LHT)
                     {
-                        Console.WriteLine($"{item.Key} is: {item.Value}");
+                        Console.WriteLine($"{item.Key}: {item.Value}");
                     }
 
+                    ISQL_QueryBuilder database = new Inserter();
+                    string returned = database.build((string)LHT["Node_ID"], (string)LHT["Location"], (double?)LHT["Battery_status"]);
+                    Console.WriteLine(returned);
+
+                    returned = database.build( (string)LHT["Node_ID"], (DateTime)LHT["Time"], (double?)LHT["Pressure"], (double?)LHT["Illumination"], (double?)LHT["Humidity"],
+                        (string)LHT["Location"], (double)LHT["Temperature_indor"], (double?)LHT["Temperature_outdor"]);
+                    Console.WriteLine(returned);
+
+                    
                 }
 
                 Console.WriteLine($"success.\n");
@@ -146,10 +163,16 @@ class Program
 
                 foreach (var item in MKR_g4)
                 {
-                    Console.WriteLine($"{item.Key} is: {item.Value}");
+                    Console.WriteLine($"{item.Key}: {item.Value}");
                 }
 
-                Console.WriteLine($"success.\n");
+                ISQL_QueryBuilder database = new Inserter();
+                string returned = database.build((string)MKR_g4["Node_ID"], (string)MKR_g4["Location"], (double?)MKR_g4["Battery_status"]);
+                Console.WriteLine(returned);
+
+                returned = database.build((string)MKR_g4["Node_ID"], (DateTime)MKR_g4["Time"], (double?)MKR_g4["Pressure"], (double?)MKR_g4["Illumination"], (double?)MKR_g4["Humidity"],
+                    (string)MKR_g4["Location"], (double)MKR_g4["Temperature_indor"], (double?)MKR_g4["Temperature_outdor"]);
+                Console.WriteLine(returned);
 
             }
             catch (Exception ex)

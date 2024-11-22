@@ -24,7 +24,7 @@ namespace mqtt_parser
         {
             try
             {
-                messages = $"[{DateTime.Now}] -- {messages}\n";
+                messages = $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)}] -- {messages}\n";
                 // Append the content to the file. If the file does not exist, it will be created.
                 File.AppendAllText(m_file_name, messages);
 

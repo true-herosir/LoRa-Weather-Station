@@ -3,13 +3,15 @@ using MQTTnet;
 using MQTTnet.Client;
 using static mqtt_parser.interfaces;
 using mqtt_parser;
-using SQL_Interface;
+using System.Globalization;
 
 class Program
 {
     private static ILogger logger = new logger();
     static async Task Main(string[] args)
     {
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture; // setting the language settings to more generic / universal
+
 
         string broker = "eu1.cloud.thethings.network";
         int port = 1883;

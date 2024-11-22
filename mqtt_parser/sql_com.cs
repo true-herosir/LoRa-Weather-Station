@@ -71,14 +71,18 @@ namespace mqtt_parser
 
         public async Task build(string Node_ID, DateTime Time, double? Pressure, double? Illumination, double? Humidity, string Location, double Temperature_indor, double? Temperature_outdor)
         {
-            string query_text = $"INSERT INTO lr2.Node (Node_ID, Time, Pressure, Illumination, Humidity, Location, Temperature_indor, Temperature_outdor) VALUES ('{Node_ID}','{Time}',{(Pressure != null ? Pressure : "NULL")}, {(Illumination != null ? Illumination : "NULL")},{(Humidity != null ? Humidity : "NULL")}, '{Location}',{Temperature_indor} , {(Temperature_outdor != null ? Temperature_outdor : "NULL")});";
+            string time_formated = Time.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+            string query_text = $"INSERT INTO lr2.Node (Node_ID, Time, Pressure, Illumination, Humidity, Location, Temperature_indor, Temperature_outdor) VALUES ('{Node_ID}','{time_formated}',{(Pressure != null ? Pressure : "NULL")}, {(Illumination != null ? Illumination : "NULL")},{(Humidity != null ? Humidity : "NULL")}, '{Location}',{Temperature_indor} , {(Temperature_outdor != null ? Temperature_outdor : "NULL")});";
+            //Console.WriteLine(query_text);
             await communicate(query_text, "Node");
             
         }
 
         public async Task build(string Node_ID, string Location, double? Battery_status)
         {
-            string query_text = $"IF NOT EXISTS (SELECT Node_ID FROM lr2.Gateway_location WHERE Node_ID = '{Node_ID}') BEGIN INSERT INTO lr2.Gateway_location (Node_ID, Location) VALUES ('{Node_ID}','{Location}'); END; UPDATE lr2.Gateway_location SET Battery_status = {(Battery_status != null ? Battery_status : "NULL")};";
+            string query_text = $"IF NOT EXISTS (SELECT Node_ID FROM lr2.Gateway_location WHERE Node_ID = '{Node_ID}') BEGIN INSERT INTO lr2.Gateway_location (Node_ID, Location) VALUES ('{Node_ID}','{Location}'); END; UPDATE lr2.Gateway_location SET Battery_status = {(Battery_status != null ? Battery_status : "NULL")} WHERE Node_ID = '{Node_ID}';";
+            //Console.WriteLine(query_text);
             await communicate(query_text, "Gateway_location");
         }
 

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("mqtt_parser")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bfc319bac796ce30f578edfae753f7b6cb01cccf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+41c6ff0759e9927921f627c96798eaf954bb4952")]
 [assembly: System.Reflection.AssemblyProductAttribute("mqtt_parser")]
 [assembly: System.Reflection.AssemblyTitleAttribute("mqtt_parser")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

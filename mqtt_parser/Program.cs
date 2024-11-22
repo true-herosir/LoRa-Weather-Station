@@ -1,22 +1,11 @@
-﻿
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using mkr = mqtt_JSON.mkr_JSON;
-using lht = mqtt_JSON.lht_JSON;
+﻿using System.Text;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Protocol;
-using Newtonsoft.Json;
 using static mqtt_parser.interfaces;
 using mqtt_parser;
 
 class Program
 {
-    
-    
-
-
     static async Task Main(string[] args)
     {
 
@@ -104,7 +93,7 @@ class Program
                 if (received.Contains("mkr-"))
                 {
                     Console.WriteLine($"Received message from MKR sensor:");
-                    IMKR_parse MKR_Parsed = new MKR_parse();
+                    INode_parse MKR_Parsed = new MKR_parse();
                     Dictionary<string, object> MKR = MKR_Parsed.data(received);
 
                     foreach (var item in MKR)
@@ -119,7 +108,7 @@ class Program
                 {
                     Console.WriteLine($"Received message from LHT sensor:");
                     //Console.WriteLine(received);
-                    ILHT_parse LHT_Parsed = new LHT_parse();
+                    INode_parse LHT_Parsed = new LHT_parse();
                     Dictionary<string, object> LHT = LHT_Parsed.data(received);
                     foreach (var item in LHT)
                     {
@@ -151,7 +140,7 @@ class Program
             {
                 Console.WriteLine($"Received message from G4 MKR sensor:");
                 
-                IMKR_parse MKR_Parsed_G4 = new MKR_parse();
+                INode_parse MKR_Parsed_G4 = new MKR_parse();
                 Dictionary<string, object> MKR_g4 = MKR_Parsed_G4.data(us_received);
                 //Console.WriteLine(us_received);
 
@@ -175,8 +164,5 @@ class Program
 
         await Task.Delay(-1); // Infinite delay to keep the application running
 
-
-
-        
     }
 }

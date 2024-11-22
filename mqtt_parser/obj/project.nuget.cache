@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "FGEbApthL0VCnjp4XPW1k6plNpqJc5W72AUWphz6Dtcwv9BIj2OmAgUlo8Km8bngPOyAEMRE7s8ccBnlgtZGxA==",
+  "dgSpecHash": "f53kpplZVNExmreBMUdhFPMCkN+18iG64uGbAqhtAe5F4SvfrYiCYycdoHA9CA+TT+kO4Aox0nxle4an0CSNaQ==",
   "success": true,
-  "projectFilePath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj",
+  "projectFilePath": "\\\\wsl.localhost\\Ubuntu\\root\\PSE\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\PeterS-PC\\.nuget\\packages\\mqttnet\\4.3.7.1207\\mqttnet.4.3.7.1207.nupkg.sha512",
-    "C:\\Users\\PeterS-PC\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+    "C:\\Users\\karol\\.nuget\\packages\\mqttnet\\4.3.7.1207\\mqttnet.4.3.7.1207.nupkg.sha512",
+    "C:\\Users\\karol\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
   ],
   "logs": []
 }

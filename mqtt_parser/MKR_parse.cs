@@ -1,15 +1,10 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using mkr = mqtt_JSON.mkr_JSON;
+using mkr = mqtt_JSON;
 using static mqtt_parser.interfaces;
-using System.Threading.Tasks;
 
 namespace mqtt_parser
 {
-    internal class MKR_parse : IMKR_parse
+    internal class MKR_parse : INode_parse
     {
         public Dictionary<string, object> data(string JSON)
         {
@@ -24,7 +19,7 @@ namespace mqtt_parser
             {
                 int index = location_mkr[0].gateway_ids.gateway_id == "packetbroker" ? 1 : 0;
                 city = location_mkr[index].gateway_ids.gateway_id;
-                
+
             }
             catch
             {
@@ -32,7 +27,7 @@ namespace mqtt_parser
             }
             if (loc.device_id == "weather-thingy-g4-2024") city = "Enschede";
 
-             string[] gibberish = { "mkr-", "lht-", "centrum", "slot", "lora", "-" };
+            string[] gibberish = { "mkr-", "lht-", "centrum", "slot", "lora", "-" };
 
             // Remove substrings
             foreach (var item in gibberish)
@@ -49,12 +44,10 @@ namespace mqtt_parser
 
             parsed.Add("Temp_in", results_mkr.temperature);
             parsed.Add("Humidity", results_mkr.humidity);
-            parsed.Add("Light_intensity_%", double.Round(results_mkr.light / 2.55, 2));
+            parsed.Add("Light_intensity_%", double.Round((double)(results_mkr.light / 2.55), 2));
             parsed.Add("Pressure", results_mkr.pressure);
-            
-            
 
-            
+
             return parsed;
         }
     }

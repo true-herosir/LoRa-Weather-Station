@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using lht = mqtt_JSON.lht_JSON;
+﻿using lht = mqtt_JSON;
 using static mqtt_parser.interfaces;
 using Newtonsoft.Json;
 
 namespace mqtt_parser
 {
-    internal class LHT_parse : ILHT_parse
+    internal class LHT_parse : INode_parse
     {
         public Dictionary<string, object> data(string JSON)
         {
@@ -54,8 +49,8 @@ namespace mqtt_parser
             if (results_lht.ILL_lx != null) parsed.Add("Light_intensity_%", double.Round((double)results_lht.ILL_lx / 18.5, 2));
             parsed.Add("Bat_v", results_lht.BatV);
             parsed.Add("Bat_stat", results_lht.Bat_status);
-            
-            
+
+
             return parsed;
         }
     }

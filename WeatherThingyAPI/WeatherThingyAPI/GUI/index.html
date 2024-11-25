@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node and Gateway Data Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .loading {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+            .pagination button {
+                padding: 5px 10px;
+                margin: 0 5px;
+                cursor: pointer;
+                border: none;
+                background-color: #f4f4f4;
+            }
+
+                .pagination button:disabled {
+                    background-color: #ccc;
+                }
+
+            .pagination input {
+                width: 50px;
+                padding: 5px;
+                text-align: center;
+            }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Node Data Viewer</h1>
+        <div id="status-node" class="loading">Loading node data...</div>
+        <table id="data-table-node" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Node ID</th>
+                    <th>Time</th>
+                    <th>Pressure</th>
+                    <th>Illumination</th>
+                    <th>Humidity</th>
+                    <th>Location</th>
+                    <th>Indoor Temperature</th>
+                    <th>Outdoor Temperature</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div id="pagination-node" class="pagination" style="display: none;">
+            <button id="prevPageNode" onclick="changePageNode(currentPageNode - 1)" disabled>Previous</button>
+            <input type="number" id="pageInputNode" value="1" min="1" max="100" oninput="updatePageNode()" />
+            <button id="nextPageNode" onclick="changePageNode(currentPageNode + 1)" disabled>Next</button>
+            <span id="pageInfoNode">Page 1 of 1</span> <!-- This will display the current page and total pages -->
+        </div>
+    </div>
+
+    <div>
+        <h1>Gateway Data Viewer</h1>
+        <div id="status-gateway" class="loading">Loading gateway data...</div>
+        <table id="data-table-gateway" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Gateway ID</th>
+                    <th>Location</th>
+                    <th>Battery Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div id="pagination-gateway" class="pagination" style="display: none;">
+            <button id="prevPageGateway" onclick="changePageGateway(currentPageGateway - 1)" disabled>Previous</button>
+            <input type="number" id="pageInputGateway" value="1" min="1" max="100" oninput="updatePageGateway()" />
+            <button id="nextPageGateway" onclick="changePageGateway(currentPageGateway + 1)" disabled>Next</button>
+            <span id="pageInfoGateway">Page 1 of 1</span> <!-- This will display the current page and total pages -->
+        </div>
+    </div>
+
+    <script>
+        const apiUrlNode = "https://localhost:7086/api/Nodes";
+        const apiUrlGateway = "https://localhost:7086/api/Gateways";
+        const pageSize = 10;
+
+        let currentPageNode = 1;
+        let totalPagesNode = 1;
+
+        let currentPageGateway = 1;
+        let totalPagesGateway = 1;
+
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow"
+        };
+
+        async function fetchData(pageNode = 1, pageGateway = 1) {
+            const statusNode = document.getElementById('status-node');
+            const tableNode = document.getElementById('data-table-node');
+            const tbodyNode = tableNode.querySelector('tbody');
+            const paginationNode = document.getElementById('pagination-node');
+            const pageInfoNode = document.getElementById('pageInfoNode');
+            const prevPageButtonNode = document.getElementById('prevPageNode');
+            const nextPageButtonNode = document.getElementById('nextPageNode');
+            const pageInputNode = document.getElementById('pageInputNode');
+
+            const statusGateway = document.getElementById('status-gateway');
+            const tableGateway = document.getElementById('data-table-gateway');
+            const tbodyGateway = tableGateway.querySelector('tbody');
+            const paginationGateway = document.getElementById('pagination-gateway');
+            const pageInfoGateway = document.getElementById('pageInfoGateway');
+            const prevPageButtonGateway = document.getElementById('prevPageGateway');
+            const nextPageButtonGateway = document.getElementById('nextPageGateway');
+            const pageInputGateway = document.getElementById('pageInputGateway');
+
+            try {
+                // Fetch Node data
+                const responseNode = await fetch(`${apiUrlNode}?page=${pageNode}&pageSize=${pageSize}`, requestOptions);
+                if (!responseNode.ok) {
+                    throw new Error(`HTTP error! Status: ${responseNode.status}`);
+                }
+
+                const resultNode = await responseNode.json();
+                statusNode.style.display = 'none';
+                tableNode.style.display = 'table';
+                tbodyNode.innerHTML = ''; // Clear previous data
+
+                resultNode.data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                            <td>${item.node_ID}</td>
+                            <td>${item.time}</td>
+                            <td>${item.pressure ?? 'N/A'}</td>
+                            <td>${item.illumination}</td>
+                            <td>${item.humidity}</td>
+                            <td>${item.location}</td>
+                            <td>${item.temperature_indoor ?? 'N/A'}</td>
+                            <td>${item.temperature_outdoor ?? 'N/A'}</td>
+                        `;
+                    tbodyNode.appendChild(row);
+                });
+
+                totalPagesNode = resultNode.totalPages;
+                currentPageNode = resultNode.currentPage;
+
+                pageInputNode.value = currentPageNode;
+                pageInfoNode.textContent = `Page ${currentPageNode} of ${totalPagesNode}`;
+
+                prevPageButtonNode.disabled = currentPageNode <= 1;
+                nextPageButtonNode.disabled = currentPageNode >= totalPagesNode;
+
+                paginationNode.style.display = 'block';
+
+                // Fetch Gateway data
+                const responseGateway = await fetch(`${apiUrlGateway}?page=${pageGateway}&pageSize=${pageSize}`, requestOptions);
+                if (!responseGateway.ok) {
+                    throw new Error(`HTTP error! Status: ${responseGateway.status}`);
+                }
+
+                const resultGateway = await responseGateway.json();
+                statusGateway.style.display = 'none';
+                tableGateway.style.display = 'table';
+                tbodyGateway.innerHTML = ''; // Clear previous data
+
+                resultGateway.data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                            <td>${item.node_ID}</td>
+                            <td>${item.location}</td>
+                            <td>${item.battery_status}</td>
+                        `;
+                    tbodyGateway.appendChild(row);
+                });
+
+                totalPagesGateway = resultGateway.totalPages;
+                currentPageGateway = resultGateway.currentPage;
+
+                pageInputGateway.value = currentPageGateway;
+                pageInfoGateway.textContent = `Page ${currentPageGateway} of ${totalPagesGateway}`;
+
+                prevPageButtonGateway.disabled = currentPageGateway <= 1;
+                nextPageButtonGateway.disabled = currentPageGateway >= totalPagesGateway;
+
+                paginationGateway.style.display = 'block';
+
+            } catch (error) {
+                console.error("Fetch error:", error);
+                statusNode.textContent = `Failed to load node data. ${error.message}`;
+                statusNode.className = 'error';
+                statusGateway.textContent = `Failed to load gateway data. ${error.message}`;
+                statusGateway.className = 'error';
+            }
+        }
+
+        function changePageNode(page) {
+            if (page >= 1 && page <= totalPagesNode) {
+                fetchData(page, currentPageGateway);
+            }
+        }
+
+        function updatePageNode() {
+            const page = parseInt(document.getElementById('pageInputNode').value);
+            if (!isNaN(page) && page >= 1 && page <= totalPagesNode) {
+                fetchData(page, currentPageGateway);
+            }
+        }
+
+        function changePageGateway(page) {
+            if (page >= 1 && page <= totalPagesGateway) {
+                fetchData(currentPageNode, page);
+            }
+        }
+
+        function updatePageGateway() {
+            const page = parseInt(document.getElementById('pageInputGateway').value);
+            if (!isNaN(page) && page >= 1 && page <= totalPagesGateway) {
+                fetchData(currentPageNode, page);
+            }
+        }
+
+        // Initial fetch
+        fetchData(currentPageNode, currentPageGateway);
+    </script>
+</body>
+</html>

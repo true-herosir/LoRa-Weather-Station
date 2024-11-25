@@ -26,7 +26,7 @@ namespace mqtt_parser
             {
                 DataSource = "weather-thingy-db.c5s2qgq8eg3x.us-east-1.rds.amazonaws.com,1433",
                 UserID = "admin",
-                Password = "N5F3EVU9^s#fc",
+                Password = "",
                 InitialCatalog = "LoRa",
                 Encrypt = true, // Enable SSL encryption
                 TrustServerCertificate = true // Ensure the certificate is verified

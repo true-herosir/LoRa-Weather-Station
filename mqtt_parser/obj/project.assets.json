@@ -1780,23 +1780,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\PeterS-PC\\.nuget\\packages\\": {},
+    "C:\\Users\\Dung Phan\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj",
+      "projectUniqueName": "D:\\Project\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj",
       "projectName": "mqtt_parser",
-      "projectPath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj",
-      "packagesPath": "C:\\Users\\PeterS-PC\\.nuget\\packages\\",
-      "outputPath": "D:\\Saxion\\2nd_year\\Project Software Engineering\\LoRa-Weather-Station\\mqtt_parser\\obj\\",
+      "projectPath": "D:\\Project\\LoRa-Weather-Station\\mqtt_parser\\mqtt_parser.csproj",
+      "packagesPath": "C:\\Users\\Dung Phan\\.nuget\\packages\\",
+      "outputPath": "D:\\Project\\LoRa-Weather-Station\\mqtt_parser\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\PeterS-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Dung Phan\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1858,7 +1858,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

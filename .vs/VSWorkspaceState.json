@@ -1,8 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\mqtt_parser"
+    ""
   ],
-  "SelectedNode": "\\mqtt_parser\\Program.cs",
+  "SelectedNode": "\\WeatherThingyAPI.sln",
   "PreviewInSolutionExplorer": false
 }

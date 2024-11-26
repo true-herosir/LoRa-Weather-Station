@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\WeatherThingyAPI.csproj": {}
+    "C:\\Users\\mikol\\OneDrive\\Pulpit\\SFX\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\WeatherThingyAPI.csproj": {}
   },
   "projects": {
-    "D:\\Project\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\WeatherThingyAPI.csproj": {
+    "C:\\Users\\mikol\\OneDrive\\Pulpit\\SFX\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\WeatherThingyAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\WeatherThingyAPI.csproj",
+        "projectUniqueName": "C:\\Users\\mikol\\OneDrive\\Pulpit\\SFX\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\WeatherThingyAPI.csproj",
         "projectName": "WeatherThingyAPI",
-        "projectPath": "D:\\Project\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\WeatherThingyAPI.csproj",
-        "packagesPath": "C:\\Users\\Dung Phan\\.nuget\\packages\\",
-        "outputPath": "D:\\Project\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\obj\\",
+        "projectPath": "C:\\Users\\mikol\\OneDrive\\Pulpit\\SFX\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\WeatherThingyAPI.csproj",
+        "packagesPath": "C:\\Users\\mikol\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mikol\\OneDrive\\Pulpit\\SFX\\LoRa-Weather-Station\\WeatherThingyAPI\\WeatherThingyAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dung Phan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mikol\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -98,7 +98,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300-preview.24203.14/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

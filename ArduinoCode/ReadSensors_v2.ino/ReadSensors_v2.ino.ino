@@ -45,7 +45,7 @@ void loop() {
   uint8_t payload[8];
   int temp = (int)(temperature * 100);  // Multiply to avoid floats
   int hum = (int)(humidity * 100);
-  int press = (int)(pressure * 1000);
+  int press = (int)(pressure * 100);
   int illum = (int)(illuminance * 100);
 
   //OxFF is 11111111

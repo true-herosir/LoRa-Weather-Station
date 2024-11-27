@@ -146,7 +146,7 @@ class Program
                 }
 
                 //Console.WriteLine("\n+++success.+++\n");
-                logger.log_time("\n+++success.+++\n");
+                logger.log_time("+++success.+++\n");
 
 
             }
@@ -196,7 +196,7 @@ class Program
                     (string)MKR_g4["Location"], (double)MKR_g4["Temperature_indor"], (double?)MKR_g4["Temperature_outdor"]);
 
                 //Console.WriteLine("\n+++success.+++\n");
-                logger.log_time("\n+++success.+++\n");
+                logger.log_time("+++success.+++\n");
 
             }
             catch (Exception ex)

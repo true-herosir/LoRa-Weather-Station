@@ -26,7 +26,7 @@ namespace mqtt_parser
             {
                 DataSource = "weather-thingy-db.c5s2qgq8eg3x.us-east-1.rds.amazonaws.com,1433",
                 UserID = "admin",
-                Password = "",
+                Password = "N5F3EVU9^s#fc",
                 InitialCatalog = "LoRa",
                 Encrypt = true, // Enable SSL encryption
                 TrustServerCertificate = true // Ensure the certificate is verified
@@ -36,8 +36,6 @@ namespace mqtt_parser
             try
             {
                 await using var connection = new SqlConnection(connectionString);
-                //Console.WriteLine("\nQuery data example:");
-                //Console.WriteLine("=========================================\n");
 
                 await connection.OpenAsync();
 
@@ -54,15 +52,11 @@ namespace mqtt_parser
             }
             catch (SqlException e)
             {
-                //Console.WriteLine($"SQL Error: {e.Message}");
-                m_logger.log_time($"SQL Error: {e.Message}");
-                m_logger.log($"query:\n{query}");
+                throw new Exception($"SQL Error: {e.Message}", e);
             }
             catch (Exception e)
             {
-                //Console.WriteLine(e.ToString());
-                m_logger.log_time(e.ToString());
-                m_logger.log($"query:\n{query}");
+                throw new Exception(e.Message, e);
             }
 
             //Console.WriteLine($"\n+++Done updating {table_name}+++");

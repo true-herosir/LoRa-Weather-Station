@@ -1,1 +1,5 @@
-/mqtt_parser/obj/
+mqtt_parser/obj
+WeatherThingyAPI/WeatherThingyAPI/obj
+mqtt_parser/.vs
+WeatherThingyAPI/.vs
+.vs

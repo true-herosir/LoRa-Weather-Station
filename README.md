@@ -1,2 +1,5 @@
 # LoRa-Weather-Station
-Put some code documentation here later :D
+
+- Create WeatherThingyAPI using .NET Core API
+- WeatherThingAPI/GUI - show data from Gateway and Node on tables with pagination
+- Need to maintain the DB connection to compatible with AWS server.

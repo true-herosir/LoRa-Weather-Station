@@ -87,13 +87,15 @@ class Program
             logger.log_time($"Failed to connect to G4 MQTT broker: {connectResult.ResultCode}");
         }
 
+
         Console.WriteLine("Listening for messages. Press Ctrl+C to exit.");
         // Callback for when a message is received
         string received = " ";
         mqttClient.ApplicationMessageReceivedAsync += async e =>
         {
-            received = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-            //Console.WriteLine($"Received message:\n{received}");
+            
+            received = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);           
+
             try
             {   
                 if (received.Contains("mkr-"))
@@ -166,12 +168,64 @@ class Program
             //return Task.CompletedTask;
         };
 
+        // if disconnect For mqttClient
+        bool disconnected = false;
+        mqttClient.DisconnectedAsync += async e =>
+        {
+            if (disconnected == false)
+            {
+                logger.log_time("Disconnected from MQTT broker. Entering reconnection loop.");
+                Console.WriteLine("Disconnected from MQTT broker. Entering reconnection loop.");
+                disconnected = true;
+            }
+            DateTime lastLogTime = DateTime.Now; // Track the last log time for error logging
 
+            while (true) // Infinite loop to retry connection
+            {
+                try
+                {
+                    // Attempt to reconnect
+                    connectResult = await mqttClient.ConnectAsync(options);
+                    if (connectResult.ResultCode == MqttClientConnectResultCode.Success)
+                    {
+                        logger.log_time("Reconnected to MQTT broker successfully.");
+                        Console.WriteLine("Reconnected to MQTT broker successfully.");
+                        disconnected = false;
+                        await mqttClient.SubscribeAsync(topic);
+                        logger.log_time($"Re-subscribed to topic.");
+                        break; // Exit loop upon successful reconnection
+                    }
+                    else
+                    {
+                        // Log only if 10 minutes have passed since the last log
+                        if ((DateTime.UtcNow - lastLogTime).TotalMinutes >= 10)
+                        {
+                            logger.log_time($"Reconnection attempt to failed: {connectResult.ResultCode}");
+                            lastLogTime = DateTime.UtcNow; // Update the last log time
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log only if 10 minutes have passed since the last log
+                    if ((DateTime.Now - lastLogTime).TotalMinutes >= 10)
+                    {
+                        logger.log_time($"Reconnection error to: {ex.Message}");
+                        lastLogTime = DateTime.Now; // Update the last log time
+                    }
+                }
+
+                // Wait for 10 seconds before retrying
+                await Task.Delay(10000); // Non-blocking delay
+            }
+        };
+
+        /// our sensor
         string us_received = " ";
         mqttClient_g4.ApplicationMessageReceivedAsync += async e =>
         {
             us_received = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-
+            
             try
             {
                 //Console.WriteLine($"Received message from G4 MKR sensor:");
@@ -213,6 +267,59 @@ class Program
                 logger.log(us_received);
             }
             //return Task.CompletedTask;
+        };
+
+        // if disconnected For mqttClient_g4
+        bool g4_disconnect = false;
+        mqttClient_g4.DisconnectedAsync += async e =>
+        {
+            if (g4_disconnect == false)
+            {
+                logger.log_time("Disconnected from G4 MQTT broker. Entering reconnection loop.");
+                Console.WriteLine("Disconnected from G4 MQTT broker. Entering reconnection loop.");
+                g4_disconnect = true;
+            }
+
+            DateTime lastLogTime = DateTime.Now; // Track the last log time for error logging
+
+            while (true) // Infinite loop to retry connection
+            {
+                try
+                {
+                    // Attempt to reconnect
+                    connectResult_g4 = await mqttClient_g4.ConnectAsync(options_g4);
+                    if (connectResult_g4.ResultCode == MqttClientConnectResultCode.Success)
+                    {
+                        logger.log_time("Reconnected to G4 MQTT broker successfully.");
+                        Console.WriteLine("Reconnected to G4 MQTT broker successfully.");
+                        g4_disconnect = false;
+                        await mqttClient_g4.SubscribeAsync(topic_g4);
+                        logger.log_time($"Re-subscribed to G4 topic.");
+                        break; // Exit loop upon successful reconnection
+                    }
+                    else
+                    {
+                        // Log only if 10 minutes have passed since the last log
+                        if ((DateTime.UtcNow - lastLogTime).TotalMinutes >= 10)
+                        {
+                            logger.log_time($"Reconnection attempt to G4 failed: {connectResult_g4.ResultCode}");
+                            lastLogTime = DateTime.UtcNow; // Update the last log time
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log only if 10 minutes have passed since the last log
+                    if ((DateTime.Now - lastLogTime).TotalMinutes >= 10)
+                    {
+                        logger.log_time($"Reconnection error to G4: {ex.Message}");
+                        lastLogTime = DateTime.Now; // Update the last log time
+                    }
+                }
+
+                // Wait for 10 seconds before retrying
+                await Task.Delay(10000); // Non-blocking delay
+            }
         };
 
         await Task.Delay(-1); // Infinite delay to keep the application running

@@ -1,0 +1,24 @@
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace WeatherThingyAPI.Models
+{
+    public class GatewayContext : DbContext
+    {
+        public GatewayContext(DbContextOptions<GatewayContext> options)
+            : base(options)
+        {
+        }
+
+        // DbSet representing the Gateway_location table
+        public DbSet<Gateway_location> Gateway_location { get; set; } = null!;
+
+        // Configure model using Fluent API
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Specify schema and primary key
+            modelBuilder.Entity<Gateway_location>()
+                .ToTable("Gateway_location", schema: "lr2")  // Table in "lr2" schema
+                .HasKey(g => g.Node_ID);  // Set primary key
+        }
+    }
+}

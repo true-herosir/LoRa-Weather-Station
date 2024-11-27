@@ -523,3 +523,5 @@ Battery_status:
 [2024-11-27 07:36:07] -- Done updating Node
 [2024-11-27 07:36:07] -- +++success.+++
 
+[2024-11-27 07:40:25] -- Connected to MQTT broker successfully.
+[2024-11-27 07:40:26] -- Connected to G4 MQTT broker successfully.

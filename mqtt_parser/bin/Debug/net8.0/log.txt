@@ -446,3 +446,65 @@ Battery_status:
 [2024-11-27 07:28:35] -- 
 +++success.+++
 
+[2024-11-27 07:29:34] -- Connected to MQTT broker successfully.
+[2024-11-27 07:29:34] -- Connected to G4 MQTT broker successfully.
+[2024-11-27 07:31:52] -- Received message from MKR sensor:
+Node_ID: mkr-wierden
+Time: 11/27/2024 07:31:52
+Pressure: 1018
+Illumination: 0
+Humidity: 80
+Location: Wierden
+Temperature_indor: 13.9
+Temperature_outdor: 
+Bat_v: 
+Battery_status: 
+[2024-11-27 07:31:53] -- Done updating Gateway_location
+[2024-11-27 07:31:53] -- Done updating Node
+[2024-11-27 07:31:53] -- +++success.+++
+
+[2024-11-27 07:33:35] -- Received message from MKR sensor:
+Node_ID: mkr-saxion
+Time: 11/27/2024 07:33:35
+Pressure: 1014.5
+Illumination: 0
+Humidity: 41
+Location: Enschede
+Temperature_indor: 20.4
+Temperature_outdor: 
+Bat_v: 
+Battery_status: 
+[2024-11-27 07:33:35] -- Done updating Gateway_location
+[2024-11-27 07:33:35] -- Done updating Node
+[2024-11-27 07:33:35] -- +++success.+++
+
+[2024-11-27 07:33:35] -- Received message from G4 MKR sensor:
+Node_ID: weather-thingy-g4-2024
+Time: 11/27/2024 07:33:35
+Pressure: 1014.8
+Illumination: 0.51
+Humidity: 69.91
+Location: Enschede
+Temperature_indor: 17.47
+Temperature_outdor: 
+Bat_v: 
+Battery_status: 
+[2024-11-27 07:33:35] -- Done updating Gateway_location
+[2024-11-27 07:33:35] -- Done updating Node
+[2024-11-27 07:33:35] -- +++success.+++
+
+[2024-11-27 07:33:59] -- Received message from LHT sensor:
+Node_ID: lht-gronau
+Time: 11/27/2024 07:33:59
+Pressure: 
+Illumination: 100
+Humidity: 100
+Location: Gronau
+Temperature_indor: 5.33
+Temperature_outdor: 
+Bat_v: 2.591
+Battery_status: 2
+[2024-11-27 07:33:59] -- Done updating Gateway_location
+[2024-11-27 07:33:59] -- Done updating Node
+[2024-11-27 07:33:59] -- +++success.+++
+

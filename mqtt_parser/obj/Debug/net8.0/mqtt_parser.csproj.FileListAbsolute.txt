@@ -1,77 +1,8 @@
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\bin\Debug\net8.0\mqtt_parser.exe
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\bin\Debug\net8.0\mqtt_parser.deps.json
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\bin\Debug\net8.0\mqtt_parser.runtimeconfig.json
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\bin\Debug\net8.0\mqtt_parser.dll
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\bin\Debug\net8.0\mqtt_parser.pdb
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\bin\Debug\net8.0\MQTTnet.dll
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.AssemblyReference.cache
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\mqtt_parser.GeneratedMSBuildEditorConfig.editorconfig
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfoInputs.cache
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfo.cs
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.CoreCompileInputs.cache
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\mqtt_par.BBD8A808.Up2Date
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\mqtt_parser.dll
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\refint\mqtt_parser.dll
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\mqtt_parser.pdb
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\mqtt_parser.genruntimeconfig.cache
-D:\Saxion\2nd_year\Project Software Engineering\mqtt demo\mqtt_parser\obj\Debug\net8.0\ref\mqtt_parser.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.exe
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.deps.json
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\MQTTnet.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.AssemblyReference.cache
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.GeneratedMSBuildEditorConfig.editorconfig
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfoInputs.cache
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfo.cs
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.CoreCompileInputs.cache
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.sourcelink.json
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_par.BBD8A808.Up2Date
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\refint\mqtt_parser.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.pdb
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.genruntimeconfig.cache
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.runtimeconfig.json
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.pdb
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Newtonsoft.Json.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\ref\mqtt_parser.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.exe
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.deps.json
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.runtimeconfig.json
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.pdb
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\MQTTnet.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Newtonsoft.Json.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.AssemblyReference.cache
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.GeneratedMSBuildEditorConfig.editorconfig
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfoInputs.cache
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfo.cs
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.CoreCompileInputs.cache
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.sourcelink.json
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_par.BBD8A808.Up2Date
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\refint\mqtt_parser.dll
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.pdb
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.genruntimeconfig.cache
-D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\ref\mqtt_parser.dll
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.dll
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\refint\mqtt_parser.dll
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.pdb
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.AssemblyReference.cache
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfoInputs.cache
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfo.cs
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.CoreCompileInputs.cache
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.sourcelink.json
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.exe
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.deps.json
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.runtimeconfig.json
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.dll
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\mqtt_parser.pdb
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\MQTTnet.dll
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Newtonsoft.Json.dll
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_par.BBD8A808.Up2Date
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.genruntimeconfig.cache
-C:\Users\karol\Desktop\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\ref\mqtt_parser.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Azure.Core.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Azure.Identity.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
@@ -85,6 +16,8 @@ D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\MQTTnet.dll
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\Newtonsoft.Json.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\System.ClientModel.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\System.Diagnostics.EventLog.dll
@@ -111,3 +44,15 @@ D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.Messages.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
 D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Runtime.Caching.dll
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.AssemblyReference.cache
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.GeneratedMSBuildEditorConfig.editorconfig
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfoInputs.cache
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.AssemblyInfo.cs
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.csproj.CoreCompileInputs.cache
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.sourcelink.json
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_par.BBD8A808.Up2Date
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.dll
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\refint\mqtt_parser.dll
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.pdb
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\mqtt_parser.genruntimeconfig.cache
+D:\Saxion\2nd_year\Project Software Engineering\LoRa-Weather-Station\mqtt_parser\obj\Debug\net8.0\ref\mqtt_parser.dll

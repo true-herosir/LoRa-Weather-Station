@@ -36,8 +36,6 @@ namespace mqtt_parser
             try
             {
                 await using var connection = new SqlConnection(connectionString);
-                //Console.WriteLine("\nQuery data example:");
-                //Console.WriteLine("=========================================\n");
 
                 await connection.OpenAsync();
 
@@ -54,15 +52,11 @@ namespace mqtt_parser
             }
             catch (SqlException e)
             {
-                //Console.WriteLine($"SQL Error: {e.Message}");
-                m_logger.log_time($"SQL Error: {e.Message}");
-                m_logger.log($"query:\n{query}");
+                throw new Exception($"SQL Error: {e.Message}", e);
             }
             catch (Exception e)
             {
-                //Console.WriteLine(e.ToString());
-                m_logger.log_time(e.ToString());
-                m_logger.log($"query:\n{query}");
+                throw new Exception(e.Message, e);
             }
 
             //Console.WriteLine($"\n+++Done updating {table_name}+++");

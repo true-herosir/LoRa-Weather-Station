@@ -1,6 +1,10 @@
 mqtt_parser/obj
 WeatherThingyAPI/WeatherThingyAPI/obj
 mqtt_parser/.vs
+mqtt_parser/bin
 WeatherThingyAPI/.vs
+WeatherThingyAPI/WeatherThingy/API/bin
 App/WeatherThingy/obj
-App/WeatherTHingy/.vs
+App/WeatherThingy/.vs
+App/WeatherThingy/bin
+.gitignore.Zone.Identifier

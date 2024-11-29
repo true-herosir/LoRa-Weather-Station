@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WeatherThingy.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+
+    <Grid>
+        <!-- Define two columns -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MenuWidth" Width="0"/>
+            <!-- Left menu width -->
+            <ColumnDefinition Width="*" />
+            <!-- Main content stretches to fill remaining space -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Menu -->
+        <ScrollView>
+            <VerticalStackLayout 
+                             Grid.Column="0"
+                             Padding="10"
+                             BackgroundColor="LightGray"
+                             Spacing="10">
+                
+                
+                <StackLayout x:Name="ExpandableContent" IsVisible="False">
+                    <Label Text="Menu Item 1" />
+                    <Label Text="Menu Item 2" />
+                    <Label Text="Menu Item 3" />
+                </StackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <ScrollView Grid.Column="1">
+            <VerticalStackLayout>
+                <Button 
+                    x:Name="ExpandButton" Text="=" 
+                    Clicked="OnExpandButtonClicked"
+                    ToolTipProperties.Text="Expands/Collapses the Menu"
+                    WidthRequest="20"
+                    HeightRequest="20"
+                    HorizontalOptions="Start"
+                    CornerRadius="50"
+                    />
+                <Label  Text="The weather thingy"
+                   HorizontalOptions="Start"
+                   Style="{StaticResource Headline}"
+                   SemanticProperties.HeadingLevel="Level1" 
+                   Padding="15"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image 
+                        Grid.Column="0"
+                        Source="dotnet_bot.png"
+                        Aspect="AspectFit"
+                    />
+                    <Image
+                        Grid.Column="1"                      
+                        Source="dotnet_bot.png"
+                        Aspect="AspectFit"
+                    />
+                    <Image
+                        Grid.Column="2"                           
+                        Source="dotnet_bot.png"
+                        Aspect="AspectFit"
+                    />
+                </Grid>
+
+
+                <Label
+                Text="Some text about our app"
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level3"
+                SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

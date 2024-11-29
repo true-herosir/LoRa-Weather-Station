@@ -20,7 +20,7 @@ namespace MauiApp1
             List<DateTime> time(string json);
             List<double?> pressure (string json);
             List<double?> illumination (string json);
-            List<double> humidity (string json);
+            List<double?> humidity (string json);
             List<string> gateway_Location (string json);
             List<double?> temperature_indor (string json);
             List<double?> temperature_outdor (string json);

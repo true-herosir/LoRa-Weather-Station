@@ -17,7 +17,7 @@ namespace MauiApp1
             public DateTime time { get; set; }
             public double? pressure { get; set; }
             public double? illumination { get; set; }
-            public double humidity { get; set; }
+            public double? humidity { get; set; }
             public string gateway_Location { get; set; }
             public double? temperature_indor { get; set; }
             public double? temperature_outdor { get; set; }
@@ -46,10 +46,10 @@ namespace MauiApp1
             return result;
         }
 
-        public List<double> humidity(string json)
+        public List<double?> humidity(string json)
         {
             Root? Deserialized = JsonConvert.DeserializeObject<Root>(json);
-            List<double> result = new List<double>();
+            List<double?> result = new List<double?>();
             foreach (var item in Deserialized.data)
             {
                 result.Add(item.humidity);

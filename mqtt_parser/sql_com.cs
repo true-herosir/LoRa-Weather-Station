@@ -63,7 +63,7 @@ namespace mqtt_parser
             m_logger.log_time($"Done updating {table_name}");
         }
 
-        public async Task build(string Node_ID, DateTime Time, double? Pressure, double? Illumination, double? Humidity, string Location, double Temperature_indor, double? Temperature_outdor)
+        public async Task build(string Node_ID, DateTime Time, double? Pressure, double? Illumination, double? Humidity, string Location, double? Temperature_indor, double? Temperature_outdor)
         {
             string time_formated = Time.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 

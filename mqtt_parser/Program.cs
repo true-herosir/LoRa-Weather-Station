@@ -117,7 +117,7 @@ class Program
                     
 
                     await database.build((string)MKR["Node_ID"], (DateTime)MKR["Time"], (double?)MKR["Pressure"], (double?)MKR["Illumination"], (double?)MKR["Humidity"],
-                        (string)MKR["Location"], (double)MKR["Temperature_indor"], (double?)MKR["Temperature_outdor"]);
+                        (string)MKR["Location"], (double?)MKR["Temperature_indor"], (double?)MKR["Temperature_outdor"]);
                     
 
                 }
@@ -141,7 +141,7 @@ class Program
 
 
                     await database.build( (string)LHT["Node_ID"], (DateTime)LHT["Time"], (double?)LHT["Pressure"], (double?)LHT["Illumination"], (double?)LHT["Humidity"],
-                        (string)LHT["Location"], (double)LHT["Temperature_indor"], (double?)LHT["Temperature_outdor"]);
+                        (string)LHT["Location"], (double?)LHT["Temperature_indor"], (double?)LHT["Temperature_outdor"]);
                     
 
                     
@@ -247,7 +247,7 @@ class Program
                 
 
                 await database.build((string)MKR_g4["Node_ID"], (DateTime)MKR_g4["Time"], (double?)MKR_g4["Pressure"], (double?)MKR_g4["Illumination"], (double?)MKR_g4["Humidity"],
-                    (string)MKR_g4["Location"], (double)MKR_g4["Temperature_indor"], (double?)MKR_g4["Temperature_outdor"]);
+                    (string)MKR_g4["Location"], (double?)MKR_g4["Temperature_indor"], (double?)MKR_g4["Temperature_outdor"]);
 
                 //Console.WriteLine("\n+++success.+++\n");
                 logger.log_time("+++success.+++\n");

@@ -36,6 +36,46 @@ namespace WeatherThingy
                 await Task.Delay(25);
             }
         }
+
+        private void OnPointerEntered(object sender, EventArgs e)
+        {
+            if (sender is ImageButton button) button.Scale = 1.05;
+        }
+
+        private void OnPointerExited(object sender, EventArgs e)
+        {
+            if (sender is ImageButton button) button.Scale = 1.00;
+        }
+
+        private async void OnEnschedeButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new EnschedePage());
+        }
+
+        private async void OnGronauButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new GronauPage());
+        }
+
+        private async void OnWierdenButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new WierdenPage());
+        }
+
+        //private async void OnEnschedeClicked(object sender, EventArgs e)
+        //{
+        //    //await Navigation.PushAsync(new EnschedePage());
+        //}
+
+        //private async void OnGronauClicked(object sender, EventArgs e)
+        //{
+        //    //await Navigation.PushAsync(new GronauPage());
+        //}
+
+        //private async void OnWeirdenClicked(object sender, EventArgs e)
+        //{
+        //    //await Navigation.PushAsync(new WierdenPage());
+        //}
     }
 
 }

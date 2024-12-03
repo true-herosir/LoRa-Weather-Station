@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WeatherThingy.GronauPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Grid>
+        <!-- Define two columns -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MenuWidth" Width="0"/>
+            <!-- Left menu width -->
+            <ColumnDefinition Width="*" />
+            <!-- Main content stretches to fill remaining space -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Menu -->
+        <ScrollView>
+            <VerticalStackLayout 
+                             Grid.Column="0"
+                             Padding="10"
+                             Spacing="10"
+                             BackgroundColor="#4A628A">
+                
+                
+                <StackLayout x:Name="ExpandableContent" IsVisible="False">
+                    <Label Text="Menu Item 1" />
+                    <Label Text="Menu Item 2" />
+                    <Label Text="Menu Item 3" />
+                </StackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <ScrollView 
+            Grid.Column="1"
+            BackgroundColor="#7AB2D3">
+            <VerticalStackLayout>
+                <ImageButton 
+                    Source="menu.png"
+                    x:Name="ExpandButton" 
+                    Clicked="OnExpandButtonClicked"
+                    ToolTipProperties.Text="Expands/Collapses the Menu"
+                    WidthRequest="15"
+                    HeightRequest="15"
+                    HorizontalOptions="Start"/>
+                
+                <HorizontalStackLayout>
+
+                    <Label  
+                        Text="The weather thingy"
+                        HorizontalOptions="Start"
+                        Style="{StaticResource Headline}"
+                        SemanticProperties.HeadingLevel="Level1" 
+                        Padding="15"/>
+                    
+                    <Image 
+                        Source="sun.png"
+                        HeightRequest="30"
+                        WidthRequest="30"/>
+                    
+                </HorizontalStackLayout>
+                
+                <Label 
+                    Text="Gronau!!!!"
+                    HorizontalOptions="Center"
+                    Padding="25"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

@@ -8,6 +8,7 @@ using System.Globalization;
 class Program
 {
     private static ILogger logger = new logger();
+    static string day = DateTime.Now.ToString("yyyy-MM-dd");
     static async Task Main(string[] args)
     {
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture; // setting the language settings to more generic / universal
@@ -93,7 +94,12 @@ class Program
         string received = " ";
         mqttClient.ApplicationMessageReceivedAsync += async e =>
         {
-            
+            if (day != DateTime.Now.ToString("yyyy-MM-dd"))
+            {
+                day = DateTime.Now.ToString("yyyy-MM-dd");
+                logger.change_file($"log({day}).txt");
+            }
+
             received = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);           
 
             try
@@ -112,7 +118,7 @@ class Program
                     }
 
                     //ISQL_QueryBuilder database = new Inserter();
-                    ISQL_communicator database = new sql_com();
+                    ISQL_communicator database = new sql_com($"log({day}).txt");
                     await database.build((string)MKR["Node_ID"], (string)MKR["Location"], (double?)MKR["Battery_status"]);
                     
 
@@ -136,7 +142,7 @@ class Program
                     }
 
                     //ISQL_QueryBuilder database = new Inserter();
-                    ISQL_communicator database = new sql_com();
+                    ISQL_communicator database = new sql_com($"log({day}).txt");
                     await database.build((string)LHT["Node_ID"], (string)LHT["Location"], (double?)LHT["Battery_status"]);
 
 
@@ -172,6 +178,12 @@ class Program
         bool disconnected = false;
         mqttClient.DisconnectedAsync += async e =>
         {
+            if (day != DateTime.Now.ToString("yyyy-MM-dd"))
+            {
+                day = DateTime.Now.ToString("yyyy-MM-dd");
+                logger.change_file($"log({day}).txt");
+            }
+
             if (disconnected == false)
             {
                 logger.log_time("Disconnected from MQTT broker. Entering reconnection loop.");
@@ -224,6 +236,12 @@ class Program
         string us_received = " ";
         mqttClient_g4.ApplicationMessageReceivedAsync += async e =>
         {
+            if (day != DateTime.Now.ToString("yyyy-MM-dd"))
+            {
+                day = DateTime.Now.ToString("yyyy-MM-dd");
+                logger.change_file($"log({day}).txt");
+            }
+
             us_received = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
             
             try
@@ -242,7 +260,7 @@ class Program
                 }
 
                 //ISQL_QueryBuilder database = new Inserter();
-                ISQL_communicator database = new sql_com();
+                ISQL_communicator database = new sql_com($"log({day}).txt");
                 await database.build((string)MKR_g4["Node_ID"], (string)MKR_g4["Location"], (double?)MKR_g4["Battery_status"]);
                 
 
@@ -273,6 +291,12 @@ class Program
         bool g4_disconnect = false;
         mqttClient_g4.DisconnectedAsync += async e =>
         {
+            if (day != DateTime.Now.ToString("yyyy-MM-dd"))
+            {
+                day = DateTime.Now.ToString("yyyy-MM-dd");
+                logger.change_file($"log({day}).txt");
+            }
+
             if (g4_disconnect == false)
             {
                 logger.log_time("Disconnected from G4 MQTT broker. Entering reconnection loop.");

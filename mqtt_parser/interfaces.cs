@@ -25,6 +25,7 @@ namespace mqtt_parser
         {
             void log(string messages);
             void log_time(string messages);
+            void change_file(string file_name);
         }
 
     }

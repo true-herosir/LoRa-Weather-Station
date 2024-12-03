@@ -18,7 +18,8 @@ namespace mqtt_parser
 
         public logger()
         {
-            m_file_name = "log.txt";
+            string day = DateTime.Now.ToString("yyyy-MM-dd");
+            m_file_name = $"log({day}).txt";
         }
         void ILogger.log_time(string messages)
         {
@@ -54,6 +55,11 @@ namespace mqtt_parser
                 Console.WriteLine("An error occurred while writing to the log file:");
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        void ILogger.change_file(string file_name)
+        {
+            m_file_name = file_name;
         }
 
         string m_file_name;

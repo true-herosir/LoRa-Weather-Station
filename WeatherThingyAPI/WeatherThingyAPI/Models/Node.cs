@@ -13,8 +13,8 @@ namespace WeatherThingyAPI.Models
         public double? Pressure { get; set; }
         public double? Illumination { get; set; }
         public double? Humidity { get; set; }
-        public string? Location { get; set; }
-        public double Temperature_indor { get; set; }
+        public string? Gateway_Location { get; set; }
+        public double? Temperature_indor { get; set; }
         public double? Temperature_outdor { get; set; }
     }
 }

@@ -81,7 +81,7 @@ namespace WeatherThingyAPI
             services.AddDbContext<NodeContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("testing")));
 
-            services.AddDbContext<GatewayContext>(options =>
+            services.AddDbContext<SensorContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("testing")));
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

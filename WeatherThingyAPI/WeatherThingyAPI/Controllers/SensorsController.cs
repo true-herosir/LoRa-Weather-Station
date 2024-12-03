@@ -6,11 +6,11 @@ namespace WeatherThingyAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class GatewaysController : ControllerBase
+public class SensorsController : ControllerBase
 {
-    private readonly GatewayContext _context;
+    private readonly SensorContext _context;
 
-    public GatewaysController(GatewayContext context)
+    public SensorsController(SensorContext context)
     {
         _context = context;
     }
@@ -23,7 +23,7 @@ public class GatewaysController : ControllerBase
     //}
     // GET: api/Nodes?page=1&pageSize=10
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Gateway_location>>> GetGateways([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<Sensor_location>>> GetGateways([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         if (page <= 0 || pageSize <= 0)
         {
@@ -59,7 +59,7 @@ public class GatewaysController : ControllerBase
 
     // GET: api/TodoItems/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Gateway_location>> GetGatewayItem(string id)
+    public async Task<ActionResult<Sensor_location>> GetGatewayItem(string id)
     {
         var todoItem = await _context.Gateway_location.FindAsync(id);
 

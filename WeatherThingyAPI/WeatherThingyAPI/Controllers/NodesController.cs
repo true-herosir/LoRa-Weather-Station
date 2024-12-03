@@ -25,30 +25,50 @@ public class NodesController : ControllerBase
 
         // Calculate the total number of items and pages
         var totalItems = await _context.Nodes.CountAsync();
+        if (totalItems == 0)
+        {
+            return Ok(new
+            {
+                totalItems,
+                totalPages = 0,
+                currentPage = page,
+                pageSize,
+                data = new List<Node>()
+            });
+        }
+
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
         // Ensure the requested page is within range
-        if (page > totalPages && totalItems > 0)
+        if (page > totalPages)
         {
             return NotFound($"Page {page} does not exist. Total pages: {totalPages}.");
         }
 
-        // Fetch the paginated data
-        var nodes = await _context.Nodes
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        // Return data along with pagination metadata
-        return Ok(new
+        try
         {
-            totalItems,
-            totalPages,
-            currentPage = page,
-            pageSize,
-            data = nodes
-        });
+            // Fetch the paginated data
+            var nodes = await _context.Nodes
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // Return data along with pagination metadata
+            return Ok(new
+            {
+                totalItems,
+                totalPages,
+                currentPage = page,
+                pageSize,
+                data = nodes
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An internal server error occurred.", error = ex.Message });
+        }
     }
+
 
     [HttpGet("pressure")]
     public async Task<ActionResult<IEnumerable<Node>>> GetNodesPressure([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
@@ -72,7 +92,7 @@ public class NodesController : ControllerBase
         var nodes = await _context.Nodes
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Pressure })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Pressure })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -108,7 +128,7 @@ public class NodesController : ControllerBase
         var nodes = await _context.Nodes
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Illumination })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Illumination })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -144,7 +164,7 @@ public class NodesController : ControllerBase
         var nodes = await _context.Nodes
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Humidity })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Humidity })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -181,7 +201,7 @@ public class NodesController : ControllerBase
         var nodes = await _context.Nodes
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Temperature_indor })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Temperature_indor })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -217,7 +237,7 @@ public class NodesController : ControllerBase
         var nodes = await _context.Nodes
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Temperature_outdor })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Temperature_outdor })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -253,7 +273,7 @@ public class NodesController : ControllerBase
         var nodes = await _context.Nodes
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Temperature_indor, n.Temperature_outdor })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Temperature_indor, n.Temperature_outdor })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -327,7 +347,7 @@ public class NodesController : ControllerBase
             .Where(n => n.Node_ID == id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Pressure })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Pressure })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -364,7 +384,7 @@ public class NodesController : ControllerBase
             .Where(n => n.Node_ID == id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Illumination })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Illumination })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -402,7 +422,7 @@ public class NodesController : ControllerBase
             .Where(n => n.Node_ID == id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Humidity })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Humidity })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -440,7 +460,7 @@ public class NodesController : ControllerBase
             .Where(n => n.Node_ID == id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Temperature_indor })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Temperature_indor })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -477,7 +497,7 @@ public class NodesController : ControllerBase
             .Where(n => n.Node_ID == id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Temperature_outdor })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Temperature_outdor })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -514,7 +534,7 @@ public class NodesController : ControllerBase
             .Where(n => n.Node_ID == id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(n => new { n.Node_ID, n.Time, n.Location, n.Temperature_indor, n.Temperature_outdor })
+            .Select(n => new { n.Node_ID, n.Time, n.Gateway_Location, n.Temperature_indor, n.Temperature_outdor })
             .ToListAsync();
 
         // Return data along with pagination metadata
@@ -552,7 +572,7 @@ public class NodesController : ControllerBase
         }
 
         // Calculate the total number of items and pages
-        var totalItems = await _context.Nodes.Where(n => n.Location == location).CountAsync();
+        var totalItems = await _context.Nodes.Where(n => n.Gateway_Location == location).CountAsync();
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
         // Ensure the requested page is within range
@@ -563,7 +583,7 @@ public class NodesController : ControllerBase
 
         // Fetch the paginated data
         var nodes = await _context.Nodes
-                                   .Where(n => n.Location == location)
+                                   .Where(n => n.Gateway_Location == location)
                                    .Skip((page - 1) * pageSize)
                                    .Take(pageSize)
                                    .ToListAsync();

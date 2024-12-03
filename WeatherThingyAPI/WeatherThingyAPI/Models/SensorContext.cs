@@ -2,22 +2,22 @@
 
 namespace WeatherThingyAPI.Models
 {
-    public class GatewayContext : DbContext
+    public class SensorContext : DbContext
     {
-        public GatewayContext(DbContextOptions<GatewayContext> options)
+        public SensorContext(DbContextOptions<SensorContext> options)
             : base(options)
         {
         }
 
         // DbSet representing the Gateway_location table
-        public DbSet<Gateway_location> Gateway_location { get; set; } = null!;
+        public DbSet<Sensor_location> Gateway_location { get; set; } = null!;
 
         // Configure model using Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Specify schema and primary key
-            modelBuilder.Entity<Gateway_location>()
-                .ToTable("Gateway_location", schema: "lr2")  // Table in "lr2" schema
+            modelBuilder.Entity<Sensor_location>()
+                .ToTable("Sensor_location", schema: "lr2")  // Table in "lr2" schema
                 .HasKey(g => g.Node_ID);  // Set primary key
         }
     }

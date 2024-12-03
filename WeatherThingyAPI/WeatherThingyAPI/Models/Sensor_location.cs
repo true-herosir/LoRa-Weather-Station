@@ -2,8 +2,8 @@
 
 namespace WeatherThingyAPI.Models
 {
-    [Table("Gateway_location", Schema = "lr2")]
-    public class Gateway_location
+    [Table("Sensor_location", Schema = "lr2")]
+    public class Sensor_location
     {
         public string Node_ID { get; set; }
         public string? Location { get; set; }

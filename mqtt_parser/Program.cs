@@ -252,6 +252,7 @@ class Program
                 INode_parse MKR_Parsed_G4 = new MKR_parse();
                 Dictionary<string, object?> MKR_g4 = MKR_Parsed_G4.data(us_received);
 
+                MKR_g4["Illumination"] = double.Round(((double)MKR_g4["Illumination"] * 2.55) / 7, 2); /// handle our sensor with max lux measured of 700
 
                 foreach (var item in MKR_g4)
                 {

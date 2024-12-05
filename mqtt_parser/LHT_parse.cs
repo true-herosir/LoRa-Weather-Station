@@ -54,8 +54,8 @@ namespace mqtt_parser
             //parsed.Add("Gateway_lon", location_lht[0].location.longitude);
             //parsed.Add("Gateway_lat", location_lht[0].location.latitude);
             
-            parsed.Add("Temperature_indor", results_lht.TempC_SHT);
-            parsed.Add("Temperature_outdor", results_lht.TempC_DS);
+            parsed.Add("Temperature_indoor", results_lht.TempC_SHT);
+            parsed.Add("Temperature_outdoor", results_lht.TempC_DS);
                     
 
             parsed.Add("Bat_v", results_lht.BatV);

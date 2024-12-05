@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MauiApp1
+namespace WeatherThingy
 {
     public class bat_stat
     {

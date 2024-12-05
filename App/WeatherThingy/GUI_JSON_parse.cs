@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static MauiApp1.GUI_interfaces;
+using static WeatherThingy.GUI_interfaces;
 
-namespace MauiApp1 
+namespace WeatherThingy
 {
     internal class GUI_JSON_parse : IGUI_JSON_parse
     {

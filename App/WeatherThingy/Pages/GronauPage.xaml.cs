@@ -1,10 +1,10 @@
 using Microsoft.Maui.Controls;
 
-namespace WeatherThingy
+namespace WeatherThingy.Pages
 {
-    public partial class WierdenPage : ContentPage
+    public partial class GronauPage : ContentPage
     {
-        public WierdenPage()
+        public GronauPage()
         {
             InitializeComponent();
         }
@@ -15,7 +15,6 @@ namespace WeatherThingy
             {
                 await AnimateMenu(200, !ExpandableContent.IsVisible);
                 ExpandableContent.IsVisible = true;
-                //await ExpandButton.RotateXTo(90); // magic trick XD
                 await ExpandButton.RotateTo(90);
             }
             else
@@ -37,5 +36,4 @@ namespace WeatherThingy
             }
         }
     }
-
 }

@@ -1,4 +1,6 @@
-﻿namespace WeatherThingy
+﻿using WeatherThingy.Pages;
+
+namespace WeatherThingy
 {
     public partial class App : Application
     {

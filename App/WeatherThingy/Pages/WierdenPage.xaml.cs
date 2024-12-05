@@ -1,10 +1,10 @@
 using Microsoft.Maui.Controls;
 
-namespace WeatherThingy
+namespace WeatherThingy.Pages
 {
-    public partial class EnschedePage : ContentPage
+    public partial class WierdenPage : ContentPage
     {
-        public EnschedePage()
+        public WierdenPage()
         {
             InitializeComponent();
         }

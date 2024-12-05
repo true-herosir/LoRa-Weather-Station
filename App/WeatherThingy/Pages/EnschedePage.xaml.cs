@@ -1,10 +1,10 @@
-﻿using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls;
 
-namespace WeatherThingy
+namespace WeatherThingy.Pages
 {
-    public partial class MainPage : ContentPage
+    public partial class EnschedePage : ContentPage
     {
-        public MainPage()
+        public EnschedePage()
         {
             InitializeComponent();
         }
@@ -39,43 +39,14 @@ namespace WeatherThingy
 
         private void OnPointerEntered(object sender, EventArgs e)
         {
-            if (sender is ImageButton button) button.Scale = 1.05;
+            if (sender is HorizontalStackLayout h_layout) h_layout.BackgroundColor = Color.FromArgb("#415679");
         }
 
         private void OnPointerExited(object sender, EventArgs e)
         {
-            if (sender is ImageButton button) button.Scale = 1.00;
+            if (sender is HorizontalStackLayout h_layout) h_layout.BackgroundColor = Color.FromArgb("#4A628A");
         }
 
-        private async void OnEnschedeButtonClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new EnschedePage());
-        }
-
-        private async void OnGronauButtonClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new GronauPage());
-        }
-
-        private async void OnWierdenButtonClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new WierdenPage());
-        }
-
-        //private async void OnEnschedeClicked(object sender, EventArgs e)
-        //{
-        //    //await Navigation.PushAsync(new EnschedePage());
-        //}
-
-        //private async void OnGronauClicked(object sender, EventArgs e)
-        //{
-        //    //await Navigation.PushAsync(new GronauPage());
-        //}
-
-        //private async void OnWeirdenClicked(object sender, EventArgs e)
-        //{
-        //    //await Navigation.PushAsync(new WierdenPage());
-        //}
     }
 
 }

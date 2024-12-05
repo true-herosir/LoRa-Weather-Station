@@ -9,7 +9,7 @@
     BackgroundColor="#7AB2D3">
 
     <ShellContent
-        ContentTemplate="{DataTemplate local:MainPage}"
+        ContentTemplate="{DataTemplate local:Pages.MainPage}"
         Route="MainPage"/>
 
 </Shell>

@@ -62,4 +62,11 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 
+	<!--<ItemGroup>
+		<MauiXaml Include="Pages\**\*.xaml" />
+		<Compile Update="Pages\**\*.xaml.cs">
+			<DependentUpon>%(Filename).xaml</DependentUpon>
+		</Compile>
+	</ItemGroup>-->
+
 </Project>

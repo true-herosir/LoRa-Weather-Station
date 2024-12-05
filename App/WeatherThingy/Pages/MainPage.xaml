@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WeatherThingy.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Grid>
+        <!-- Define two columns -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MenuWidth" Width="0"/>
+            <!-- Left menu width -->
+            <ColumnDefinition Width="*" />
+            <!-- Main content stretches to fill remaining space -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Menu -->
+        <ScrollView>
+            <VerticalStackLayout 
+                             Grid.Column="0"
+                             BackgroundColor="#4A628A">
+
+                <StackLayout x:Name="ExpandableContent" IsVisible="False">
+                    <HorizontalStackLayout>
+                        <Image Source="home.png"
+                               HeightRequest="25"
+                               WidthRequest="25"
+                               />
+                        <Label Text="Home"
+                               Margin="10"
+                               FontSize="Medium"
+                               HorizontalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    
+                    <HorizontalStackLayout>
+                        <Image Source="live.png"
+                               HeightRequest="20"
+                               WidthRequest="20"/>
+                        <Button Text="Menu Item 1"
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                                                      PointerExited="OnPointerExited"/>
+                        </HorizontalStackLayout.GestureRecognizers>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout>
+                        <Image Source="live.png"
+                               HeightRequest="20"
+                               WidthRequest="20"/>
+                        <Button Text="Menu Item 1"
+                                BackgroundColor="Transparent"
+                                BorderColor="Transparent"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                                  PointerExited="OnPointerExited"/>
+                        </HorizontalStackLayout.GestureRecognizers>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout>
+                        <Image Source="live.png"
+                               HeightRequest="20"
+                               WidthRequest="20"/>
+                        <Button Text="Menu Item 1"
+                                BackgroundColor="Transparent"
+                                BorderColor="Transparent"/>
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                                  PointerExited="OnPointerExited"/>
+                        </HorizontalStackLayout.GestureRecognizers>
+                    </HorizontalStackLayout>
+                    
+                </StackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <ScrollView 
+            Grid.Column="1"
+            BackgroundColor="#7AB2D3">
+            <VerticalStackLayout>
+                <ImageButton 
+                    Source="menu.png"
+                    x:Name="ExpandButton" 
+                    Clicked="OnExpandButtonClicked"
+                    ToolTipProperties.Text="Expands/Collapses the Menu"
+                    WidthRequest="10"
+                    HeightRequest="10"
+                    HorizontalOptions="Start"
+                    BackgroundColor="Transparent"/>
+                
+                <HorizontalStackLayout>
+
+                    <Label  
+                        Text="The weather thingy"
+                        HorizontalOptions="Start"
+                        Style="{StaticResource Headline}"
+                        SemanticProperties.HeadingLevel="Level1" 
+                        Padding="15"/>
+                    
+                    <Image 
+                        Source="sun.png"
+                        HeightRequest="30"
+                        WidthRequest="30"/>
+                    
+                </HorizontalStackLayout>
+                
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <VerticalStackLayout
+                         Grid.Column="0">
+                        <ImageButton
+                            x:Name="EnschedeButton"
+                            Source="enschede.png"
+                            Clicked="OnEnschedeButtonClicked"
+                            HeightRequest="250"
+                            WidthRequest="250"
+                            Aspect="Fill">
+                            
+                            <ImageButton.GestureRecognizers>
+                                <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                                       PointerExited="OnPointerExited"/>
+                            </ImageButton.GestureRecognizers>
+                            
+                        </ImageButton>
+                        <Label 
+                                Text="Enschede"
+                                HorizontalOptions="Center"
+                                FontSize="Subtitle"/>
+                           
+
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1">
+                        <ImageButton
+                            x:Name="GronauButton"
+                            Source="gronau.png"
+                            Clicked="OnGronauButtonClicked"
+                            HeightRequest="250"
+                            WidthRequest="250"
+                            Aspect="Fill">
+                            
+                            <ImageButton.GestureRecognizers>
+                                <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                                       PointerExited="OnPointerExited"/>
+                            </ImageButton.GestureRecognizers>
+                            
+                        </ImageButton>
+                       
+                        <Label 
+                            Text="Gronau"
+                            HorizontalOptions="Center"
+                            FontSize="Subtitle"/>
+                            
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="2">
+                        <ImageButton
+                                 x:Name="WierdenButton"
+                                 Source="wierden.png"
+                                 Clicked="OnWierdenButtonClicked"
+                                     HeightRequest="250"
+                                     WidthRequest="250"
+                                     Aspect="Fill">
+                                <ImageButton.GestureRecognizers>
+                                <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                                                              PointerExited="OnPointerExited"/>
+                                </ImageButton.GestureRecognizers>
+                            </ImageButton>
+                            <Label 
+                            Text="Wierden"
+                            HorizontalOptions="Center"
+                            FontSize="Subtitle"/>
+                    </VerticalStackLayout>
+                </Grid>
+                <Label 
+                    Text="Some thing about our app"
+                    HorizontalOptions="Center"
+                    Padding="25"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

@@ -19,8 +19,8 @@ namespace WeatherThingy.Sources.Model
             public double? illumination { get; set; }
             public double? humidity { get; set; }
             public string gateway_Location { get; set; }
-            public double? temperature_indor { get; set; }
-            public double? temperature_outdor { get; set; }
+            public double? temperature_indoor { get; set; }
+            public double? temperature_outdoor { get; set; }
 
             public string? location { get; set; }
             public int? battery_status { get; set; }

@@ -19,7 +19,7 @@ namespace WeatherThingy.Sources.Services
         {
             _httpClient = new HttpClient();
         }
-        public async Task<GUI_JSON_parse.Root> GetNodeData()
+        public async Task<Root> GetNodeData()
         {
             string urlData = $"https://84.85.32.192:7086/api/Nodes/lht-gronau?page=1&pageSize=1000";
             var responseData = await _httpClient.GetStringAsync(urlData);
@@ -40,7 +40,16 @@ namespace WeatherThingy.Sources.Services
                 {
                     var datum = new Datum
                     {
-                        // TODO: data from datum conversion here
+                        time = Convert.ToDateTime(item.Value.GetProperty("time")),
+                        node_ID = item.Value.GetProperty("node_ID").ToString(),
+                        pressure = Convert.ToDouble(item.Value.GetProperty("pressure")),
+                        illumination = Convert.ToDouble(item.Value.GetProperty("illumination")),
+                        humidity = Convert.ToDouble(item.Value.GetProperty("humidity")),
+                        temperature_indoor = Convert.ToDouble(item.Value.GetProperty("temperature_indoor")),
+                        temperature_outdoor = Convert.ToDouble(item.Value.GetProperty("temperature_outdoor")),
+                        gateway_Location = item.Value.GetProperty("gateway_Location").ToString(),
+                        location = item.Value.GetProperty("location").ToString(),
+                        battery_status = Convert.ToInt16(item.Value.GetProperty("battery_status").ToString())
                     };
 
                     node.data.Add(datum);

@@ -21,7 +21,9 @@ namespace mqtt_parser
 
             if (results_mkr.light != null)
             {
-                parsed.Add("Illumination", double.Round((double)(results_mkr.light / 2.55), 2));
+                double lighty = double.Round((double)(results_mkr.light / 2.55), 2);
+                lighty = lighty>100? 100 : lighty;
+                parsed.Add("Illumination", lighty);
             }
             else parsed.Add("Illumination", null);
 

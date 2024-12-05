@@ -63,11 +63,11 @@ namespace mqtt_parser
             m_logger.log_time($"Done updating {table_name}");
         }
 
-        public async Task build(string Node_ID, DateTime Time, double? Pressure, double? Illumination, double? Humidity, string Location, double? Temperature_indor, double? Temperature_outdor)
+        public async Task build(string Node_ID, DateTime Time, double? Pressure, double? Illumination, double? Humidity, string Location, double? Temperature_indoor, double? Temperature_outdoor)
         {
             string time_formated = Time.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
-            string query_text = $"INSERT INTO lr2.Node (Node_ID, Time, Pressure, Illumination, Humidity, Gateway_Location, Temperature_indor, Temperature_outdor) VALUES ('{Node_ID}','{time_formated}',{(Pressure != null ? Pressure : "NULL")}, {(Illumination != null ? Illumination : "NULL")},{(Humidity != null ? Humidity : "NULL")}, '{Location}',{Temperature_indor} , {(Temperature_outdor != null ? Temperature_outdor : "NULL")});";
+            string query_text = $"INSERT INTO lr2.Node (Node_ID, Time, Pressure, Illumination, Humidity, Gateway_Location, Temperature_indoor, Temperature_outdoor) VALUES ('{Node_ID}','{time_formated}',{(Pressure != null ? Pressure : "NULL")}, {(Illumination != null ? Illumination : "NULL")},{(Humidity != null ? Humidity : "NULL")}, '{Location}',{Temperature_indoor} , {(Temperature_outdoor != null ? Temperature_outdoor : "NULL")});";
             //Console.WriteLine(query_text);
             await communicate(query_text, "Node");
             

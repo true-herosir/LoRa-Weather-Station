@@ -123,7 +123,7 @@ class Program
                     
 
                     await database.build((string)MKR["Node_ID"], (DateTime)MKR["Time"], (double?)MKR["Pressure"], (double?)MKR["Illumination"], (double?)MKR["Humidity"],
-                        (string)MKR["Location"], (double?)MKR["Temperature_indor"], (double?)MKR["Temperature_outdor"]);
+                        (string)MKR["Location"], (double?)MKR["Temperature_indoor"], (double?)MKR["Temperature_outdoor"]);
                     
 
                 }
@@ -147,7 +147,7 @@ class Program
 
 
                     await database.build( (string)LHT["Node_ID"], (DateTime)LHT["Time"], (double?)LHT["Pressure"], (double?)LHT["Illumination"], (double?)LHT["Humidity"],
-                        (string)LHT["Location"], (double?)LHT["Temperature_indor"], (double?)LHT["Temperature_outdor"]);
+                        (string)LHT["Location"], (double?)LHT["Temperature_indoor"], (double?)LHT["Temperature_outdoor"]);
                     
 
                     
@@ -252,7 +252,8 @@ class Program
                 INode_parse MKR_Parsed_G4 = new MKR_parse();
                 Dictionary<string, object?> MKR_g4 = MKR_Parsed_G4.data(us_received);
 
-                MKR_g4["Illumination"] = double.Round(((double)MKR_g4["Illumination"] * 2.55) / 7, 2); /// handle our sensor with max lux measured of 700
+                MKR_g4["Illumination"] = double.Round(((double)MKR_g4["Illumination"] * 2.55) / 6.6, 2); /// handle our sensor with max lux measured of 700
+                MKR_g4["Illumination"] = (double)MKR_g4["Illumination"] > 100 ? 100 : (double)MKR_g4["Illumination"];
 
                 foreach (var item in MKR_g4)
                 {
@@ -266,7 +267,7 @@ class Program
                 
 
                 await database.build((string)MKR_g4["Node_ID"], (DateTime)MKR_g4["Time"], (double?)MKR_g4["Pressure"], (double?)MKR_g4["Illumination"], (double?)MKR_g4["Humidity"],
-                    (string)MKR_g4["Location"], (double?)MKR_g4["Temperature_indor"], (double?)MKR_g4["Temperature_outdor"]);
+                    (string)MKR_g4["Location"], (double?)MKR_g4["Temperature_indoor"], (double?)MKR_g4["Temperature_outdoor"]);
 
                 //Console.WriteLine("\n+++success.+++\n");
                 logger.log_time("+++success.+++\n");

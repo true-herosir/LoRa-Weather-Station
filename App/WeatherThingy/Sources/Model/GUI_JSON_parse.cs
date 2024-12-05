@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static WeatherThingy.GUI_interfaces;
+using static WeatherThingy.Sources.Model.GUI_interfaces;
 
-namespace WeatherThingy
+namespace WeatherThingy.Sources.Model
 {
     internal class GUI_JSON_parse : IGUI_JSON_parse
     {
-        
+
         internal class Datum
         {
             public string node_ID { get; set; }
@@ -21,7 +21,7 @@ namespace WeatherThingy
             public string gateway_Location { get; set; }
             public double? temperature_indor { get; set; }
             public double? temperature_outdor { get; set; }
-   
+
             public string? location { get; set; }
             public int? battery_status { get; set; }
         }

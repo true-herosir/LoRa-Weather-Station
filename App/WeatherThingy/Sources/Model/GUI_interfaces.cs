@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WeatherThingy
+namespace WeatherThingy.Sources.Model
 {
     public class bat_stat
     {
@@ -16,14 +16,14 @@ namespace WeatherThingy
     {
         public interface IGUI_JSON_parse
         {
-            List<string> node_ID (string json);
+            List<string> node_ID(string json);
             List<DateTime> time(string json);
-            List<double?> pressure (string json);
-            List<double?> illumination (string json);
-            List<double?> humidity (string json);
-            List<string> gateway_Location (string json);
-            List<double?> temperature_indor (string json);
-            List<double?> temperature_outdor (string json);
+            List<double?> pressure(string json);
+            List<double?> illumination(string json);
+            List<double?> humidity(string json);
+            List<string> gateway_Location(string json);
+            List<double?> temperature_indor(string json);
+            List<double?> temperature_outdor(string json);
             List<bat_stat> battery(string json);
         }
 

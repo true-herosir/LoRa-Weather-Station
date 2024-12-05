@@ -63,6 +63,12 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Sources\View\" />
+	  <Folder Include="Sources\Services\" />
+	  <Folder Include="Sources\ViewModel\" />
+	</ItemGroup>
+
 	<!--<ItemGroup>
 		<MauiXaml Include="Pages\**\*.xaml" />
 		<Compile Update="Pages\**\*.xaml.cs">

@@ -6,7 +6,7 @@ namespace mqtt_parser
 {
     internal class LHT_parse : INode_parse
     {
-        double maximum_lux = 1850.00;
+        double maximum_lux = 65535;
         public Dictionary<string, object?> data(string JSON)
         {
             Dictionary<string, object?> parsed = new Dictionary<string, object?>();
@@ -22,7 +22,8 @@ namespace mqtt_parser
 
             if (results_lht.ILL_lx != null)
             {
-                double light_percent = double.Round((double)results_lht.ILL_lx / (maximum_lux / 100), 2);
+                double light_percent = (double.Log10((double)results_lht.ILL_lx) / double.Log10(maximum_lux)) * 100;
+                light_percent = double.Round(light_percent, 2);
                 light_percent = light_percent > 100 ? 100 : light_percent;
                 parsed.Add("Illumination", light_percent);
             }

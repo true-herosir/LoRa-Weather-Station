@@ -3,11 +3,11 @@ USE LoRa;
 
 /*
 UPDATE lr2.Node
-SET Temperature_outdor = Temperature_indor
+SET Temperature_outdoor = Temperature_indoor
 WHERE Node_ID = 'lht-wierden';
 
 UPDATE lr2.Node
-SET  Temperature_indor = NULL
+SET  Temperature_indoor = NULL
 WHERE Node_ID = 'lht-wierden';
 */
 
@@ -22,23 +22,23 @@ AS
 		BEGIN
 		-- Update Temperature_outdoor using values from INSERTED
         UPDATE lr2.Node
-        SET Temperature_outdor = i.Temperature_indor
+        SET Temperature_outdoor = i.Temperature_indoor
         FROM lr2.Node n
         INNER JOIN INSERTED i ON n.Time = i.Time AND n.Node_ID = 'lht-gronau';
 
 		UPDATE lr2.Node
-        SET Temperature_outdor = i.Temperature_indor
+        SET Temperature_outdoor = i.Temperature_indoor
         FROM lr2.Node n
         INNER JOIN INSERTED i ON n.Time = i.Time AND n.Node_ID = 'lht-wierden';
         
         -- Set Temperature_indoor to NULL for the same rows
         UPDATE lr2.Node
-        SET Temperature_indor = NULL
+        SET Temperature_indoor = NULL
         FROM lr2.Node n
         INNER JOIN INSERTED i ON n.Time = i.Time AND n.Node_ID = 'lht-gronau';
 
 		UPDATE lr2.Node
-        SET Temperature_indor = NULL
+        SET Temperature_indoor = NULL
         FROM lr2.Node n
         INNER JOIN INSERTED i ON n.Time = i.Time AND n.Node_ID = 'lht-wierden';
 		END
@@ -62,8 +62,8 @@ Pressure float NULL,
 Illumination FLOAT NULL,
 Humidity FLOAT NULL,
 Gateway_Location varchar(50) NULL,
-Temperature_indor FLOAT NULL,
-Temperature_outdor FLOAT NULL,
+Temperature_indoor FLOAT NULL,
+Temperature_outdoor FLOAT NULL,
 PRIMARY KEY (Node_ID),
 FOREIGN KEY (Node_ID) REFERENCES lr2.Sensor_location(Node_ID)
 );
@@ -94,8 +94,8 @@ AS
 		 Time = INSERTED.Time,
 		 Humidity = INSERTED.Humidity,
 		 Gateway_Location = INSERTED.Gateway_Location,
-		 Temperature_indor = INSERTED.Temperature_indor,
-		 Temperature_outdor = INSERTED.Temperature_outdor
+		 Temperature_indoor = INSERTED.Temperature_indoor,
+		 Temperature_outdoor = INSERTED.Temperature_outdoor
         FROM lr2.most_recent
         INNER JOIN INSERTED  ON lr2.most_recent.Node_ID = INSERTED.Node_ID; 
 		
@@ -104,23 +104,23 @@ AS
 		BEGIN
 		-- Update Temperature_outdoor using values from INSERTED
         UPDATE lr2.most_recent
-        SET Temperature_outdor = i.Temperature_indor
+        SET Temperature_outdoor = i.Temperature_indoor
         FROM lr2.most_recent n
         INNER JOIN INSERTED i ON n.Time = i.Time AND n.Node_ID = 'lht-gronau';
 
 		UPDATE lr2.most_recent
-        SET Temperature_outdor = i.Temperature_indor
+        SET Temperature_outdoor = i.Temperature_indoor
         FROM lr2.most_recent n
         INNER JOIN INSERTED i ON n.Time = i.Time AND n.Node_ID = 'lht-wierden';
         
         -- Set Temperature_indoor to NULL for the same rows
         UPDATE lr2.most_recent
-        SET Temperature_indor = NULL
+        SET Temperature_indoor = NULL
         FROM lr2.most_recent n
         INNER JOIN INSERTED i ON n.Time = i.Time AND n.Node_ID = 'lht-gronau';
 
 		UPDATE lr2.most_recent
-        SET Temperature_indor = NULL
+        SET Temperature_indoor = NULL
         FROM lr2.most_recent n
         INNER JOIN INSERTED i ON n.Time = i.Time AND n.Node_ID = 'lht-wierden';
 		END
@@ -160,12 +160,12 @@ INSERT INTO lr2.hours_avg (Node_ID, Location, the_day, the_hour, AVG_Pressure, A
                 ROUND(AVG(N.Pressure),2) AS AVG_Pressure,
                 ROUND(AVG(N.Illumination),2) AS AVG_Illumination,
                 ROUND(AVG(N.Humidity),2) AS AVG_Humidity,
-                ROUND(AVG(N.Temperature_indor),2) AS AVG_Temperature_indoor,
-                ROUND(AVG(N.Temperature_outdor),2) AS AVG_Temperature_outdoor
+                ROUND(AVG(N.Temperature_indoor),2) AS AVG_Temperature_indoor,
+                ROUND(AVG(N.Temperature_outdoor),2) AS AVG_Temperature_outdoor
 FROM lr2.Node AS N
 INNER JOIN lr2.Sensor_location AS s
 ON N.Node_id = s.Node_ID
-WHERE N.Time < '2024-12-04 22:00:00.000'
+WHERE N.Time < '2024-12-05 12:00:00.000' AND N.Time > '2024-12-05 11:00:00.000'
 GROUP BY
 	N.Node_id
 	, s.Location
@@ -210,8 +210,8 @@ BEGIN
                 ROUND(AVG(N.Pressure),2) AS AVG_Pressure,
                 ROUND(AVG(N.Illumination),2) AS AVG_Illumination,
                 ROUND(AVG(N.Humidity),2) AS AVG_Humidity,
-                ROUND(AVG(N.Temperature_indor),2) AS AVG_Temperature_indoor,
-                ROUND(AVG(N.Temperature_outdor),2) AS AVG_Temperature_outdoor
+                ROUND(AVG(N.Temperature_indoor),2) AS AVG_Temperature_indoor,
+                ROUND(AVG(N.Temperature_outdoor),2) AS AVG_Temperature_outdoor
             FROM lr2.Node AS N
             INNER JOIN lr2.Sensor_location AS S
                 ON N.Node_id = S.Node_ID
@@ -262,10 +262,10 @@ INSERT INTO lr2.max_min (Node_ID, Location, the_day, max_Pressure, min_Pressure,
 	, MIN(N.Illumination) AS 'min_Illumination'
 	, MAX(N.Humidity) AS 'max_Humidity'
 	, MIN(N.Humidity) AS 'min_Humidity'
-	, MAX(N.Temperature_indor) AS 'max_Temperature_indoor'
-	, MIN(N.Temperature_indor) AS 'min_Temperature_indoor'
-	, MAX(N.Temperature_outdor) AS 'max_Temperature_outdoor'
-	, MIN(N.Temperature_outdor) AS 'min_Temperature_outdoor'
+	, MAX(N.Temperature_indoor) AS 'max_Temperature_indoor'
+	, MIN(N.Temperature_indoor) AS 'min_Temperature_indoor'
+	, MAX(N.Temperature_outdoor) AS 'max_Temperature_outdoor'
+	, MIN(N.Temperature_outdoor) AS 'min_Temperature_outdoor'
 FROM lr2.Node AS N
 INNER JOIN lr2.Sensor_location AS s
 ON N.Node_id = s.Node_ID
@@ -315,10 +315,10 @@ BEGIN
 			, MIN(N.Illumination) AS 'min_Illumination'
 			, MAX(N.Humidity) AS 'max_Humidity'
 			, MIN(N.Humidity) AS 'min_Humidity'
-			, MAX(N.Temperature_indor) AS 'max_Temperature_indoor'
-			, MIN(N.Temperature_indor) AS 'min_Temperature_indoor'
-			, MAX(N.Temperature_outdor) AS 'max_Temperature_outdoor'
-			, MIN(N.Temperature_outdor) AS 'min_Temperature_outdoor'
+			, MAX(N.Temperature_indoor) AS 'max_Temperature_indoor'
+			, MIN(N.Temperature_indoor) AS 'min_Temperature_indoor'
+			, MAX(N.Temperature_outdoor) AS 'max_Temperature_outdoor'
+			, MIN(N.Temperature_outdoor) AS 'min_Temperature_outdoor'
 		FROM lr2.Node AS N
 		INNER JOIN lr2.Sensor_location AS s
 		ON N.Node_id = s.Node_ID

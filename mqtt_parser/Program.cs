@@ -7,6 +7,9 @@ using System.Globalization;
 
 class Program
 {
+    
+
+
     private static ILogger logger = new logger();
     static string day = DateTime.Now.ToString("yyyy-MM-dd");
     static async Task Main(string[] args)

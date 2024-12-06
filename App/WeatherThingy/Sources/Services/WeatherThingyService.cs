@@ -14,14 +14,16 @@ namespace WeatherThingy.Sources.Services
     internal class WeatherThingyService : IWeatherThingyService
     {
         HttpClient _httpClient;
+        string _api_param;
 
         public WeatherThingyService()
         {
             _httpClient = new HttpClient();
+            _api_param = $"http://84.85.32.192:7086/api/Nodes/lht-gronau?page=1&pageSize=1000";
         }
         public async Task<Root> GetNodeData()
         {
-            string urlData = $"https://84.85.32.192:7086/api/Nodes/lht-gronau?page=1&pageSize=1000";
+            string urlData = _api_param;
             var responseData = await _httpClient.GetStringAsync(urlData);
             var rootData = JsonDocument.Parse(responseData).RootElement;
 

@@ -22,8 +22,8 @@ namespace WeatherThingy.Sources.Model
             List<double?> illumination(string json);
             List<double?> humidity(string json);
             List<string> gateway_Location(string json);
-            List<double?> temperature_indor(string json);
-            List<double?> temperature_outdor(string json);
+            List<double?> temperature_indoor(string json);
+            List<double?> temperature_outdoor(string json);
             List<bat_stat> battery(string json);
         }
 

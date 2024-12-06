@@ -90,24 +90,24 @@ namespace WeatherThingy.Sources.Model
             return result;
         }
 
-        public List<double?> temperature_indor(string json)
+        public List<double?> temperature_indoor(string json)
         {
             Root? Deserialized = JsonConvert.DeserializeObject<Root>(json);
             List<double?> result = new List<double?>();
             foreach (var item in Deserialized.data)
             {
-                result.Add(item.temperature_indor);
+                result.Add(item.temperature_indoor);
             }
             return result;
         }
 
-        public List<double?> temperature_outdor(string json)
+        public List<double?> temperature_outdoor(string json)
         {
             Root? Deserialized = JsonConvert.DeserializeObject<Root>(json);
             List<double?> result = new List<double?>();
             foreach (var item in Deserialized.data)
             {
-                result.Add(item.temperature_outdor);
+                result.Add(item.temperature_outdoor);
             }
             return result;
         }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static WeatherThingy.Sources.Model.GUI_interfaces;
+using WeatherThingy.Sources.Model;
 
 namespace WeatherThingy.Sources.Model
 {

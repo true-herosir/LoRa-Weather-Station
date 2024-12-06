@@ -12,8 +12,7 @@ namespace WeatherThingy.Sources.Model
         public string location { get; set; }
         public int? bat { get; set; }
     }
-    internal class GUI_interfaces
-    {
+
         public interface IGUI_JSON_parse
         {
             List<string> node_ID(string json);
@@ -27,5 +26,4 @@ namespace WeatherThingy.Sources.Model
             List<bat_stat> battery(string json);
         }
 
-    }
 }

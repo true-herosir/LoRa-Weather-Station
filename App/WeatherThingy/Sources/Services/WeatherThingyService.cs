@@ -21,7 +21,7 @@ namespace WeatherThingy.Sources.Services
         }
         public async Task<Root> GetNodeData()
         {
-            string urlData = $"https://84.85.32.192:7086/api/Nodes/lht-gronau?page=1&pageSize=1000";
+            string urlData = $"http://84.85.32.192:7086/api/Nodes?nodeId=lht-gronau&page=1&pageSize=1000";
             var responseData = await _httpClient.GetStringAsync(urlData);
             var rootData = JsonDocument.Parse(responseData).RootElement;
 
@@ -36,20 +36,20 @@ namespace WeatherThingy.Sources.Services
 
             if (rootData.TryGetProperty($"data", out var Data))
             {
-                foreach (var item in Data.EnumerateObject())
+                foreach (var item in Data.EnumerateArray())
                 {
                     var datum = new Datum
                     {
-                        time = Convert.ToDateTime(item.Value.GetProperty("time")),
-                        node_ID = item.Value.GetProperty("node_ID").ToString(),
-                        pressure = Convert.ToDouble(item.Value.GetProperty("pressure")),
-                        illumination = Convert.ToDouble(item.Value.GetProperty("illumination")),
-                        humidity = Convert.ToDouble(item.Value.GetProperty("humidity")),
-                        temperature_indoor = Convert.ToDouble(item.Value.GetProperty("temperature_indoor")),
-                        temperature_outdoor = Convert.ToDouble(item.Value.GetProperty("temperature_outdoor")),
-                        gateway_Location = item.Value.GetProperty("gateway_Location").ToString(),
-                        location = item.Value.GetProperty("location").ToString(),
-                        battery_status = Convert.ToInt16(item.Value.GetProperty("battery_status").ToString())
+                        time = Convert.ToDateTime(item.GetProperty("time")),
+                        node_ID = item.GetProperty("node_ID").ToString(),
+                        pressure = Convert.ToDouble(item.GetProperty("pressure")),
+                        illumination = Convert.ToDouble(item.GetProperty("illumination")),
+                        humidity = Convert.ToDouble(item.GetProperty("humidity")),
+                        temperature_indoor = Convert.ToDouble(item.GetProperty("temperature_indoor")),
+                        temperature_outdoor = Convert.ToDouble(item.GetProperty("temperature_outdoor")),
+                        gateway_Location = item.GetProperty("gateway_Location").ToString(),
+                        location = item.GetProperty("location").ToString(),
+                        battery_status = Convert.ToInt16(item.GetProperty("battery_status").ToString())
                     };
 
                     node.data.Add(datum);

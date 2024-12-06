@@ -102,11 +102,24 @@
                         WidthRequest="30"/>
                     
                 </HorizontalStackLayout>
-                
+
                 <Label 
                     Text="Enschede!!!!"
                     HorizontalOptions="Center"
-                    Padding="25"/>
+                    Padding="25">
+                <Label.GestureRecognizers>
+                        <PointerGestureRecognizer PointerEntered="ShowData"/>
+                </Label.GestureRecognizers>
+                </Label>
+                <StackLayout 
+                    BindableLayout.ItemsSource="{Binding WeatherData}"
+                    Padding="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding}" FontSize="16" Margin="5"/>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
 
             </VerticalStackLayout>
         </ScrollView>

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WeatherThingy.Sources.Model;
+using static WeatherThingy.Sources.Model.GUI_interfaces;
 
 namespace WeatherThingy.Sources.Model
 {
@@ -90,7 +90,7 @@ namespace WeatherThingy.Sources.Model
             return result;
         }
 
-        public List<double?> temperature_indoor(string json)
+        public List<double?> temperature_indor(string json)
         {
             Root? Deserialized = JsonConvert.DeserializeObject<Root>(json);
             List<double?> result = new List<double?>();
@@ -101,7 +101,7 @@ namespace WeatherThingy.Sources.Model
             return result;
         }
 
-        public List<double?> temperature_outdoor(string json)
+        public List<double?> temperature_outdor(string json)
         {
             Root? Deserialized = JsonConvert.DeserializeObject<Root>(json);
             List<double?> result = new List<double?>();

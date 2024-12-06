@@ -1,4 +1,4 @@
-﻿using Microsoft.Maui.Controls;
+﻿//using Microsoft.Maui.Controls;
 
 namespace WeatherThingy.Pages
 {
@@ -15,7 +15,6 @@ namespace WeatherThingy.Pages
             {
                 await AnimateMenu(200, !ExpandableContent.IsVisible);
                 ExpandableContent.IsVisible = true;
-                //await ExpandButton.RotateXTo(90); // magic trick XD
                 await ExpandButton.RotateTo(90);
             }
             else

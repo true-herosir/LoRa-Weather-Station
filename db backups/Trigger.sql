@@ -149,6 +149,7 @@ FOREIGN KEY (Node_ID) REFERENCES lr2.Sensor_location(Node_ID)
 --Drop Table lr2.hours_avg;
 -- DELETE  lr2.hours_avg;
 /*
+DELETE  lr2.hours_avg;
 BEGIN
 INSERT INTO lr2.hours_avg (Node_ID, Location, the_day, the_hour, AVG_Pressure, AVG_Illumination,
 							AVG_Humidity, AVG_Temperature_indoor, AVG_Temperature_outdoor)
@@ -165,7 +166,7 @@ INSERT INTO lr2.hours_avg (Node_ID, Location, the_day, the_hour, AVG_Pressure, A
 FROM lr2.Node AS N
 INNER JOIN lr2.Sensor_location AS s
 ON N.Node_id = s.Node_ID
-WHERE N.Time < '2024-12-05 12:00:00.000' AND N.Time > '2024-12-05 11:00:00.000'
+WHERE N.Time < '2024-12-06 10:00:00.000' AND N.Time > '2024-12-05 11:00:00.000'
 GROUP BY
 	N.Node_id
 	, s.Location
@@ -248,6 +249,7 @@ FOREIGN KEY (Node_ID) REFERENCES lr2.Sensor_location(Node_ID)
 
 
 /*
+--delete lr2.max_min
 BEGIN
 INSERT INTO lr2.max_min (Node_ID, Location, the_day, max_Pressure, min_Pressure, max_Illumination, min_Illumination,
 							max_Humidity, min_Humidity, max_Temperature_indoor, min_Temperature_indoor,
@@ -269,7 +271,7 @@ INSERT INTO lr2.max_min (Node_ID, Location, the_day, max_Pressure, min_Pressure,
 FROM lr2.Node AS N
 INNER JOIN lr2.Sensor_location AS s
 ON N.Node_id = s.Node_ID
-WHERE N.Time < '2024-12-03 00:00:00.000'
+WHERE N.Time < '2024-12-06 00:00:00.000'
 GROUP BY
 	N.Node_id
 	, s.Location

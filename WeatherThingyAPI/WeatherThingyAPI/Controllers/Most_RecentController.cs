@@ -6,23 +6,23 @@ namespace WeatherThingyAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SensorsController : ControllerBase
+public class Most_RecentController : ControllerBase
 {
-    private readonly SensorContext _context;
+    private readonly Most_RecentContext _context;
 
-    public SensorsController(SensorContext context)
+    public Most_RecentController(Most_RecentContext context)
     {
         _context = context;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Sensor_location>>> GetSensorLocations(
-        [FromQuery] string? nodeId,
-        [FromQuery] string? location,
-        //[FromQuery] double? minBatteryStatus,
-        //[FromQuery] double? maxBatteryStatus,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<Most_Recent>>> GetMostRecents(
+       [FromQuery] string? nodeId,
+       [FromQuery] string? gatewayLocation,
+       [FromQuery] DateTime? startTime,
+       [FromQuery] DateTime? endTime,
+       [FromQuery] int page = 1,
+       [FromQuery] int pageSize = 10)
     {
         if (page <= 0 || pageSize <= 0)
         {
@@ -30,23 +30,23 @@ public class SensorsController : ControllerBase
         }
 
         // Build the query dynamically
-        var query = _context.Sensor_locations.AsQueryable();
+        var query = _context.Most_Recents.AsQueryable();
 
         // Apply optional filters
         if (!string.IsNullOrWhiteSpace(nodeId))
-            query = query.Where(s => s.Node_ID == nodeId);
+            query = query.Where(n => n.Node_ID == nodeId);
 
-        if (!string.IsNullOrWhiteSpace(location))
-            query = query.Where(s => s.Location == location);
+        if (!string.IsNullOrWhiteSpace(gatewayLocation))
+            query = query.Where(n => n.Gateway_Location == gatewayLocation);
 
-        //if (minBatteryStatus.HasValue && !maxBatteryStatus.HasValue)
-        //    query = query.Where(s => s.Battery_status >= minBatteryStatus.Value);
+        if (startTime.HasValue && !endTime.HasValue)
+            query = query.Where(n => n.Time >= startTime.Value);
 
-        //if (maxBatteryStatus.HasValue && !minBatteryStatus.HasValue)
-        //    query = query.Where(s => s.Battery_status <= maxBatteryStatus.Value);
+        if (endTime.HasValue && !startTime.HasValue)
+            query = query.Where(n => n.Time <= endTime.Value);
 
-        //if (minBatteryStatus.HasValue && maxBatteryStatus.HasValue)
-        //    query = query.Where(s => s.Battery_status >= minBatteryStatus.Value && s.Battery_status <= maxBatteryStatus.Value);
+        if (startTime.HasValue && endTime.HasValue)
+            query = query.Where(n => n.Time >= startTime.Value && n.Time <= endTime.Value);
 
         // Calculate total items and pages
         var totalItems = await query.CountAsync();
@@ -74,7 +74,6 @@ public class SensorsController : ControllerBase
             data
         });
     }
-
 
 }
 

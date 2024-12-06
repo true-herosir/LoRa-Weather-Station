@@ -2,8 +2,8 @@
 
 namespace WeatherThingyAPI.Models
 {
-    [Table("Node", Schema = "lr2")]
-    public class Node
+    [Table("most_recent", Schema = "lr2")]
+    public class Most_Recent
     {
         public string Node_ID { get; set; }
         public DateTime Time { get; set; }

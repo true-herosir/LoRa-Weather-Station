@@ -41,6 +41,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using WeatherThingyAPI.Models;
+using WeatherThingyAPI.Controllers;
 
 namespace WeatherThingyAPI
 {
@@ -82,6 +83,15 @@ namespace WeatherThingyAPI
                 options.UseSqlServer(configuration.GetConnectionString("testing")));
 
             services.AddDbContext<SensorContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("testing")));
+
+            services.AddDbContext<Max_MinContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("testing")));
+
+            services.AddDbContext<Most_RecentContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("testing")));
+
+            services.AddDbContext<Hours_AVGContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("testing")));
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

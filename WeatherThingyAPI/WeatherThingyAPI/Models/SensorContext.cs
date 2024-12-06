@@ -10,7 +10,7 @@ namespace WeatherThingyAPI.Models
         }
 
         // DbSet representing the Gateway_location table
-        public DbSet<Sensor_location> Gateway_location { get; set; } = null!;
+        public DbSet<Sensor_location> Sensor_locations { get; set; } = null!;
 
         // Configure model using Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)

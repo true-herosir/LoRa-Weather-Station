@@ -22,7 +22,8 @@ namespace mqtt_parser
 
             if (results_lht.ILL_lx != null)
             {
-                double light_percent = (double.Log10((double)results_lht.ILL_lx) / double.Log10(maximum_lux)) * 100;
+
+                double light_percent = ((double)results_lht.ILL_lx) <= 0 ? 0: (double.Log10((double)results_lht.ILL_lx) / double.Log10(maximum_lux)) * 100;
                 light_percent = double.Round(light_percent, 2);
                 light_percent = light_percent > 100 ? 100 : light_percent;
                 parsed.Add("Illumination", light_percent);

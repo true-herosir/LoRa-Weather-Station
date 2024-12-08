@@ -19,14 +19,15 @@ public class Max_MinController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Max_Min>>> GetMaxMins(
         [FromQuery] string? id,
+        [FromQuery] string? location,
         [FromQuery] DateOnly? start_date,
         [FromQuery] DateOnly? end_date,
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] int page_size = 10)
     {
-        if (page <= 0 || pageSize <= 0)
+        if (page <= 0 || page_size <= 0)
         {
-            return BadRequest("Page and pageSize must be positive integers.");
+            return BadRequest("Page and page_size must be positive integers.");
         }
 
         // Start building the query dynamically
@@ -50,28 +51,28 @@ public class Max_MinController : ControllerBase
 
 
         // Calculate the total number of items and pages
-        var totalItems = await query.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        var total_items = await query.CountAsync();
+        var total_pages = (int)Math.Ceiling(total_items / (double)page_size);
 
         // Ensure the requested page is within range
-        if (page > totalPages && totalItems > 0)
+        if (page > total_pages && total_items > 0)
         {
-            return NotFound($"Page {page} does not exist. Total pages: {totalPages}.");
+            return NotFound($"Page {page} does not exist. Total pages: {total_pages}.");
         }
 
         // Fetch the paginated data
         var nodes = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((page - 1) * page_size)
+            .Take(page_size)
             .ToListAsync();
 
         // Return data along with pagination metadata
         return Ok(new
         {
-            totalItems,
-            totalPages,
-            currentPage = page,
-            pageSize,
+            total_items,
+            total_pages,
+            current_page = page,
+            page_size,
             data = nodes
         });
     }

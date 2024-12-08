@@ -19,6 +19,7 @@ namespace WeatherThingyAPI.Models
             modelBuilder.Entity<Sensor_location>()
                 .ToTable("Sensor_location", schema: "lr2")  // Table in "lr2" schema
                 .HasKey(g => g.Node_ID);  // Set primary key
+
         }
     }
 }

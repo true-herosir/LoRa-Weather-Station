@@ -17,24 +17,24 @@ public class SensorsController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Sensor_location>>> GetSensorLocations(
-        [FromQuery] string? nodeId,
+        [FromQuery] string? id,
         [FromQuery] string? location,
         //[FromQuery] double? minBatteryStatus,
         //[FromQuery] double? maxBatteryStatus,
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] int page_size = 10)
     {
-        if (page <= 0 || pageSize <= 0)
+        if (page <= 0 || page_size <= 0)
         {
-            return BadRequest("Page and pageSize must be positive integers.");
+            return BadRequest("Page and page_size must be positive integers.");
         }
 
         // Build the query dynamically
         var query = _context.Sensor_locations.AsQueryable();
 
         // Apply optional filters
-        if (!string.IsNullOrWhiteSpace(nodeId))
-            query = query.Where(s => s.Node_ID == nodeId);
+        if (!string.IsNullOrWhiteSpace(id))
+            query = query.Where(s => s.Node_ID == id);
 
         if (!string.IsNullOrWhiteSpace(location))
             query = query.Where(s => s.Location == location);
@@ -49,28 +49,28 @@ public class SensorsController : ControllerBase
         //    query = query.Where(s => s.Battery_status >= minBatteryStatus.Value && s.Battery_status <= maxBatteryStatus.Value);
 
         // Calculate total items and pages
-        var totalItems = await query.CountAsync();
-        if (totalItems == 0)
+        var total_items = await query.CountAsync();
+        if (total_items == 0)
             return NotFound("No records found matching the given criteria.");
 
-        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        var total_pages = (int)Math.Ceiling(total_items / (double)page_size);
 
-        if (page > totalPages)
-            return NotFound($"Page {page} does not exist. Total pages: {totalPages}.");
+        if (page > total_pages)
+            return NotFound($"Page {page} does not exist. Total pages: {total_pages}.");
 
         // Fetch paginated data
         var data = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((page - 1) * page_size)
+            .Take(page_size)
             .ToListAsync();
 
         // Return data with pagination metadata
         return Ok(new
         {
-            totalItems,
-            totalPages,
-            currentPage = page,
-            pageSize,
+            total_items,
+            total_pages,
+            current_page = page,
+            page_size,
             data
         });
     }

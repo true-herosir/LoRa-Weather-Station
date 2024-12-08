@@ -17,60 +17,60 @@ public class Most_RecentController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Most_Recent>>> GetMostRecents(
-       [FromQuery] string? nodeId,
-       [FromQuery] string? gatewayLocation,
-       [FromQuery] DateTime? startTime,
-       [FromQuery] DateTime? endTime,
+       [FromQuery] string? id,
+       [FromQuery] string? location,
+       [FromQuery] DateTime? start_time,
+       [FromQuery] DateTime? end_time,
        [FromQuery] int page = 1,
-       [FromQuery] int pageSize = 10)
+       [FromQuery] int page_size = 10)
     {
-        if (page <= 0 || pageSize <= 0)
+        if (page <= 0 || page_size <= 0)
         {
-            return BadRequest("Page and pageSize must be positive integers.");
+            return BadRequest("Page and page_size must be positive integers.");
         }
 
         // Build the query dynamically
         var query = _context.Most_Recents.AsQueryable();
 
         // Apply optional filters
-        if (!string.IsNullOrWhiteSpace(nodeId))
-            query = query.Where(n => n.Node_ID == nodeId);
+        if (!string.IsNullOrWhiteSpace(id))
+            query = query.Where(n => n.Node_ID == id);
 
-        if (!string.IsNullOrWhiteSpace(gatewayLocation))
-            query = query.Where(n => n.Gateway_Location == gatewayLocation);
+        if (!string.IsNullOrWhiteSpace(location))
+            query = query.Where(n => n.Location == location);
 
-        if (startTime.HasValue && !endTime.HasValue)
-            query = query.Where(n => n.Time >= startTime.Value);
+        if (start_time.HasValue && !end_time.HasValue)
+            query = query.Where(n => n.Time >= start_time.Value);
 
-        if (endTime.HasValue && !startTime.HasValue)
-            query = query.Where(n => n.Time <= endTime.Value);
+        if (end_time.HasValue && !start_time.HasValue)
+            query = query.Where(n => n.Time <= end_time.Value);
 
-        if (startTime.HasValue && endTime.HasValue)
-            query = query.Where(n => n.Time >= startTime.Value && n.Time <= endTime.Value);
+        if (start_time.HasValue && end_time.HasValue)
+            query = query.Where(n => n.Time >= start_time.Value && n.Time <= end_time.Value);
 
         // Calculate total items and pages
-        var totalItems = await query.CountAsync();
-        if (totalItems == 0)
+        var total_items = await query.CountAsync();
+        if (total_items == 0)
             return NotFound("No records found matching the given criteria.");
 
-        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        var total_pages = (int)Math.Ceiling(total_items / (double)page_size);
 
-        if (page > totalPages)
-            return NotFound($"Page {page} does not exist. Total pages: {totalPages}.");
+        if (page > total_pages)
+            return NotFound($"Page {page} does not exist. Total pages: {total_pages}.");
 
         // Fetch paginated data
         var data = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((page - 1) * page_size)
+            .Take(page_size)
             .ToListAsync();
 
         // Return data with pagination metadata
         return Ok(new
         {
-            totalItems,
-            totalPages,
-            currentPage = page,
-            pageSize,
+            total_items,
+            total_pages,
+            current_page = page,
+            page_size,
             data
         });
     }

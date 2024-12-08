@@ -20,16 +20,16 @@ public class Hours_AVGController : ControllerBase
     public async Task<ActionResult<IEnumerable<Hours_AVG>>> GetHoursAVG(
         [FromQuery] string? id,
         [FromQuery] string? location,
-        [FromQuery] DateOnly? startDate,
-        [FromQuery] DateOnly? endDate,
-        [FromQuery] byte? startHour,
-        [FromQuery] byte? endHour,
+        [FromQuery] DateOnly? start_date,
+        [FromQuery] DateOnly? end_date,
+        [FromQuery] byte? start_hour,
+        [FromQuery] byte? end_hour,
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] int page_size = 10)
     {
-        if (page <= 0 || pageSize <= 0)
+        if (page <= 0 || page_size <= 0)
         {
-            return BadRequest("Page and pageSize must be positive integers.");
+            return BadRequest("Page and page_size must be positive integers.");
         }
 
         // Start building the query dynamically
@@ -47,49 +47,49 @@ public class Hours_AVGController : ControllerBase
         }
 
         // Filter for a specific day
-        if (startDate.HasValue && !endDate.HasValue)
+        if (start_date.HasValue && !end_date.HasValue)
         {
-            query = query.Where(h => h.the_day == startDate.Value);
+            query = query.Where(h => h.the_day == start_date.Value);
         }
 
         // Filter for a date range
-        if (startDate.HasValue && endDate.HasValue)
+        if (start_date.HasValue && end_date.HasValue)
         {
-            query = query.Where(h => h.the_day >= startDate.Value && h.the_day <= endDate.Value);
+            query = query.Where(h => h.the_day >= start_date.Value && h.the_day <= end_date.Value);
         }
 
-        if (startHour.HasValue && !endDate.HasValue)
+        if (start_hour.HasValue && !end_hour.HasValue)
         {
-            query = query.Where(h => h.the_hour == startHour.Value);
+            query = query.Where(h => h.the_hour == start_hour.Value);
         }
 
-        if (startHour.HasValue &&  endHour.HasValue)
+        if (start_hour.HasValue && end_hour.HasValue)
         {
-            query = query.Where(h => h.the_hour >= startHour.Value && h.the_hour <= endHour.Value);
+            query = query.Where(h => h.the_hour >= start_hour.Value && h.the_hour <= end_hour.Value);
         }
 
         // Calculate total items and pages
-        var totalItems = await query.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        var total_items = await query.CountAsync();
+        var total_pages = (int)Math.Ceiling(total_items / (double)page_size);
 
-        if (page > totalPages && totalItems > 0)
+        if (page > total_pages && total_items > 0)
         {
-            return NotFound($"Page {page} does not exist. Total pages: {totalPages}.");
+            return NotFound($"Page {page} does not exist. Total pages: {total_pages}.");
         }
 
         // Fetch paginated data
         var data = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((page - 1) * page_size)
+            .Take(page_size)
             .ToListAsync();
 
         // Return data with pagination metadata
         return Ok(new
         {
-            totalItems,
-            totalPages,
-            currentPage = page,
-            pageSize,
+            total_items,
+            total_pages,
+            current_page = page,
+            page_size,
             data
         });
     }

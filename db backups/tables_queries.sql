@@ -3,7 +3,7 @@ USE LoRa
 
 SELECT *
   FROM [LoRa].[lr2].[Node]
-  WHERE Node_ID = 'lht-saxion' 
+  --WHERE Node_ID = 'lht-saxion' 
   ORDER BY Time DESC
 
 

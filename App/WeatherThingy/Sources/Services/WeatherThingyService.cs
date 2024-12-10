@@ -42,12 +42,13 @@ namespace WeatherThingy.Sources.Services
 
             var node = new Root
             {
-                totalItems = Convert.ToInt16(rootData.GetProperty("totalItems").ToString()),
-                totalPages = Convert.ToInt16(rootData.GetProperty("totalPages").ToString()),
-                currentPage = Convert.ToInt16(rootData.GetProperty("currentPage").ToString()),
-                pageSize = Convert.ToInt16(rootData.GetProperty("pageSize").ToString()),
+                total_items = Convert.ToInt16(rootData.GetProperty("totalItems").ToString()),
+                total_pages = Convert.ToInt16(rootData.GetProperty("totalPages").ToString()),
+                current_page = Convert.ToInt16(rootData.GetProperty("currentPage").ToString()),
+                page_size = Convert.ToInt16(rootData.GetProperty("pageSize").ToString()),
                 data = new List<Datum>()
             };
+            
 
             if (rootData.TryGetProperty($"data", out var Data))
             {

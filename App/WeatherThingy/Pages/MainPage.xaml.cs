@@ -1,5 +1,7 @@
 ﻿//using Microsoft.Maui.Controls;
 
+using WeatherThingy.Sources.Views;
+
 namespace WeatherThingy.Pages
 {
     public partial class MainPage : ContentPage
@@ -57,7 +59,7 @@ namespace WeatherThingy.Pages
 
         private async void OnGronauButtonClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new GronauPage());
+            await Navigation.PushAsync(new DetailPage());
         }
 
         private async void OnWierdenButtonClicked(object sender, EventArgs e)

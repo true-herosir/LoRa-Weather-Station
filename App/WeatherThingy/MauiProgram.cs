@@ -2,6 +2,9 @@
 //using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using SkiaSharp.Views.Maui.Controls.Hosting;
+using WeatherThingy.Pages;
+using WeatherThingy.Sources.ViewModels;
+using WeatherThingy.Sources.Views;
 
 namespace WeatherThingy
 {
@@ -20,7 +23,10 @@ namespace WeatherThingy
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddTransient<DetailPage>();
+            builder.Services.AddSingleton<DetailViewModel>();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

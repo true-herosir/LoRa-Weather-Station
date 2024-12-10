@@ -65,9 +65,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Sources\View\" />
 	  <Folder Include="Sources\Services\" />
-	  <Folder Include="Sources\ViewModel\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Sources\Views\DetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<!--<ItemGroup>

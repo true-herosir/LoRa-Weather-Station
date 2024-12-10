@@ -139,7 +139,7 @@ namespace WeatherThingy.Sources.Model
             List<DateTime> result = new List<DateTime>();
             foreach (var item in Deserialized.data)
             {
-                result.Add(item.time);
+                result.Add(item.time.Value);
             }
             return result;
         }

@@ -83,7 +83,7 @@ namespace WeatherThingy.Pages
             WeatherData.Clear();
             foreach (var item in data.data)
             {
-                WeatherData.Add($"Humidity in {item.node_ID} at {item.time.TimeOfDay.ToString()}: " + item.humidity.Value.ToString()); //showing jsut the values of humidity
+                WeatherData.Add($"Humidity in {item.node_ID} at {item.time.Value.TimeOfDay.ToString()}: " + item.humidity.Value.ToString()); //showing jsut the values of humidity
             }
         }
 

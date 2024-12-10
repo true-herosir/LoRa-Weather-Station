@@ -28,10 +28,10 @@ namespace WeatherThingy.Sources.Model
 
         internal class Root
         {
-            public int totalItems { get; set; }
-            public int totalPages { get; set; }
-            public int currentPage { get; set; }
-            public int pageSize { get; set; }
+            public int total_items { get; set; }
+            public int total_pages { get; set; }
+            public int current_page { get; set; }
+            public int page_size { get; set; }
             public List<Datum> data { get; set; }
         }
 

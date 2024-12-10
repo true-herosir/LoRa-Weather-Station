@@ -11,13 +11,33 @@ namespace WeatherThingy.Pages
 {
     public partial class EnschedePage : ContentPage
     {
-        public ObservableCollection<string> WeatherData { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<double> WeatherData { get; set; } = new ObservableCollection<double>();
         public EnschedePage()
         {
             InitializeComponent();
             BindingContext = this;
+            InitialiseChartAsync();
         }
 
+        private async void InitialiseChartAsync()
+        {
+            var temperatureSeriesData = new ObservableCollection<ObservablePoint>();
+            var data = await new WeatherThingyService().GetNodeData();
+            foreach (var item in from item in data.data
+                                 where item.humidity != null
+                                 select item)
+            {
+                temperatureSeriesData.Add(new ObservablePoint { X = item.time.ToOADate(), Y = item.humidity.Value });
+            }
+
+            Chart.Series = new ISeries[]
+            {
+                    new LineSeries<ObservablePoint>
+                    {
+                        Values = temperatureSeriesData
+                    }
+            };
+        }
         private async void OnExpandButtonClicked(object sender, EventArgs e)
         {
             if(!ExpandableContent.IsVisible) 
@@ -63,32 +83,10 @@ namespace WeatherThingy.Pages
             WeatherData.Clear();
             foreach (var item in data.data)
             {
-                WeatherData.Add($"{item.temperature_outdoor.ToString}");
+                WeatherData.Add(item.humidity.Value); //showing jsut the values of humidity
             }
-
         }
 
     }
-
-    //namespace ViewModelsSamples.Lines.XY
-    //{
-    //    public class ViewModel
-    //    {
-    //        public ISeries[] Series { get; set; }
-
-    //        public ViewModel() {
-    //            var data = new WeatherThingyService().GetNodeData();
-    //            //var data = thingy.GetNodeData();
-    //            var series = new LineSeries<ObservablePoint>();
-    //            foreach(var item in data.Result.data) 
-    //            {
-    //                Series.Append(new ObservablePoint(item.temperature_outdoor, Convert.ToDouble(item.time)));
-    //                //series += new ObservablePoint(item.temperature_outdoor, Convert.ToDouble(item.time));
-    //            }
-
-    //            Series = series;
-    //        }
-
-    //    }
 
     }

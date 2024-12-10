@@ -13,7 +13,7 @@ namespace WeatherThingy.Sources.Model
 
         internal class Datum
         {
-            public string node_ID { get; set; }
+            public string node_id { get; set; }
             public DateTime? time { get; set; }
             public string? gateway_Location { get; set; }
             public string? location { get; set; }
@@ -27,11 +27,11 @@ namespace WeatherThingy.Sources.Model
             public DateTime? the_day { get; set; }
             public DateTime? the_hour { get; set; }
 
-            public double? avG_pressure { get; set; }
-            public double? avG_illumination { get; set; }
-            public double? avG_humidity { get; set; }
-            public double? avG_temperature_indoor { get; set; }
-            public double? avG_temperature_outdoor { get; set; }
+            public double? avg_pressure { get; set; }
+            public double? avg_illumination { get; set; }
+            public double? avg_humidity { get; set; }
+            public double? avg_temperature_indoor { get; set; }
+            public double? avg_temperature_outdoor { get; set; }
 
             public double? min_pressure { get; set; }
             public double? min_illumination { get; set; }
@@ -95,7 +95,7 @@ namespace WeatherThingy.Sources.Model
             List<string> result = new List<string>();
             foreach (var item in Deserialized.data)
             {
-                result.Add(item.node_ID);
+                result.Add(item.node_id);
             }
             return result;
         }
@@ -151,7 +151,7 @@ namespace WeatherThingy.Sources.Model
             foreach (var item in Deserialized.data)
             {
                 bat_stat temp = new bat_stat();
-                temp.node_id = item.node_ID;
+                temp.node_id = item.node_id;
                 temp.location = item.location;
                 temp.bat = item.battery_status;
                 result.Add(temp);

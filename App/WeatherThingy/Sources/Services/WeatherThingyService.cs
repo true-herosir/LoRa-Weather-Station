@@ -29,8 +29,8 @@ namespace WeatherThingy.Sources.Services
             //_api_base = $"http://84.85.32.192:7086/api/Nodes/lht-gronau?page=1&pageSize=1000";
             _api_IP = $"http://84.85.32.192";
             _api_PORT = ":7086/api/";
-            _api_table.Add("Most_Recent");
-            _api_table.Add("Nodes/Node_location");
+            _api_table.Add("most_recent");
+            _api_table.Add("Nodes/node_location");
             _api_table.Add("Hours_AVG");
             _api_table.Add("Max_Min");
             _api_table.Add("Node_location");
@@ -62,7 +62,7 @@ namespace WeatherThingy.Sources.Services
         ? (DateTime?)parsedTime
         : null,
 
-                        node_ID = item.TryGetProperty("node_ID", out var nodeElement)
+                        node_id = item.TryGetProperty("node_ID", out var nodeElement)
         ? nodeElement.ToString()
         : null,
 
@@ -104,27 +104,27 @@ namespace WeatherThingy.Sources.Services
         ? (short?)parsedBatteryStatus
         : null,
 
-                        avG_pressure = item.TryGetProperty("avG_pressure", out var avgPressureElement) &&
+                        avg_pressure = item.TryGetProperty("avG_pressure", out var avgPressureElement) &&
                    double.TryParse(avgPressureElement.ToString(), out var parsedAvgPressure)
         ? (double?)parsedAvgPressure
         : null,
 
-                        avG_illumination = item.TryGetProperty("avG_illumination", out var avgIlluminationElement) &&
+                        avg_illumination = item.TryGetProperty("avG_illumination", out var avgIlluminationElement) &&
                        double.TryParse(avgIlluminationElement.ToString(), out var parsedAvgIllumination)
         ? (double?)parsedAvgIllumination
         : null,
 
-                        avG_humidity = item.TryGetProperty("avG_humidity", out var avgHumidityElement) &&
+                        avg_humidity = item.TryGetProperty("avG_humidity", out var avgHumidityElement) &&
                    double.TryParse(avgHumidityElement.ToString(), out var parsedAvgHumidity)
         ? (double?)parsedAvgHumidity
         : null,
 
-                        avG_temperature_indoor = item.TryGetProperty("avG_temperature_indoor", out var avgTempIndoorElement) &&
+                        avg_temperature_indoor = item.TryGetProperty("avG_temperature_indoor", out var avgTempIndoorElement) &&
                              double.TryParse(avgTempIndoorElement.ToString(), out var parsedAvgTempIndoor)
         ? (double?)parsedAvgTempIndoor
         : null,
 
-                        avG_temperature_outdoor = item.TryGetProperty("AVG_temperature_outdoor", out var avgTempOutdoorElement) &&
+                        avg_temperature_outdoor = item.TryGetProperty("AVG_temperature_outdoor", out var avgTempOutdoorElement) &&
                               double.TryParse(avgTempOutdoorElement.ToString(), out var parsedAvgTempOutdoor)
         ? (double?)parsedAvgTempOutdoor
         : null,

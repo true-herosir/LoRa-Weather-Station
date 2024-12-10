@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
+using System.Xml.Linq;
 using WeatherThingyAPI.Models;
 
 namespace WeatherThingyAPI.Controllers;
@@ -9,21 +11,21 @@ namespace WeatherThingyAPI.Controllers;
 public class NodesController : ControllerBase
 {
     private readonly NodeContext _context; 
-    private readonly SensorContext _scontext;
+    private readonly Node_locationContext _scontext;
 
     //public NodesController(NodeContext context)
     //{
     //    _context = context;
     //}
 
-    public NodesController(NodeContext context, SensorContext sensorContext)
+    public NodesController(NodeContext context, Node_locationContext sensorContext)
     {
         _context = context;
         _scontext = sensorContext;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Node>>> GetNodes(
+    public async Task<ActionResult<object>> GetNodes(
     [FromQuery] string? id,
     [FromQuery] string? gateway_location,
     [FromQuery] DateTime? start_time,
@@ -31,44 +33,81 @@ public class NodesController : ControllerBase
     [FromQuery] int page = 1,
     [FromQuery] int page_size = 10)
     {
+        // Validate page and page_size
         if (page <= 0 || page_size <= 0)
         {
             return BadRequest("Page and page_size must be positive integers.");
         }
 
-        // Build the query dynamically
-        var query = _context.Nodes.AsQueryable();
+        // Start building the query
+        IQueryable<Node> query = _context.Nodes;
 
-        // Apply optional filters
+        // Apply filters if present
         if (!string.IsNullOrWhiteSpace(id))
+        {
             query = query.Where(n => n.Node_ID == id);
+        }
 
         if (!string.IsNullOrWhiteSpace(gateway_location))
+        {
             query = query.Where(n => n.Gateway_Location == gateway_location);
+        }
 
         if (start_time.HasValue && !end_time.HasValue)
-            query = query.Where(n => n.Time >= start_time.Value && n.Time <= start_time.Value.AddHours(24));
+        {
+            // Include records for the entire day of start_time
+            DateTime startOfDay = start_time.Value.Date;
+            DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+            query = query.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+        }
+
+        if (end_time.HasValue && !start_time.HasValue)
+        {
+            // Include records for the entire day of end_time
+            DateTime startOfDay = end_time.Value.Date;
+            DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+            query = query.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+        }
 
         if (start_time.HasValue && end_time.HasValue)
-            query = query.Where(n => n.Time >= start_time.Value && n.Time <= end_time.Value.AddHours(24));
+        {
+            // Use the exact provided start_time and end_time
+            query = query.Where(n => n.Time >= start_time.Value && n.Time <= end_time.Value);
+        }
 
-        // Calculate total items and pages
-        var total_items = await query.CountAsync();
+        // Get total items count
+        int total_items = await query.CountAsync();
         if (total_items == 0)
+        {
             return NotFound("No records found matching the given criteria.");
+        }
 
-        var total_pages = (int)Math.Ceiling(total_items / (double)page_size);
+        // Calculate total pages
+        int total_pages = (int)Math.Ceiling(total_items / (double)page_size);
 
         if (page > total_pages)
+        {
             return NotFound($"Page {page} does not exist. Total pages: {total_pages}.");
+        }
 
         // Fetch paginated data
         var data = await query
             .Skip((page - 1) * page_size)
             .Take(page_size)
+            .Select(n => new
+            {
+                node_id = n.Node_ID,
+                time = n.Time,
+                pressure = n.Pressure,
+                illumination = n.Illumination,
+                humidity = n.Humidity,
+                gateway_location = n.Gateway_Location,
+                temperature_indoor = n.Temperature_indoor,
+                temperature_outdoor = n.Temperature_outdoor
+            })
             .ToListAsync();
 
-        // Return data with pagination metadata
+        // Return paginated response with metadata
         return Ok(new
         {
             total_items,
@@ -79,13 +118,12 @@ public class NodesController : ControllerBase
         });
     }
 
-    [HttpGet("sensor_location")]
+
+    [HttpGet("node_location")]
     public async Task<ActionResult<IEnumerable<object>>> GetNodesWithSensorLocations(
         [FromQuery] string? id,
         [FromQuery] string? gateway_location,
-        [FromQuery] string? sensor_location,
-        [FromQuery] double? minBatteryStatus,
-        [FromQuery] double? maxBatteryStatus,
+        [FromQuery] string? location,
         [FromQuery] DateTime? start_time,
         [FromQuery] DateTime? end_time,
         [FromQuery] int page = 1,
@@ -106,21 +144,36 @@ public class NodesController : ControllerBase
             nodesQuery = nodesQuery.Where(n => n.Gateway_Location == gateway_location);
 
         if (start_time.HasValue && !end_time.HasValue)
-            nodesQuery = nodesQuery.Where(n => n.Time >= start_time.Value);
+        {
+            // Include records for the entire day of start_time
+            DateTime startOfDay = start_time.Value.Date;
+            DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+            nodesQuery = nodesQuery.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+        }
 
         if (end_time.HasValue && !start_time.HasValue)
-            nodesQuery = nodesQuery.Where(n => n.Time <= end_time.Value);
+        {
+            // Include records for the entire day of end_time
+            DateTime startOfDay = end_time.Value.Date;
+            DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+            nodesQuery = nodesQuery.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+        }
 
         if (start_time.HasValue && end_time.HasValue)
+        {
+            // Use the exact provided start_time and end_time
             nodesQuery = nodesQuery.Where(n => n.Time >= start_time.Value && n.Time <= end_time.Value);
+        }
+
+
 
         var nodes = await nodesQuery.ToListAsync();
 
         // Load sensor locations from SensorContext
-        var sensorsQuery = _scontext.Sensor_locations.AsQueryable();
+        var sensorsQuery = _scontext.Node_locations.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(sensor_location))
-            sensorsQuery = sensorsQuery.Where(s => s.Location == sensor_location);
+        if (!string.IsNullOrWhiteSpace(location))
+            sensorsQuery = sensorsQuery.Where(s => s.Location == location);
 
         var sensors = await sensorsQuery.ToListAsync();
 
@@ -130,15 +183,15 @@ public class NodesController : ControllerBase
                          on node.Node_ID equals sensor.Node_ID
                          select new
                          {
-                             Node_ID = node.Node_ID,
-                             Time = node.Time,
-                             Pressure = node.Pressure,
-                             Illumination = node.Illumination,
-                             Humidity = node.Humidity,
-                             Gateway_Location = node.Gateway_Location,
-                             Temperature_Indoor = node.Temperature_indoor,
-                             Temperature_Outdoor = node.Temperature_outdoor,
-                             Sensor_Location = sensor.Location
+                             node_id = node.Node_ID,
+                             time = node.Time,
+                             pressure = node.Pressure,
+                             illumination = node.Illumination,
+                             humidity = node.Humidity,
+                             gateway_location = node.Gateway_Location,
+                             temperature_indoor = node.Temperature_indoor,
+                             temperature_outdoor = node.Temperature_outdoor,
+                             location = sensor.Location
                          };
 
         var total_items = joinedData.Count();

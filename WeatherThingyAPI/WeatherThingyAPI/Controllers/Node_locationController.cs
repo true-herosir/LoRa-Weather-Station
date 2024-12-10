@@ -6,17 +6,17 @@ namespace WeatherThingyAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SensorsController : ControllerBase
+public class Node_locationController : ControllerBase
 {
-    private readonly SensorContext _context;
+    private readonly Node_locationContext _context;
 
-    public SensorsController(SensorContext context)
+    public Node_locationController(Node_locationContext context)
     {
         _context = context;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Sensor_location>>> GetSensorLocations(
+    public async Task<ActionResult<IEnumerable<Node_location>>> GetSensorLocations(
         [FromQuery] string? id,
         [FromQuery] string? location,
         //[FromQuery] double? minBatteryStatus,
@@ -30,7 +30,7 @@ public class SensorsController : ControllerBase
         }
 
         // Build the query dynamically
-        var query = _context.Sensor_locations.AsQueryable();
+        var query = _context.Node_locations.AsQueryable();
 
         // Apply optional filters
         if (!string.IsNullOrWhiteSpace(id))
@@ -62,6 +62,12 @@ public class SensorsController : ControllerBase
         var data = await query
             .Skip((page - 1) * page_size)
             .Take(page_size)
+            .Select(n => new
+            {
+                node_id = n.Node_ID,
+                location = n.Location,
+                battery_status = n.Battery_status
+            })
             .ToListAsync();
 
         // Return data with pagination metadata

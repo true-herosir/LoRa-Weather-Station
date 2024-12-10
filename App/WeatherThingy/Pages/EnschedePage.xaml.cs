@@ -11,33 +11,33 @@ namespace WeatherThingy.Pages
 {
     public partial class EnschedePage : ContentPage
     {
-        public ObservableCollection<double> WeatherData { get; set; } = new ObservableCollection<double>();
+        public ObservableCollection<string> WeatherData { get; set; } = new ObservableCollection<string>();
         public EnschedePage()
         {
             InitializeComponent();
             BindingContext = this;
-            InitialiseChartAsync();
+            //InitialiseChartAsync();
         }
 
-        private async void InitialiseChartAsync()
-        {
-            var temperatureSeriesData = new ObservableCollection<ObservablePoint>();
-            var data = await new WeatherThingyService().GetNodeData();
-            foreach (var item in from item in data.data
-                                 where item.humidity != null
-                                 select item)
-            {
-                temperatureSeriesData.Add(new ObservablePoint { X = item.time.ToOADate(), Y = item.humidity.Value });
-            }
+        //private async void InitialiseChartAsync()
+        //{
+        //    var temperatureSeriesData = new ObservableCollection<ObservablePoint>();
+        //    var data = await new WeatherThingyService().GetNodeData();
+        //    foreach (var item in from item in data.data
+        //                         where item.humidity != null
+        //                         select item)
+        //    {
+        //        temperatureSeriesData.Add(new ObservablePoint { X = item.time.ToOADate(), Y = item.humidity.Value });
+        //    }
 
-            Chart.Series = new ISeries[]
-            {
-                    new LineSeries<ObservablePoint>
-                    {
-                        Values = temperatureSeriesData
-                    }
-            };
-        }
+        //    Chart.Series = new ISeries[]
+        //    {
+        //            new LineSeries<ObservablePoint>
+        //            {
+        //                Values = temperatureSeriesData
+        //            }
+        //    };
+        //}
         private async void OnExpandButtonClicked(object sender, EventArgs e)
         {
             if(!ExpandableContent.IsVisible) 
@@ -83,7 +83,7 @@ namespace WeatherThingy.Pages
             WeatherData.Clear();
             foreach (var item in data.data)
             {
-                WeatherData.Add(item.humidity.Value); //showing jsut the values of humidity
+                WeatherData.Add($"Humidity in {item.node_ID} at {item.time.TimeOfDay.ToString()}: " + item.humidity.Value.ToString()); //showing jsut the values of humidity
             }
         }
 

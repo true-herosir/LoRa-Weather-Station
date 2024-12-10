@@ -24,5 +24,5 @@ SELECT *
   ORDER BY the_day DESC, Location;
 
    SELECT *
-  FROM [LoRa].[lr2].[Sensor_location]
+  FROM [LoRa].[lr2].[Node_location]
 

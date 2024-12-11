@@ -7,4 +7,5 @@ WeatherThingyAPI/WeatherThingyAPI/obj
 App/WeatherThingy/.vs
 App/WeatherThingy/bin
 App/WeatherThingy/obj
-.gitignore.Zone.Ide
+*.Zone.Identifier*
+.vs/

@@ -207,6 +207,7 @@ namespace WeatherThingy.Sources.Services
 
         public Task<Root> GetNodeData(string location, DateTime start, DateTime end, int page)
         {
+            
             if (location.Contains("lht") || location.Contains("mkr") || location.Contains("thingy"))
             {
                 location = "?id=" + location;
@@ -217,6 +218,7 @@ namespace WeatherThingy.Sources.Services
             int table = 0;
             string start_st;
             string end_st;
+            int page_size = location.Contains("lht")? 250: 900;
 
             if (daysDifference < 0) throw new InvalidDataException("End date cannot be before start date");
             else if (daysDifference <= 3)
@@ -224,6 +226,7 @@ namespace WeatherThingy.Sources.Services
                 table = 1;
                 start_st = start.ToString("yyyy-MM-dd'%20'HH'%3A'mm'%3A'00.000");
                 end_st = end.ToString("yyyy-MM-dd'%20'HH'%3A'mm'%3A'00.000");
+
             }
             else if (daysDifference > 3 && daysDifference < 15)
             {
@@ -238,7 +241,7 @@ namespace WeatherThingy.Sources.Services
                 end_st = end.ToString("yyyy-MM-dd");
             }
 
-            _api_param = $"{location}&start_time={start_st}&end_time={end_st}&page={page}&page_size=200";
+            _api_param = $"{location}&start_time={start_st}&end_time={end_st}&page={page}&page_size={page_size}";
             _api_complete = _api_IP + _api_PORT + _api_table[table] + _api_param;
             return callAPI();
         }

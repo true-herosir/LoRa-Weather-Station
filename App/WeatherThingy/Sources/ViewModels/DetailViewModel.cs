@@ -20,6 +20,7 @@ namespace WeatherThingy.Sources.ViewModels
     public class DetailViewModel
     {
         public List<plot> plots = new List<plot>();
+        public List<string> nodes = new List<string>();
         // ObservableCollection for chart data
         public ObservableCollection<DateTimePoint> HumiditySeriesData { get; set; } = new ObservableCollection<DateTimePoint>();
         //public ObservableCollection<DateTimePoint> HumiditySeriesData2 { get; set; } = new ObservableCollection<DateTimePoint>();
@@ -53,110 +54,84 @@ namespace WeatherThingy.Sources.ViewModels
         public DetailViewModel()
         {
              initialize_plots();
-
+             
 
 
         }
 
-      //  public ISeries[] Series => new ISeries[]
-      //{
-      //      new LineSeries<DateTimePoint>
-      //      {
-      //          Values = HumiditySeriesData,
-
-      //          Name = "test"
-      //      }
-      //};
-
-
-
-
-        // X-Axis configuration with DateTime label formatting
-        //public Axis[] XAxes { get; set; } = new Axis[]
+        //  public ISeries[] Series => new ISeries[]
         //{
-        //    new Axis
-        //    {
-        //        Labeler = value =>
-        //        {
-        //            var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
-        //            return dateTime.ToString("dd HH:mm");    // Display only day, hour, minute
-        //        },
-        //        UnitWidth = TimeSpan.FromMinutes(30).Ticks, // Adjust the spacing for your data
-        //    }
+        //      new LineSeries<DateTimePoint>
+        //      {
+        //          Values = HumiditySeriesData,
+
+        //          Name = "test"
+        //      }
         //};
 
-        // Async method to fetch and display data
+
+
+
+        //X-Axis configuration with DateTime label formatting
+        public Axis[] XAxes { get; set; } = new Axis[]
+        {
+            new Axis
+            {
+                Labeler = value =>
+                {
+                    if (value < DateTime.MinValue.Ticks || value > DateTime.MaxValue.Ticks)
+                        {
+                            return "0";
+                        }
+                    var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
+                    return dateTime.ToString("dd HH:mm");    // Display only day, hour, minute
+                },
+                UnitWidth = TimeSpan.FromMinutes(30).Ticks, // Adjust the spacing for your data
+            }
+        };
+
+
+
+
+
+
+
         public async Task ShowData()
         {
+            nodes.Add("lht-gronau"); nodes.Add("lht-wierden"); nodes.Add("mkr-saxion");
             try
             {
-
-                var start = DateTime.Now.AddDays(-1);
-                var end = DateTime.Now;
-                var data = await new WeatherThingyService().GetNodeData("lht-gronau", start, end, 1);
-                var data2 = await new WeatherThingyService().GetNodeData("lht-wierden", start, end, 1);
-
-                //HumiditySeriesData.Clear();
-
-                // Process data and update the collections
-                int index = 0;
-                foreach (var item1 in plots)
+                foreach (var node in nodes)
                 {
-                    if (item1.node_id == "lht-gronau") break;
-                    index++;
-                }
-                foreach (var item in data.data)
-                {
-                    
-                    
-
-                    if (item.time.HasValue) // Ensure time is not null
+                    var start = DateTime.Now.AddDays(-1);
+                    var end = DateTime.Now;
+                    var data = await new WeatherThingyService().GetNodeData(node, start, end, 1);
+                    int index = 0;
+                    foreach (var plot in plots)
                     {
+                        if (plot.node_id == node) break;
+                        index++;
+                    }
+                    foreach (var item in data.data)
+                    {
+                        if (item.time.HasValue) // Ensure time is not null
+                        {
 
-                        // Add data to chart
-                        plots[index].datapoints.Add(new DateTimePoint(item.time.Value, item.humidity.Value));
+                            // Add data to chart
+                            plots[index].datapoints.Add(new DateTimePoint(item.time.Value, item.humidity.Value));
+                        }
+
                     }
 
-                    
-                }
+                    Series.Add(
+                        new LineSeries<DateTimePoint>
+                        {
+                            Values = plots[index].datapoints,
 
-              
-                Series.Add(
-                    new LineSeries<DateTimePoint> { 
-                    Values = plots[index].datapoints,
-
-                    Name = plots[index].node_id
-                });
-
-
-
-
-
-                index = 0;
-                foreach (var item1 in plots)
-                {
-                    if (item1.node_id == "lht-wierden") break;
-                    index++;
-                }
-                foreach (var item in data2.data)
-                {                    
-
-                    if (item.time.HasValue) // Ensure time is not null
-                    {
-
-                        // Add data to chart
-                        plots[index].datapoints.Add(new DateTimePoint(item.time.Value, item.humidity.Value));
-                    }
+                            Name = plots[index].node_id
+                        });
 
                 }
-                Series.Add(new LineSeries<DateTimePoint>
-                {
-                    Values = plots[index].datapoints,
-
-                    Name = plots[index].node_id
-                });
-
-
     }
                 
             catch (Exception ex)

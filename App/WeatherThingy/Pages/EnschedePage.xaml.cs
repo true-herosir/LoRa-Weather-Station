@@ -78,12 +78,14 @@ namespace WeatherThingy.Pages
 
         private async void ShowData(object sender, EventArgs e)
         {
-            var data = await new WeatherThingyService().GetNodeData();
+            var start = DateTime.Now.AddDays(-1);
+            var end = DateTime.Now;
+            var data = await new WeatherThingyService().GetNodeData("Enschede", start, end, 1);
 
             WeatherData.Clear();
             foreach (var item in data.data)
             {
-                WeatherData.Add($"Humidity in {item.node_ID} at {item.time.Value.TimeOfDay.ToString()}: " + item.humidity.Value.ToString()); //showing jsut the values of humidity
+                WeatherData.Add($"Humidity in {item.node_id} at {item.time.Value.TimeOfDay.ToString()}: " + item.humidity.Value.ToString()); //showing just the values of humidity
             }
         }
 

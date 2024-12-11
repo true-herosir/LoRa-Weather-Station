@@ -40,13 +40,26 @@ public class Most_RecentController : ControllerBase
             query = query.Where(n => n.Location == location);
 
         if (start_time.HasValue && !end_time.HasValue)
-            query = query.Where(n => n.Time >= start_time.Value);
+        {
+            // Include records for the entire day of start_time
+            DateTime startOfDay = start_time.Value.Date;
+            DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+            query = query.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+        }
 
         if (end_time.HasValue && !start_time.HasValue)
-            query = query.Where(n => n.Time <= end_time.Value);
+        {
+            // Include records for the entire day of end_time
+            DateTime startOfDay = end_time.Value.Date;
+            DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+            query = query.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+        }
 
         if (start_time.HasValue && end_time.HasValue)
+        {
+            // Use the exact provided start_time and end_time
             query = query.Where(n => n.Time >= start_time.Value && n.Time <= end_time.Value);
+        }
 
         // Calculate total items and pages
         var total_items = await query.CountAsync();
@@ -62,6 +75,17 @@ public class Most_RecentController : ControllerBase
         var data = await query
             .Skip((page - 1) * page_size)
             .Take(page_size)
+            .Select(n => new
+            {
+                node_id = n.Node_ID,
+                time = n.Time,
+                pressure = n.Pressure,
+                illumination = n.Illumination,
+                humidity = n.Humidity,
+                location = n.Location,
+                temperature_indoor = n.Temperature_indoor,
+                temperature_outdoor = n.Temperature_outdoor
+            })
             .ToListAsync();
 
         // Return data with pagination metadata

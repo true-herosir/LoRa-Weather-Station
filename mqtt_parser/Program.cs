@@ -38,7 +38,7 @@ class Program
             .WithCleanSession()
             .Build();
 
-        ////////////////our sensor broker/////////////////////
+        ////////////////our Node broker/////////////////////
         string broker_g4 = "eu1.cloud.thethings.network";
         int port_g4 = 1883;
         string clientId_g4 = Guid.NewGuid().ToString();
@@ -109,8 +109,8 @@ class Program
             {   
                 if (received.Contains("mkr-"))
                 {
-                    //Console.WriteLine($"Received message from MKR sensor:");
-                    logger.log_time("Received message from MKR sensor:");
+                    //Console.WriteLine($"Received message from MKR Node:");
+                    logger.log_time("Received message from MKR Node:");
                     INode_parse MKR_Parsed = new MKR_parse();
                     Dictionary<string, object?> MKR = MKR_Parsed.data(received);
 
@@ -133,8 +133,8 @@ class Program
 
                 if (received.Contains("lht-"))
                 {
-                    //Console.WriteLine($"Received message from LHT sensor:");
-                    logger.log_time("Received message from LHT sensor:");
+                    //Console.WriteLine($"Received message from LHT Node:");
+                    logger.log_time("Received message from LHT Node:");
 
                     INode_parse LHT_Parsed = new LHT_parse();
                     Dictionary<string, object?> LHT = LHT_Parsed.data(received);
@@ -235,7 +235,7 @@ class Program
             }
         };
 
-        /// our sensor
+        /// our Node
         string us_received = " ";
         mqttClient_g4.ApplicationMessageReceivedAsync += async e =>
         {
@@ -249,13 +249,13 @@ class Program
             
             try
             {
-                //Console.WriteLine($"Received message from G4 MKR sensor:");
-                logger.log_time($"Received message from G4 MKR sensor:");
+                //Console.WriteLine($"Received message from G4 MKR Node:");
+                logger.log_time($"Received message from G4 MKR Node:");
 
                 INode_parse MKR_Parsed_G4 = new MKR_parse();
                 Dictionary<string, object?> MKR_g4 = MKR_Parsed_G4.data(us_received);
 
-                MKR_g4["Illumination"] = double.Round(((double)MKR_g4["Illumination"] * 2.55) / 6.6, 2); /// handle our sensor with max lux measured of 700
+                MKR_g4["Illumination"] = double.Round(((double)MKR_g4["Illumination"] * 2.55) / 6.6, 2); /// handle our Node with max lux measured of 700
                 MKR_g4["Illumination"] = (double)MKR_g4["Illumination"] > 100 ? 100 : (double)MKR_g4["Illumination"];
 
                 foreach (var item in MKR_g4)

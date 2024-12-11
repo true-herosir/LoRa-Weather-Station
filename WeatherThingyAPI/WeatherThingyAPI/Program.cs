@@ -82,7 +82,7 @@ namespace WeatherThingyAPI
             services.AddDbContext<NodeContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("testing")));
 
-            services.AddDbContext<SensorContext>(options =>
+            services.AddDbContext<Node_locationContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("testing")));
 
             services.AddDbContext<Max_MinContext>(options =>

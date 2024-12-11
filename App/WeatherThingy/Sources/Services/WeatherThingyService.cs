@@ -29,10 +29,11 @@ namespace WeatherThingy.Sources.Services
             //_api_base = $"http://84.85.32.192:7086/api/Nodes/lht-gronau?page=1&pageSize=1000";
             _api_IP = $"http://84.85.32.192";
             _api_PORT = ":7086/api/";
-            _api_table.Add("Most_Recent");
-            _api_table.Add("Nodes/sensor_location");
+            _api_table.Add("most_recent");
+            _api_table.Add("Nodes/node_location");
             _api_table.Add("Hours_AVG");
             _api_table.Add("Max_Min");
+            _api_table.Add("Node_location");
         }
         public async Task<Root> callAPI()
         {
@@ -61,7 +62,7 @@ namespace WeatherThingy.Sources.Services
         ? (DateTime?)parsedTime
         : null,
 
-                        node_ID = item.TryGetProperty("node_ID", out var nodeElement)
+                        node_id = item.TryGetProperty("node_ID", out var nodeElement)
         ? nodeElement.ToString()
         : null,
 
@@ -103,27 +104,27 @@ namespace WeatherThingy.Sources.Services
         ? (short?)parsedBatteryStatus
         : null,
 
-                        avG_pressure = item.TryGetProperty("avG_pressure", out var avgPressureElement) &&
+                        avg_pressure = item.TryGetProperty("avG_pressure", out var avgPressureElement) &&
                    double.TryParse(avgPressureElement.ToString(), out var parsedAvgPressure)
         ? (double?)parsedAvgPressure
         : null,
 
-                        avG_illumination = item.TryGetProperty("avG_illumination", out var avgIlluminationElement) &&
+                        avg_illumination = item.TryGetProperty("avG_illumination", out var avgIlluminationElement) &&
                        double.TryParse(avgIlluminationElement.ToString(), out var parsedAvgIllumination)
         ? (double?)parsedAvgIllumination
         : null,
 
-                        avG_humidity = item.TryGetProperty("avG_humidity", out var avgHumidityElement) &&
+                        avg_humidity = item.TryGetProperty("avG_humidity", out var avgHumidityElement) &&
                    double.TryParse(avgHumidityElement.ToString(), out var parsedAvgHumidity)
         ? (double?)parsedAvgHumidity
         : null,
 
-                        avG_temperature_indoor = item.TryGetProperty("avG_temperature_indoor", out var avgTempIndoorElement) &&
+                        avg_temperature_indoor = item.TryGetProperty("avG_temperature_indoor", out var avgTempIndoorElement) &&
                              double.TryParse(avgTempIndoorElement.ToString(), out var parsedAvgTempIndoor)
         ? (double?)parsedAvgTempIndoor
         : null,
 
-                        avG_temperature_outdoor = item.TryGetProperty("AVG_temperature_outdoor", out var avgTempOutdoorElement) &&
+                        avg_temperature_outdoor = item.TryGetProperty("AVG_temperature_outdoor", out var avgTempOutdoorElement) &&
                               double.TryParse(avgTempOutdoorElement.ToString(), out var parsedAvgTempOutdoor)
         ? (double?)parsedAvgTempOutdoor
         : null,
@@ -195,13 +196,22 @@ namespace WeatherThingy.Sources.Services
             return callAPI();
         }
 
+
+        public Task<Root> GetBattData() // Node_location
+        {
+
+            _api_param = "?page=1&page_size=10";
+            _api_complete = _api_IP + _api_PORT + _api_table[4] + _api_param;
+            return callAPI();
+        }
+
         public Task<Root> GetNodeData(string location, DateTime start, DateTime end, int page)
         {
             if (location.Contains("lht") || location.Contains("mkr") || location.Contains("thingy"))
             {
                 location = "?id=" + location;
             }
-            else location = "?sensor_location=" + location;
+            else location = "?location=" + location;
             TimeSpan timeDiff = end - start;
             int daysDifference = timeDiff.Days;
             int table = 0;

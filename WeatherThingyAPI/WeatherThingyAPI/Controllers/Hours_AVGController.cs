@@ -68,6 +68,7 @@ public class Hours_AVGController : ControllerBase
             query = query.Where(h => h.the_hour >= start_hour.Value && h.the_hour <= end_hour.Value);
         }
 
+
         // Calculate total items and pages
         var total_items = await query.CountAsync();
         var total_pages = (int)Math.Ceiling(total_items / (double)page_size);
@@ -81,6 +82,18 @@ public class Hours_AVGController : ControllerBase
         var data = await query
             .Skip((page - 1) * page_size)
             .Take(page_size)
+            .Select(n => new
+            {
+                node_id = n.Node_ID,
+                location = n.Location,
+                n.the_day,
+                n.the_hour,
+                avg_pressure = n.AVG_Pressure,
+                avg_illumination = n.AVG_Illumination,
+                avg_humidity = n.AVG_Humidity,
+                avg_temperature_indoor = n.AVG_Temperature_indoor,
+                avg_temperature_outdoor = n.AVG_Temperature_outdoor
+            })
             .ToListAsync();
 
         // Return data with pagination metadata

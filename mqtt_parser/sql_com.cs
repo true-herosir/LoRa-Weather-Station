@@ -75,9 +75,9 @@ namespace mqtt_parser
 
         public async Task build(string Node_ID, string Location, double? Battery_status)
         {
-            string query_text = $"IF NOT EXISTS (SELECT Node_ID FROM lr2.Sensor_location WHERE Node_ID = '{Node_ID}') BEGIN INSERT INTO lr2.Sensor_location (Node_ID, Location) VALUES ('{Node_ID}','{Location}'); END; UPDATE lr2.Sensor_location SET Battery_status = {(Battery_status != null ? Battery_status : "NULL")} WHERE Node_ID = '{Node_ID}';";
+            string query_text = $"IF NOT EXISTS (SELECT Node_ID FROM lr2.Node_location WHERE Node_ID = '{Node_ID}') BEGIN INSERT INTO lr2.Node_location (Node_ID, Location) VALUES ('{Node_ID}','{Location}'); END; UPDATE lr2.Node_location SET Battery_status = {(Battery_status != null ? Battery_status : "NULL")} WHERE Node_ID = '{Node_ID}';";
             //Console.WriteLine(query_text);
-            await communicate(query_text, "Sensor_location");
+            await communicate(query_text, "Node_location");
         }
 
         private static ILogger m_logger;

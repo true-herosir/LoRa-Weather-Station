@@ -44,6 +44,11 @@ public class Max_MinController : ControllerBase
             query = query.Where(n => n.the_day == start_date.Value);
         }
 
+        if (end_date.HasValue && !start_date.HasValue)
+        {
+            query = query.Where(n => n.the_day == end_date.Value);
+        }
+
         if (start_date.HasValue && end_date.HasValue)
         {
             query = query.Where(n => n.the_day >= start_date.Value && n.the_day <= end_date.Value);
@@ -64,6 +69,23 @@ public class Max_MinController : ControllerBase
         var nodes = await query
             .Skip((page - 1) * page_size)
             .Take(page_size)
+            .Select(n => new
+            {
+                node_id = n.Node_ID,
+                location = n.Location,
+                n.the_day,
+                max_pressure = n.max_Pressure,
+                min_pressure = n.min_Pressure,
+                max_illumination = n.max_Illumination,
+                min_illumination = n.min_Illumination,
+                max_humidity = n.max_Humidity,
+                min_humidity = n.min_Humidity,
+                max_temperature_indoor = n.max_Temperature_indoor,
+                min_temperature_indoor = n.min_Temperature_indoor,
+                max_emperature_outdoor = n.max_Temperature_outdoor,
+                min_temperature_outdoor = n.min_Temperature_outdoor
+
+            })
             .ToListAsync();
 
         // Return data along with pagination metadata

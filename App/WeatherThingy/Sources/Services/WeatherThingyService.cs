@@ -62,7 +62,7 @@ namespace WeatherThingy.Sources.Services
         ? (DateTime?)parsedTime
         : null,
 
-                        node_id = item.TryGetProperty("node_ID", out var nodeElement)
+                        node_id = item.TryGetProperty("node_id", out var nodeElement)
         ? nodeElement.ToString()
         : null,
 

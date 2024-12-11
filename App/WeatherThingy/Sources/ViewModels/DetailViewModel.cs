@@ -4,47 +4,86 @@ using LiveChartsCore.SkiaSharpView;
 using System.Collections.ObjectModel;
 using System;
 using WeatherThingy.Sources.Services;
+using LiveChartsCore.Kernel.Sketches;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
+using System.Xml.Linq;
 
 namespace WeatherThingy.Sources.ViewModels
 {
+    public class plot
+    {
+        public ObservableCollection<DateTimePoint> datapoints { get; set; } = new ObservableCollection<DateTimePoint>();
+        public string node_id { get; set; }
+    }
+
     public class DetailViewModel
     {
+        public List<plot> plots = new List<plot>();
         // ObservableCollection for chart data
         public ObservableCollection<DateTimePoint> HumiditySeriesData { get; set; } = new ObservableCollection<DateTimePoint>();
-        public ObservableCollection<DateTimePoint> HumiditySeriesData2 { get; set; } = new ObservableCollection<DateTimePoint>();
+        //public ObservableCollection<DateTimePoint> HumiditySeriesData2 { get; set; } = new ObservableCollection<DateTimePoint>();
 
         // Property to bind to the chart
-        public ISeries[] Series => new ISeries[]
-        {
-            new LineSeries<DateTimePoint>
-            {
-                Values = HumiditySeriesData,
-                Name = "ser"
-            },
-             new LineSeries<DateTimePoint>
-            {
-                Values = HumiditySeriesData2,
-                Name = "ser2"
-            }
-        };
 
-        public DetailViewModel()
+        //public ISeries[] Series { get; set; } = new ISeries[] { };
+        public ObservableCollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>();
+
+
+
+        public async Task<List<plot>> initialize_plots()
         {
+            var data = await new WeatherThingyService().GetNodeData();
+            foreach (var item in data.data)
+            {
+                if (item.time.HasValue) // Ensure time is not null
+                {
+                    var retrieved = new plot();
+                    retrieved.node_id = item.node_id;
+                    plots.Add(retrieved);
+
+                }
+
+            }
+            return plots;
+
         }
 
-        // X-Axis configuration with DateTime label formatting
-        public Axis[] XAxes { get; set; } = new Axis[]
+        
+        public DetailViewModel()
         {
-            new Axis
-            {
-                Labeler = value =>
-                {
-                    var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
-                    return dateTime.ToString("dd HH:mm");    // Display only day, hour, minute
-                },
-                UnitWidth = TimeSpan.FromMinutes(30).Ticks, // Adjust the spacing for your data
-            }
-        };
+             initialize_plots();
+
+
+
+        }
+
+      //  public ISeries[] Series => new ISeries[]
+      //{
+      //      new LineSeries<DateTimePoint>
+      //      {
+      //          Values = HumiditySeriesData,
+
+      //          Name = "test"
+      //      }
+      //};
+
+
+
+
+        // X-Axis configuration with DateTime label formatting
+        //public Axis[] XAxes { get; set; } = new Axis[]
+        //{
+        //    new Axis
+        //    {
+        //        Labeler = value =>
+        //        {
+        //            var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
+        //            return dateTime.ToString("dd HH:mm");    // Display only day, hour, minute
+        //        },
+        //        UnitWidth = TimeSpan.FromMinutes(30).Ticks, // Adjust the spacing for your data
+        //    }
+        //};
 
         // Async method to fetch and display data
         public async Task ShowData()
@@ -57,26 +96,69 @@ namespace WeatherThingy.Sources.ViewModels
                 var data = await new WeatherThingyService().GetNodeData("lht-gronau", start, end, 1);
                 var data2 = await new WeatherThingyService().GetNodeData("lht-wierden", start, end, 1);
 
-                HumiditySeriesData.Clear();
+                //HumiditySeriesData.Clear();
 
                 // Process data and update the collections
+                int index = 0;
+                foreach (var item1 in plots)
+                {
+                    if (item1.node_id == "lht-gronau") break;
+                    index++;
+                }
                 foreach (var item in data.data)
                 {
+                    
+                    
+
                     if (item.time.HasValue) // Ensure time is not null
                     {
+
                         // Add data to chart
-                        HumiditySeriesData.Add(new DateTimePoint(item.time.Value, item.humidity.Value));
+                        plots[index].datapoints.Add(new DateTimePoint(item.time.Value, item.humidity.Value));
                     }
+
+                    
+                }
+
+              
+                Series.Add(
+                    new LineSeries<DateTimePoint> { 
+                    Values = plots[index].datapoints,
+
+                    Name = plots[index].node_id
+                });
+
+
+
+
+
+                index = 0;
+                foreach (var item1 in plots)
+                {
+                    if (item1.node_id == "lht-wierden") break;
+                    index++;
                 }
                 foreach (var item in data2.data)
-                {
+                {                    
+
                     if (item.time.HasValue) // Ensure time is not null
                     {
+
                         // Add data to chart
-                        HumiditySeriesData2.Add(new DateTimePoint(item.time.Value, item.humidity.Value));
+                        plots[index].datapoints.Add(new DateTimePoint(item.time.Value, item.humidity.Value));
                     }
+
                 }
-            }
+                Series.Add(new LineSeries<DateTimePoint>
+                {
+                    Values = plots[index].datapoints,
+
+                    Name = plots[index].node_id
+                });
+
+
+    }
+                
             catch (Exception ex)
             {
                 // Handle exceptions, such as network errors or invalid data

@@ -10,7 +10,7 @@ namespace WeatherThingy.Sources.Model
     {
         public string node_id { get; set; }
         public string location { get; set; }
-        public int? bat { get; set; }
+        public int? battery_status { get; set; }
     }
     internal class GUI_interfaces
     {

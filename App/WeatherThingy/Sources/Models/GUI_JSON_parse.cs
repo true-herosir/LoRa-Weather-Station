@@ -153,7 +153,7 @@ namespace WeatherThingy.Sources.Model
                 bat_stat temp = new bat_stat();
                 temp.node_id = item.node_id;
                 temp.location = item.location;
-                temp.bat = item.battery_status;
+                temp.battery_status = item.battery_status;
                 result.Add(temp);
             }
             return result;

@@ -11,6 +11,27 @@ namespace WeatherThingy.Pages
 {
     public partial class EnschedePage : ContentPage
     {
+
+        public ISeries[] Series { get; set; } = [
+        new LineSeries<double>
+        {
+            Values = [5, 0, 5, 0, 5, 0],
+            Fill = null,
+            GeometrySize = 0,
+            // use the line smoothness property to control the curve
+            // it goes from 0 to 1
+            // where 0 is a straight line and 1 the most curved
+            LineSmoothness = 0
+        },
+        new LineSeries<double>
+        {
+            Values = [7, 2, 7, 2, 7, 2],
+            Fill = null,
+            GeometrySize = 0,
+            LineSmoothness = 1
+        }
+    ];
+
         public ObservableCollection<string> WeatherData { get; set; } = new ObservableCollection<string>();
         public EnschedePage()
         {
@@ -81,8 +102,9 @@ namespace WeatherThingy.Pages
             var start = DateTime.Now.AddDays(-1);
             var end = DateTime.Now;
             var data = await new WeatherThingyService().GetNodeData("Enschede", start, end, 1);
+            
 
-            WeatherData.Clear();
+        WeatherData.Clear();
             foreach (var item in data.data)
             {
                 WeatherData.Add($"Humidity in {item.node_id} at {item.time.Value.TimeOfDay.ToString()}: " + item.humidity.Value.ToString()); //showing just the values of humidity

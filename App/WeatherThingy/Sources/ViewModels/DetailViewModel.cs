@@ -118,11 +118,14 @@ namespace WeatherThingy.Sources.ViewModels
                     plots[index].datapoints.Clear();
                     foreach (var item in data.data)
                     {
-                        if (item.time.HasValue) // Ensure time is not null
+                        if (item.time.HasValue || item.the_day.HasValue) // Ensure time is not null
                         {
 
+                            var time_stamp = item.time.HasValue ? item.time.Value : item.the_day.Value;
+
+
                             // Add data to chart
-                            plots[index].datapoints.Add(new DateTimePoint(item.time.Value, item.humidity.Value));
+                            plots[index].datapoints.Add(new DateTimePoint(time_stamp, item.humidity.Value));
                         }
 
                     }

@@ -25,7 +25,7 @@ namespace WeatherThingy.Sources.Model
             public double? temperature_outdoor { get; set; }
 
             public DateTime? the_day { get; set; }
-            public DateTime? the_hour { get; set; }
+            public int? the_hour { get; set; }
 
             public double? min_pressure { get; set; }
             public double? min_illumination { get; set; }

@@ -62,6 +62,14 @@ namespace WeatherThingy.Sources.Services
         ? (DateTime?)parsedTime
         : null,
 
+                        the_day = item.TryGetProperty("the_day", out var dayElement) &&
+    DateTime.TryParse(dayElement.ToString(), out var parsedDay)
+    ? (item.TryGetProperty("the_hour", out var hourElement) &&
+       int.TryParse(hourElement.ToString(), out var parsedHour)
+        ? parsedDay.AddHours(parsedHour)
+        : (DateTime?)parsedDay)
+    : null,
+
                         node_id = item.TryGetProperty("node_id", out var nodeElement)
         ? nodeElement.ToString()
         : null,
@@ -201,24 +209,24 @@ namespace WeatherThingy.Sources.Services
             else if (daysDifference <= 3)
             {
                 table = 1;
-                start_st = start.ToString("yyyy-MM-dd'%20'HH'%3A'mm'%3A'00.000");
-                end_st = end.ToString("yyyy-MM-dd'%20'HH'%3A'mm'%3A'00.000");
+                start_st = "start_time=" + start.ToString("yyyy-MM-dd'%20'HH'%3A'mm'%3A'00.000");
+                end_st = "end_time=" + end.ToString("yyyy-MM-dd'%20'HH'%3A'mm'%3A'00.000");
 
             }
             else if (daysDifference > 3 && daysDifference < 14)
             {
                 table = 2;
-                start_st = start.ToString("yyyy-MM-dd");
-                end_st = end.ToString("yyyy-MM-dd");
+                start_st = "start_date=" + start.ToString("yyyy-MM-dd");
+                end_st = "end_date=" + end.ToString("yyyy-MM-dd");
             }
             else
             {
                 table = 3;
-                start_st = start.ToString("yyyy-MM-dd");
-                end_st = end.ToString("yyyy-MM-dd");
+                start_st = "start_date=" +start.ToString("yyyy -MM-dd");
+                end_st = "end_date=" + end.ToString("yyyy-MM-dd");
             }
 
-            _api_param = $"{location}&start_time={start_st}&end_time={end_st}&page={page}&page_size={page_size}";
+            _api_param = $"{location}&{start_st}&{end_st}&page={page}&page_size={page_size}";
             _api_complete = _api_IP + _api_PORT + _api_table[table] + _api_param;
             return callAPI();
         }

@@ -119,7 +119,6 @@ namespace WeatherThingy.Sources.ViewModels
 
                             var time_stamp = item.time.HasValue ? item.time.Value : item.the_day.Value;
 
-
                             // Add data to chart
                             plots[index].datapoints.Add(new DateTimePoint(time_stamp, item.humidity.Value));
                         }

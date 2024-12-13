@@ -9,11 +9,16 @@ namespace WeatherThingyAPI.Controllers;
 public class Most_RecentController : ControllerBase
 {
     private readonly Most_RecentContext _context;
+    private readonly Node_locationContext _scontext;
 
-    public Most_RecentController(Most_RecentContext context)
+
+    public Most_RecentController(Most_RecentContext context, Node_locationContext sensorContext)
     {
         _context = context;
+        _scontext = sensorContext;
+
     }
+
 
     //[HttpGet]
     //public async Task<ActionResult<IEnumerable<Most_Recent>>> GetMostRecents(
@@ -165,10 +170,10 @@ public class Most_RecentController : ControllerBase
                              pressure = node.Pressure,
                              illumination = node.Illumination,
                              humidity = node.Humidity,
-                             gateway_location = node.Gateway_Location,
+                             location = node.Location,
                              temperature_indoor = node.Temperature_indoor,
                              temperature_outdoor = node.Temperature_outdoor,
-                             location = sensor.Location
+                             battery_status = sensor.Battery_status
                          };
 
         var total_items = joinedData.Count();

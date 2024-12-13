@@ -3,6 +3,7 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using WeatherThingy.Sources.Services;
 
+
 namespace WeatherThingy.Sources.ViewModels
 {
     public class plot
@@ -13,6 +14,8 @@ namespace WeatherThingy.Sources.ViewModels
 
     public class DetailViewModel
     {
+        public DateTime MinDate { get; } = new DateTime(2024, 11, 22);
+        public DateTime MaxDate { get; } = DateTime.Now;
         public List<plot> plots = new List<plot>();
         public List<string> nodes = new List<string>();
         // ObservableCollection for chart data
@@ -44,11 +47,10 @@ namespace WeatherThingy.Sources.ViewModels
 
         }
 
-        
+
         public DetailViewModel()
         {
-             initialize_plots();
-             
+            initialize_plots();
 
 
         }
@@ -90,15 +92,18 @@ namespace WeatherThingy.Sources.ViewModels
 
 
 
-        public async Task ShowData()
+        public async Task ShowData(DateTime start, DateTime end)
         {
+            Series.Clear();
+            nodes.Clear();
+
             nodes.Add("lht-gronau"); nodes.Add("lht-wierden"); nodes.Add("mkr-saxion");
             try
             {
+
                 foreach (var node in nodes)
                 {
-                    var start = DateTime.Now.AddDays(-1);
-                    var end = DateTime.Now;
+
                     var data = await new WeatherThingyService().GetNodeData(node, start, end, 1);
                     int index = 0;
                     foreach (var plot in plots)
@@ -106,13 +111,17 @@ namespace WeatherThingy.Sources.ViewModels
                         if (plot.node_id == node) break;
                         index++;
                     }
+                    plots[index].datapoints.Clear();
                     foreach (var item in data.data)
                     {
-                        if (item.time.HasValue) // Ensure time is not null
+                        if (item.time.HasValue || item.the_day.HasValue) // Ensure time is not null
                         {
 
+                            var time_stamp = item.time.HasValue ? item.time.Value : item.the_day.Value;
+
+
                             // Add data to chart
-                            plots[index].datapoints.Add(new DateTimePoint(item.time.Value, item.humidity.Value));
+                            plots[index].datapoints.Add(new DateTimePoint(time_stamp, item.humidity.Value));
                         }
 
                     }
@@ -126,8 +135,8 @@ namespace WeatherThingy.Sources.ViewModels
                         });
 
                 }
-    }
-                
+            }
+
             catch (Exception ex)
             {
                 // Handle exceptions, such as network errors or invalid data

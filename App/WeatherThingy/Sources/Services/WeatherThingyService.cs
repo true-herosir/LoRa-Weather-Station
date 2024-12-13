@@ -90,31 +90,6 @@ internal class WeatherThingyService : IWeatherThingyService
     ? (short?)parsedBatteryStatus
     : null,
 
-                    avg_pressure = item.TryGetProperty("avG_pressure", out var avgPressureElement) &&
-               double.TryParse(avgPressureElement.ToString(), out var parsedAvgPressure)
-    ? (double?)parsedAvgPressure
-    : null,
-
-                    avg_illumination = item.TryGetProperty("avG_illumination", out var avgIlluminationElement) &&
-                   double.TryParse(avgIlluminationElement.ToString(), out var parsedAvgIllumination)
-    ? (double?)parsedAvgIllumination
-    : null,
-
-                    avg_humidity = item.TryGetProperty("avG_humidity", out var avgHumidityElement) &&
-               double.TryParse(avgHumidityElement.ToString(), out var parsedAvgHumidity)
-    ? (double?)parsedAvgHumidity
-    : null,
-
-                    avg_temperature_indoor = item.TryGetProperty("avG_temperature_indoor", out var avgTempIndoorElement) &&
-                         double.TryParse(avgTempIndoorElement.ToString(), out var parsedAvgTempIndoor)
-    ? (double?)parsedAvgTempIndoor
-    : null,
-
-                    avg_temperature_outdoor = item.TryGetProperty("AVG_temperature_outdoor", out var avgTempOutdoorElement) &&
-                          double.TryParse(avgTempOutdoorElement.ToString(), out var parsedAvgTempOutdoor)
-    ? (double?)parsedAvgTempOutdoor
-    : null,
-
                     min_pressure = item.TryGetProperty("min_pressure", out var minPressureElement) &&
                double.TryParse(minPressureElement.ToString(), out var parsedMinPressure)
     ? (double?)parsedMinPressure

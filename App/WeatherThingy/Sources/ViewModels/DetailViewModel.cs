@@ -9,6 +9,7 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
 
+
 namespace WeatherThingy.Sources.ViewModels
 {
     public class plot
@@ -53,8 +54,7 @@ namespace WeatherThingy.Sources.ViewModels
         
         public DetailViewModel()
         {
-             initialize_plots();
-             
+             initialize_plots();          
 
 
         }
@@ -96,15 +96,18 @@ namespace WeatherThingy.Sources.ViewModels
 
 
 
-        public async Task ShowData()
+        public async Task ShowData(DateTime start, DateTime end)
         {
+            Series.Clear();
+            nodes.Clear();
+
             nodes.Add("lht-gronau"); nodes.Add("lht-wierden"); nodes.Add("mkr-saxion");
             try
             {
+                
                 foreach (var node in nodes)
                 {
-                    var start = DateTime.Now.AddDays(-1);
-                    var end = DateTime.Now;
+                     
                     var data = await new WeatherThingyService().GetNodeData(node, start, end, 1);
                     int index = 0;
                     foreach (var plot in plots)
@@ -112,6 +115,7 @@ namespace WeatherThingy.Sources.ViewModels
                         if (plot.node_id == node) break;
                         index++;
                     }
+                    plots[index].datapoints.Clear();
                     foreach (var item in data.data)
                     {
                         if (item.time.HasValue) // Ensure time is not null

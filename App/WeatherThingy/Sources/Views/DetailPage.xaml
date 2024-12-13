@@ -10,8 +10,45 @@
 
 
     <!-- LiveCharts for the chart -->
-    <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}"
-                        
-    />
+    <Grid>
+        <!-- Define rows for the layout -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Button -->
+            <RowDefinition Height="*" />
+            <!-- Chart -->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Button in the first row -->
+        <Button 
+            Text="1 day"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            Clicked="OnDayDataClicked"
+            Grid.Column="0" 
+            Grid.Row="0"/>
+
+        <Button 
+             Text="Week"
+             VerticalOptions="Center"
+             HorizontalOptions="Center"
+             Clicked="OnWeekDataClicked"
+             Grid.Column="1" 
+             Grid.Row="0" />
+
+        <!-- Chart in the second row -->
+        <lvc:CartesianChart 
+            x:Name="Chart" 
+            Series="{Binding Series}" 
+            XAxes="{Binding XAxes}"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand"
+            IsVisible="False"
+            Grid.Row="1" 
+            Grid.ColumnSpan="2"/>
+    </Grid>
 
 </ContentPage>

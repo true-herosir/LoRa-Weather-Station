@@ -1,3 +1,6 @@
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using System.Collections.ObjectModel;
 using WeatherThingy.Sources.ViewModels;
 
 namespace WeatherThingy.Sources.Views
@@ -17,17 +20,49 @@ namespace WeatherThingy.Sources.Views
             // Trigger data fetching when the page appears
             if (BindingContext is DetailViewModel viewModel)
             {
-                viewModel.ShowData();
+                //viewModel.ShowData();
             }
         }
 
         // Alternatively, you can bind it to a button click
-        private void OnLoadDataClicked(object sender, EventArgs e)
+        private void OnDayDataClicked(object sender, EventArgs e)
         {
             if (BindingContext is DetailViewModel viewModel)
             {
-                viewModel.ShowData();
+
+                //Chart.Series = null; // Clear existing series
+                var start = DateTime.Now.AddDays(-1);
+                var end = DateTime.Now;
+
+                Chart.IsVisible = false;
+                 viewModel.ShowData(start, end);
+                Chart.CoreChart.Update();
+                Chart.IsVisible = true;
+
             }
+        }
+
+        private void OnWeekDataClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is DetailViewModel viewModel)
+            {
+
+                //Chart.Series = null; // Clear existing series
+                var start = DateTime.Now.AddDays(-7);
+                var end = DateTime.Now;
+
+                Chart.IsVisible = false;
+                 viewModel.ShowData(start, end);
+                Chart.CoreChart.Update();
+                Chart.IsVisible = true;
+
+            }
+        }
+
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+
         }
     }
 }

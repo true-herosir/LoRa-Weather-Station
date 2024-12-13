@@ -20,7 +20,7 @@ SELECT *
   
   SELECT *
   FROM [LoRa].[lr2].[max_min]
-  WHERE Node_ID LIKE 'lht%' 
+ --WHERE Node_ID LIKE 'lht%' 
   ORDER BY the_day DESC, Location;
 
    SELECT *

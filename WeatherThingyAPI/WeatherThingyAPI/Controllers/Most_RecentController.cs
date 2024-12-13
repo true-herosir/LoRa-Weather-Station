@@ -15,9 +15,93 @@ public class Most_RecentController : ControllerBase
         _context = context;
     }
 
+    //[HttpGet]
+    //public async Task<ActionResult<IEnumerable<Most_Recent>>> GetMostRecents(
+    //   [FromQuery] string? id,
+    //   [FromQuery] string? location,
+    //   [FromQuery] DateTime? start_time,
+    //   [FromQuery] DateTime? end_time,
+    //   [FromQuery] int page = 1,
+    //   [FromQuery] int page_size = 10)
+    //{
+    //    if (page <= 0 || page_size <= 0)
+    //    {
+    //        return BadRequest("Page and page_size must be positive integers.");
+    //    }
+
+    //    // Build the query dynamically
+    //    var query = _context.Most_Recents.AsQueryable();
+
+    //    // Apply optional filters
+    //    if (!string.IsNullOrWhiteSpace(id))
+    //        query = query.Where(n => n.Node_ID == id);
+
+    //    if (!string.IsNullOrWhiteSpace(location))
+    //        query = query.Where(n => n.Location == location);
+
+    //    if (start_time.HasValue && !end_time.HasValue)
+    //    {
+    //        // Include records for the entire day of start_time
+    //        DateTime startOfDay = start_time.Value.Date;
+    //        DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+    //        query = query.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+    //    }
+
+    //    if (end_time.HasValue && !start_time.HasValue)
+    //    {
+    //        // Include records for the entire day of end_time
+    //        DateTime startOfDay = end_time.Value.Date;
+    //        DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+    //        query = query.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+    //    }
+
+    //    if (start_time.HasValue && end_time.HasValue)
+    //    {
+    //        // Use the exact provided start_time and end_time
+    //        query = query.Where(n => n.Time >= start_time.Value && n.Time <= end_time.Value);
+    //    }
+
+    //    // Calculate total items and pages
+    //    var total_items = await query.CountAsync();
+    //    if (total_items == 0)
+    //        return NotFound("No records found matching the given criteria.");
+
+    //    var total_pages = (int)Math.Ceiling(total_items / (double)page_size);
+
+    //    if (page > total_pages)
+    //        return NotFound($"Page {page} does not exist. Total pages: {total_pages}.");
+
+    //    // Fetch paginated data
+    //    var data = await query
+    //        .Skip((page - 1) * page_size)
+    //        .Take(page_size)
+    //        .Select(n => new
+    //        {
+    //            node_id = n.Node_ID,
+    //            time = n.Time,
+    //            pressure = n.Pressure,
+    //            illumination = n.Illumination,
+    //            humidity = n.Humidity,
+    //            location = n.Location,
+    //            temperature_indoor = n.Temperature_indoor,
+    //            temperature_outdoor = n.Temperature_outdoor
+    //        })
+    //        .ToListAsync();
+
+    //    // Return data with pagination metadata
+    //    return Ok(new
+    //    {
+    //        total_items,
+    //        total_pages,
+    //        current_page = page,
+    //        page_size,
+    //        data
+    //    });
+    //}
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Most_Recent>>> GetMostRecents(
-       [FromQuery] string? id,
+    public async Task<ActionResult<IEnumerable<object>>> GetNodesWithSensorLocations(
+        [FromQuery] string? id,
        [FromQuery] string? location,
        [FromQuery] DateTime? start_time,
        [FromQuery] DateTime? end_time,
@@ -29,22 +113,19 @@ public class Most_RecentController : ControllerBase
             return BadRequest("Page and page_size must be positive integers.");
         }
 
-        // Build the query dynamically
-        var query = _context.Most_Recents.AsQueryable();
+        // Load nodes from NodeContext
+        var nodesQuery = _context.Most_Recents.AsQueryable();
 
-        // Apply optional filters
         if (!string.IsNullOrWhiteSpace(id))
-            query = query.Where(n => n.Node_ID == id);
+            nodesQuery = nodesQuery.Where(n => n.Node_ID == id);
 
-        if (!string.IsNullOrWhiteSpace(location))
-            query = query.Where(n => n.Location == location);
 
         if (start_time.HasValue && !end_time.HasValue)
         {
             // Include records for the entire day of start_time
             DateTime startOfDay = start_time.Value.Date;
             DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
-            query = query.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+            nodesQuery = nodesQuery.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
         }
 
         if (end_time.HasValue && !start_time.HasValue)
@@ -52,43 +133,55 @@ public class Most_RecentController : ControllerBase
             // Include records for the entire day of end_time
             DateTime startOfDay = end_time.Value.Date;
             DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
-            query = query.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
+            nodesQuery = nodesQuery.Where(n => n.Time >= startOfDay && n.Time <= endOfDay);
         }
 
         if (start_time.HasValue && end_time.HasValue)
         {
             // Use the exact provided start_time and end_time
-            query = query.Where(n => n.Time >= start_time.Value && n.Time <= end_time.Value);
+            nodesQuery = nodesQuery.Where(n => n.Time >= start_time.Value && n.Time <= end_time.Value);
         }
 
-        // Calculate total items and pages
-        var total_items = await query.CountAsync();
-        if (total_items == 0)
-            return NotFound("No records found matching the given criteria.");
 
+
+        var nodes = await nodesQuery.ToListAsync();
+
+        // Load sensor locations from SensorContext
+        var sensorsQuery = _scontext.Node_locations.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(location))
+            sensorsQuery = sensorsQuery.Where(s => s.Location == location);
+
+        var sensors = await sensorsQuery.ToListAsync();
+
+        // Join data in memory
+        var joinedData = from node in nodes
+                         join sensor in sensors
+                         on node.Node_ID equals sensor.Node_ID
+                         select new
+                         {
+                             node_id = node.Node_ID,
+                             time = node.Time,
+                             pressure = node.Pressure,
+                             illumination = node.Illumination,
+                             humidity = node.Humidity,
+                             gateway_location = node.Gateway_Location,
+                             temperature_indoor = node.Temperature_indoor,
+                             temperature_outdoor = node.Temperature_outdoor,
+                             location = sensor.Location
+                         };
+
+        var total_items = joinedData.Count();
         var total_pages = (int)Math.Ceiling(total_items / (double)page_size);
 
         if (page > total_pages)
             return NotFound($"Page {page} does not exist. Total pages: {total_pages}.");
 
-        // Fetch paginated data
-        var data = await query
+        var data = joinedData
             .Skip((page - 1) * page_size)
             .Take(page_size)
-            .Select(n => new
-            {
-                node_id = n.Node_ID,
-                time = n.Time,
-                pressure = n.Pressure,
-                illumination = n.Illumination,
-                humidity = n.Humidity,
-                location = n.Location,
-                temperature_indoor = n.Temperature_indoor,
-                temperature_outdoor = n.Temperature_outdoor
-            })
-            .ToListAsync();
+            .ToList();
 
-        // Return data with pagination metadata
         return Ok(new
         {
             total_items,

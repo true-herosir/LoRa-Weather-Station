@@ -11,10 +11,11 @@
 
     <TabBar>
         <ShellContent
-        ContentTemplate="{DataTemplate local:Pages.MainPage}"
+        Title="Home"
+        ContentTemplate="{DataTemplate views:HomePage}"
         Route="MainPage"/>
         <ShellContent
-        Title="News"
+        Title="Detail"
         ContentTemplate="{DataTemplate views:DetailPage}"
         Route="NewsPage"/>
     </TabBar>

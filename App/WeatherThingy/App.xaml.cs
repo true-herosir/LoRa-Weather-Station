@@ -1,4 +1,5 @@
 ﻿using WeatherThingy.Pages;
+using WeatherThingy.Sources.Views;
 
 namespace WeatherThingy
 {
@@ -9,7 +10,7 @@ namespace WeatherThingy
         public App()
         {
             InitializeComponent();
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new AppShell();
         }
     }
 }

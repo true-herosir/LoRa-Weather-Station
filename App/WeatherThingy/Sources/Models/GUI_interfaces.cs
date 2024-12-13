@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WeatherThingy.Sources.Model
+﻿namespace WeatherThingy.Sources.Models
 {
     public class bat_stat
     {

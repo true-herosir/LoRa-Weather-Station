@@ -1,13 +1,7 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
-using System.Collections.ObjectModel;
-using System;
 using WeatherThingy.Sources.Services;
-using LiveChartsCore.Kernel.Sketches;
-using System.Reflection;
-using Newtonsoft.Json.Linq;
-using System.Xml.Linq;
 
 namespace WeatherThingy.Sources.ViewModels
 {

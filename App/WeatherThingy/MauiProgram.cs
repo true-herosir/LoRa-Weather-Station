@@ -23,9 +23,10 @@ namespace WeatherThingy
                 });
 
 #if DEBUG
-            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<HomePage>();
             builder.Services.AddTransient<DetailPage>();
             builder.Services.AddSingleton<DetailViewModel>();
+            builder.Services.AddSingleton<HomeViewModel>();
             builder.Logging.AddDebug();
 #endif
 

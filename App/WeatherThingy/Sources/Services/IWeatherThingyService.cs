@@ -1,11 +1,7 @@
-﻿using static WeatherThingy.Sources.Model.GUI_JSON_parse;
-
-namespace WeatherThingy.Sources.Services
+﻿namespace WeatherThingy.Sources.Services;
+public partial interface IWeatherThingyService
 {
-    internal interface IWeatherThingyService
-    {
-        Task<Root> GetNodeData(); //should return most recent
-        Task<Root> GetBattData(); //should return most recent
-        Task<Root> GetNodeData(string location, DateTime start, DateTime end, int page);
-    }
+    Task<Root> GetNodeData(); //should return most recent
+    Task<Root> GetBattData(); //should return most recent
+    Task<Root> GetNodeData(string location, DateTime start, DateTime end, int page);
 }

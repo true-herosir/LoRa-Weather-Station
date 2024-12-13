@@ -13,6 +13,16 @@ namespace WeatherThingy.Sources.Views
             BindingContext = new DetailViewModel();
         }
 
+        private void OnPointerEntered(object sender, EventArgs e)
+        {
+            if (sender is Button button) button.Scale = 1.10;
+        }
+
+        private void OnPointerExited(object sender, EventArgs e)
+        {
+            if (sender is Button button) button.Scale = 1;
+        }
+
         // Example: Trigger ShowData when the page is loaded or when a button is clicked
         protected override void OnAppearing()
         {
@@ -25,7 +35,7 @@ namespace WeatherThingy.Sources.Views
         }
 
         // Alternatively, you can bind it to a button click
-        private void OnDayDataClicked(object sender, EventArgs e)
+        private async void OnDayDataClicked(object sender, EventArgs e)
         {
             if (BindingContext is DetailViewModel viewModel)
             {
@@ -35,14 +45,14 @@ namespace WeatherThingy.Sources.Views
                 var end = DateTime.Now;
 
                 Chart.IsVisible = false;
-                 viewModel.ShowData(start, end);
+                await viewModel.ShowData(start, end);
                 Chart.CoreChart.Update();
                 Chart.IsVisible = true;
 
             }
         }
 
-        private void OnWeekDataClicked(object sender, EventArgs e)
+        private async void OnWeekDataClicked(object sender, EventArgs e)
         {
             if (BindingContext is DetailViewModel viewModel)
             {
@@ -52,17 +62,11 @@ namespace WeatherThingy.Sources.Views
                 var end = DateTime.Now;
 
                 Chart.IsVisible = false;
-                 viewModel.ShowData(start, end);
+                await viewModel.ShowData(start, end);
                 Chart.CoreChart.Update();
                 Chart.IsVisible = true;
 
             }
-        }
-
-
-        private void Button_Clicked(object sender, EventArgs e)
-        {
-
         }
     }
 }

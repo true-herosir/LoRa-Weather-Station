@@ -20,6 +20,8 @@ namespace WeatherThingy.Sources.ViewModels
 
     public class DetailViewModel
     {
+        public DateTime MinDate { get; } = new DateTime(2024, 11, 22);
+        public DateTime MaxDate { get; } = DateTime.Now;
         public List<plot> plots = new List<plot>();
         public List<string> nodes = new List<string>();
         // ObservableCollection for chart data

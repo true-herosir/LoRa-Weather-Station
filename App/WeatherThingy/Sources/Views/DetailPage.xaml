@@ -19,26 +19,51 @@
             <!-- Chart -->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="70*"/>
+            <ColumnDefinition Width="30*"/>
         </Grid.ColumnDefinitions>
         <!-- Button in the first row -->
-        <Button 
-            Text="1 day"
-            VerticalOptions="Center"
+        <HorizontalStackLayout 
+            VerticalOptions="Center" 
             HorizontalOptions="Center"
-            Clicked="OnDayDataClicked"
-            Grid.Column="0" 
-            Grid.Row="0"/>
+            Grid.Row="0"
+            Grid.Column="0">
+            <Button 
+                Text="1 Day"
+                Clicked="OnDayDataClicked"
+                Grid.Row="0"/>
+            <Button 
+                Text="3 Days"
+                Grid.Row="0" />
+            <Button 
+                Text="1 Week"
+                Clicked="OnWeekDataClicked"
+                Grid.Row="0" />
 
-        <Button 
-             Text="Week"
-             VerticalOptions="Center"
-             HorizontalOptions="Center"
-             Clicked="OnWeekDataClicked"
-             Grid.Column="1" 
-             Grid.Row="0" />
-
+            <Button 
+                Text="2 Weeks"
+                Grid.Row="0" />
+            <Button 
+                Text="1 Month"
+                Grid.Row="0" />
+            <Button 
+                Text="Custom range"
+                Grid.Row="0" />
+            <HorizontalStackLayout.GestureRecognizers>
+                <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                                          PointerExited="OnPointerExited"/>
+            </HorizontalStackLayout.GestureRecognizers>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout
+            VerticalOptions="Center" 
+            HorizontalOptions="Center"
+            Grid.Row="0"
+            Grid.Column="1">
+            <DatePicker MaximumDate="{Binding MaxDate}"
+                        MinimumDate="{Binding MinDate}"/>
+            <DatePicker MaximumDate="{Binding MaxDate}"
+                        MinimumDate="{Binding MinDate}"/>
+        </HorizontalStackLayout>
         <!-- Chart in the second row -->
         <lvc:CartesianChart 
             x:Name="Chart" 

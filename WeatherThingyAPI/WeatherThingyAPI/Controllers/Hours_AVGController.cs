@@ -88,11 +88,11 @@ public class Hours_AVGController : ControllerBase
                 location = n.Location,
                 n.the_day,
                 n.the_hour,
-                avg_pressure = n.AVG_Pressure,
-                avg_illumination = n.AVG_Illumination,
-                avg_humidity = n.AVG_Humidity,
-                avg_temperature_indoor = n.AVG_Temperature_indoor,
-                avg_temperature_outdoor = n.AVG_Temperature_outdoor
+                pressure = n.AVG_Pressure,
+                illumination = n.AVG_Illumination,
+                humidity = n.AVG_Humidity,
+                temperature_indoor = n.AVG_Temperature_indoor,
+                temperature_outdoor = n.AVG_Temperature_outdoor
             })
             .ToListAsync();
 

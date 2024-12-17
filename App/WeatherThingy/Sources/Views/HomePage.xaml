@@ -121,8 +121,10 @@
                                         <Label Grid.Row="7" Grid.Column="1" Text="{Binding temperature_outdoor}" />
 
                                         <!-- Battery Status -->
-                                        <Label Grid.Row="8" Grid.Column="0" Text="Battery (%):" FontAttributes="Bold" />
-                                        <Label Grid.Row="8" Grid.Column="1" Text="{Binding battery_status}" />
+                                        <Label Grid.Row="8" Grid.Column="0" Text="Battery :" FontAttributes="Bold" />
+                                        <!--<Label Grid.Row="8" Grid.Column="1" Text="{Binding battery_status}" />-->
+                                        <Image Grid.Row="8" Grid.Column="1" Source="{Binding battery_status}" HeightRequest="20" HorizontalOptions="Start"/>
+
                                     </Grid>
                                 </Frame>
                             </DataTemplate>

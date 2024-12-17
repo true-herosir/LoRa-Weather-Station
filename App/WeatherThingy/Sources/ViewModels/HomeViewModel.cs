@@ -12,6 +12,8 @@ public partial class HomeViewModel : ObservableObject
 
     private IWeatherThingyService weather_thingy_service;
 
+    Image image = new Image();
+
     public HomeViewModel()
     {
         weather_thingy_service = new WeatherThingyService();
@@ -32,6 +34,21 @@ public partial class HomeViewModel : ObservableObject
                     MostRecent.Add(datum);
                     if (!NodeId.Contains(datum.location))
                         NodeId.Add(datum.location);
+                }
+                switch (datum.battery_status)
+                {
+                    case "1":
+                        datum.battery_status = "bat1.png";
+                        break;
+                    case "2":   
+                        datum.battery_status = "bat2.png";
+                        break;
+                    case "3":
+                        datum.battery_status = "bat3.png";
+                        break;
+                    case "4":
+                        datum.battery_status = "bat4.png";
+                        break;
                 }
             }
         }

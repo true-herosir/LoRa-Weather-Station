@@ -8,6 +8,7 @@ namespace WeatherThingy.Sources.ViewModels;
 public partial class HomeViewModel : ObservableObject
 {
     public ObservableCollection<Datum> MostRecent { get; } = new();
+    public ObservableCollection<string> NodeId { get; } = new();
 
     private IWeatherThingyService weather_thingy_service;
 
@@ -24,8 +25,15 @@ public partial class HomeViewModel : ObservableObject
         try
         {
             var data = await weather_thingy_service.GetNodeData();
-            foreach (var datum in data.data) 
-                MostRecent.Add(datum);
+            foreach (var datum in data.data)
+            {
+                if (datum is not null)
+                {
+                    MostRecent.Add(datum);
+                    if (!NodeId.Contains(datum.location))
+                        NodeId.Add(datum.location);
+                }
+            }
         }
         catch (Exception ex)
         {

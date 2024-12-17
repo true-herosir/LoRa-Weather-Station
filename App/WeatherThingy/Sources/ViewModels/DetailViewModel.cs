@@ -87,11 +87,6 @@ namespace WeatherThingy.Sources.ViewModels
         };
 
 
-
-
-
-
-
         public async Task ShowData(DateTime start, DateTime end)
         {
             Series.Clear();

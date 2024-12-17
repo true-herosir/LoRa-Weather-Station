@@ -7,7 +7,6 @@
 
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="20">
-
             <!-- Node ID Collection -->
             <Label Text="Location" 
                    FontSize="18" 
@@ -25,10 +24,16 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Button Text="{Binding .}" 
-                                   HorizontalOptions="Center" 
-                                   VerticalOptions="Center" 
-                                   Padding="5"
-                                   FontAttributes="Bold">
+                                    HorizontalOptions="Center" 
+                                    VerticalOptions="Center" 
+                                    Padding="5"
+                                    FontAttributes="Bold">
+                                <Button.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                         CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:HomeViewModel}}, Path=RefreshLocationCommand}" 
+                                    />
+                                </Button.GestureRecognizers>
                             </Button>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -53,7 +58,7 @@
             <Label Text="Most Recent Data" FontSize="18" FontAttributes="Bold" Margin="0,0,0,10"
                    AutomationProperties.Name="Most Recent Data Section" />
             <Border Padding="10">
-                <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+                <RefreshView Command="{Binding RefreshLocationCommand}" IsRefreshing="{Binding IsRefreshing}">
                     <CollectionView ItemsSource="{Binding FilteredNode}" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
@@ -75,9 +80,6 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <!--<Grid.GestureRecognizers>
-                                            <TapGestureRecognizer CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:MainViewModel}}, Path=GoToDetailCommand}" />
-                                        </Grid.GestureRecognizers>-->
 
                                         <!-- Node ID -->
                                         <Label Grid.Row="0" Grid.Column="0" Text="Node ID:" FontAttributes="Bold" />
@@ -113,7 +115,6 @@
 
                                         <!-- Battery Status -->
                                         <Label Grid.Row="8" Grid.Column="0" Text="Battery :" FontAttributes="Bold" />
-                                        <!--<Label Grid.Row="8" Grid.Column="1" Text="{Binding battery_status}" />-->
                                         <Image Grid.Row="8" Grid.Column="1" Source="{Binding battery_status}" HeightRequest="20" HorizontalOptions="Start"/>
 
                                     </Grid>

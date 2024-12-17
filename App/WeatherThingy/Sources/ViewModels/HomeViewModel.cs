@@ -1,94 +1,164 @@
-﻿using WeatherThingy.Sources.Services;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Collections;
-using System.Collections.ObjectModel;
+﻿using System.Windows.Input;
+using WeatherThingy.Sources.Services;
 
-namespace WeatherThingy.Sources.ViewModels;
-
-public partial class HomeViewModel : ObservableObject
+namespace WeatherThingy.Sources.ViewModels
 {
-    public ObservableCollection<Datum> MostRecent { get; } = new();
-    public ObservableCollection<Datum> FilteredNode { get; } = new();
-    public ObservableCollection<string> NodeId { get; } = new();
-
-    private IWeatherThingyService weather_thingy_service;
-
-    Image image = new Image();
-
-    public HomeViewModel()
+    public partial class HomeViewModel : ObservableObject
     {
-        weather_thingy_service = new WeatherThingyService();
-        _ = InitializeData();
-    }
+        public ObservableCollection<Datum> MostRecent { get; } = new();
+        public ObservableCollection<Datum> FilteredNode { get; } = new();
+        public ObservableCollection<string> NodeId { get; } = new();
 
-    private async Task InitializeData()
-    {
-        await GetMostRecentData();
-        if (NodeId.Any())
-            await GetNodeByLocation(NodeId[0]);
-    }
+        //public ICommand RefreshCommand { get; }
+        public ICommand RefreshLocationCommand { get; }
 
-
-    [RelayCommand]
-    private async Task GetMostRecentData()
-    {
-        try
+        private bool _isRefreshing;
+        public bool IsRefreshing
         {
-            var data = await weather_thingy_service.GetNodeData();
-            foreach (var datum in data.data)
-            {
-                if (datum is not null)
-                {
-                    MostRecent.Add(datum);
-                    if (!NodeId.Contains(datum.location))
-                        NodeId.Add(datum.location);
-                }
-                switch (datum.battery_status)
-                {
-                    case "1":
-                        datum.battery_status = "bat1.png";
-                        break;
-                    case "2":   
-                        datum.battery_status = "bat2.png";
-                        break;
-                    case "3":
-                        datum.battery_status = "bat3.png";
-                        break;
-                    case "4":
-                        datum.battery_status = "bat4.png";
-                        break;
-                }
-            }
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
         }
-        catch (Exception ex)
+
+        private readonly IWeatherThingyService _weatherThingyService;
+
+        // Use a dictionary for better status mapping
+        private static readonly Dictionary<string, string> BatteryStatusMap = new()
         {
-            // Replace with proper logging
-            Console.WriteLine($"Error fetching data: {ex.Message}");
+            { "1", "bat1.png" },
+            { "2", "bat2.png" },
+            { "3", "bat3.png" },
+            { "4", "bat4.png" }
+        };
+
+        // Constructor
+        public HomeViewModel(IWeatherThingyService weatherThingyService)
+        {
+            _weatherThingyService = weatherThingyService ?? throw new ArgumentNullException(nameof(weatherThingyService));
+
+            // Initialize commands
+            //RefreshCommand = new RelayCommand(OnRefresh);
+            RefreshLocationCommand = new RelayCommand<string>(OnRefreshLocation);
+
+            // Initialize data asynchronously
+            _ = InitializeData();
         }
-    }
 
-    [RelayCommand]
-    private async Task GetNodeByLocation(string location)
-    {
-        if (string.IsNullOrEmpty(location))
-            return;
-
-        try
+        // Initialize value by fetching the data
+        private async Task InitializeData()
         {
-            // Assuming MostRecent is an ObservableCollection or IQueryable
-            var filteredNodes = MostRecent.Where(n => n.location == location);
-
-            // If you need to update the UI or another collection with the results
+            MostRecent.Clear();
             FilteredNode.Clear();
-            foreach (var node in filteredNodes)
+            NodeId.Clear();
+            await GetMostRecentDataCommand();
+            await GetNodeByLocationCommand(NodeId.FirstOrDefault());
+        }
+
+
+        //private async void OnRefresh()
+        //{
+        //    IsRefreshing = true;
+        //    try
+        //    {
+        //        RefreshData();
+        //    }
+        //    finally
+        //    {
+        //        IsRefreshing = false;
+        //    }
+        //}
+
+        // Refresh method with location parameter
+        private async void OnRefreshLocation(string location)
+        {
+            IsRefreshing = true;
+            try
             {
-                FilteredNode.Add(node); // Assuming FilteredNodes is a bindable collection
+                // Refresh data for a specific location
+                if (!string.IsNullOrEmpty(location))
+                {
+                    await GetNodeByLocationCommand(location);
+                }
+            }
+            finally
+            {
+                IsRefreshing = false;
             }
         }
-        catch (Exception ex)
+
+        // Common method to clear collections and refresh data
+        //private async Task RefreshData()
+        //{
+        //    MostRecent.Clear();
+        //    FilteredNode.Clear();
+        //    NodeId.Clear();
+
+        //    await Task.Delay(500); // Simulate a delay for refreshing data
+        //    await GetMostRecentDataCommand();
+        //}
+
+        // Get the most recent data
+        [RelayCommand]
+        private async Task GetMostRecentDataCommand()
         {
-            // Handle potential exceptions (e.g., logging)
-            Debug.WriteLine($"Error in GetNodeByLocation: {ex.Message}");
+            try
+            {
+                var data = await _weatherThingyService.GetNodeData();
+                foreach (var datum in data.data)
+                {
+                    if (datum is not null)
+                    {
+                        MostRecent.Add(datum);
+                        if (!NodeId.Contains(datum.location))
+                            NodeId.Add(datum.location);
+                        switch (datum.battery_status)
+                        {
+                            case "1":
+                                datum.battery_status = "bat1.png";
+                                break;
+                            case "2":
+                                datum.battery_status = "bat2.png";
+                                break;
+                            case "3":
+                                datum.battery_status = "bat3.png";
+                                break;
+                            case "4":
+                                datum.battery_status = "bat4.png";
+                                break;
+                        }
+                    }
+                   
+                }
+            }
+            catch (Exception ex)
+            {
+                // Replace with proper logging
+                Console.WriteLine($"Error fetching data: {ex.Message}");
+            }
+        }
+
+        // Get nodes filtered by location
+        private Task GetNodeByLocationCommand(string location)
+        {
+            if (string.IsNullOrEmpty(location))
+                return Task.CompletedTask;
+
+            try
+            {
+                // Filter nodes by location and update the FilteredNode collection
+                var filteredNodes = MostRecent.Where(n => n.location.Equals(location, StringComparison.OrdinalIgnoreCase)).ToList();
+                FilteredNode.Clear();
+                foreach (var node in filteredNodes)
+                {
+                    FilteredNode.Add(node);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the error appropriately
+                Debug.WriteLine($"Error filtering nodes by location: {ex.Message}");
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

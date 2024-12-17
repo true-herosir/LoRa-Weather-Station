@@ -27,7 +27,7 @@ public partial class Datum
     public double? max_humidity { get; set; }
     public double? max_temperature_indoor { get; set; }
     public double? max_temperature_outdoor { get; set; }
-    public int? battery_status { get; set; }
+    public string? battery_status { get; set; }
 }
 
 public partial class Root

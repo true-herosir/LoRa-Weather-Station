@@ -98,7 +98,7 @@ namespace WeatherThingy.Sources.Services
 
                         battery_status = item.TryGetProperty("battery_status", out var batteryStatusElement) &&
                      short.TryParse(batteryStatusElement.ToString(), out var parsedBatteryStatus)
-        ? (short?)parsedBatteryStatus
+        ? parsedBatteryStatus.ToString()
         : null,
 
 

@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WeatherThingy.Sources.Views.HomePage"
              xmlns:viewModel="clr-namespace.WeatherThingy.Sources.ViewModels"
-             Title="HomePage"
-             BackgroundColor="#F9F9F9">
+             Title="HomePage">
 
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="20">
@@ -16,21 +15,18 @@
                    Margin="0,0,0,10"
                    AutomationProperties.Name="Location Section" />
 
-            <Border BackgroundColor="White" 
+            <Border
                     Padding="10" 
                     Margin="0,10,0,10"> 
                 <CollectionView ItemsSource="{Binding NodeId}" 
                     ItemsLayout="HorizontalList" 
                     HorizontalOptions="Fill"
-                    SelectedItem="{Binding SelectedNode}"
                     AutomationProperties.Name="Node ID List">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Frame CornerRadius="5" 
                                    Padding="10" 
                                    Margin="5"
-                                   BackgroundColor="#FFFFFF"
-                                   BorderColor="#E0E0E0"
                                    HasShadow="False">
                                 <Label Text="{Binding .}" 
                                        HorizontalOptions="Center" 
@@ -38,9 +34,9 @@
                                        Padding="5"
                                        FontAttributes="Bold"
                                        AutomationProperties.Name="{Binding .}" >
-                                    <Label.GestureRecognizers>
+                                    <!--<Label.GestureRecognizers>
                                         <TapGestureRecognizer CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:MainViewModel}}, Path=GoToDetailCommand}" />
-                                    </Label.GestureRecognizers>
+                                    </Label.GestureRecognizers>-->
                                 </Label>
                             </Frame>
                         </DataTemplate>
@@ -54,7 +50,6 @@
                                    WidthRequest="100" 
                                    AutomationProperties.Name="Empty Locations Image" />
                             <Label Text="No locations available."
-                                   TextColor="Gray" 
                                    FontSize="16" 
                                    AutomationProperties.Name="Empty Locations Message" />   
                         </VerticalStackLayout>
@@ -66,13 +61,13 @@
             <!-- Most Recent Data Collection -->
             <Label Text="Most Recent Data" FontSize="18" FontAttributes="Bold" Margin="0,0,0,10"
                    AutomationProperties.Name="Most Recent Data Section" />
-            <Border BackgroundColor="White" Padding="10">
-                <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <Border Padding="10">
+                <!--<RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">-->
                     <CollectionView ItemsSource="{Binding MostRecent}" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Frame CornerRadius="10" BackgroundColor="#FFFFFF" Padding="10" Margin="10"
-                                       BorderColor="#E0E0E0">
+                                <Frame CornerRadius="10" Padding="10" Margin="10"
+                                      >
                                     <Grid ColumnSpacing="10" RowSpacing="5">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -89,9 +84,9 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <Grid.GestureRecognizers>
+                                        <!--<Grid.GestureRecognizers>
                                             <TapGestureRecognizer CommandParameter="{Binding .}" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:MainViewModel}}, Path=GoToDetailCommand}" />
-                                        </Grid.GestureRecognizers>
+                                        </Grid.GestureRecognizers>-->
 
                                         <!-- Node ID -->
                                         <Label Grid.Row="0" Grid.Column="0" Text="Node ID:" FontAttributes="Bold" />
@@ -134,13 +129,11 @@
                         </CollectionView.ItemTemplate>
                         <CollectionView.EmptyView>
                             <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                <Label Text="No data available." TextColor="Gray" />
+                                <Label Text="No data available." />
                             </StackLayout>
                         </CollectionView.EmptyView>
                     </CollectionView>
-                </RefreshView>
             </Border>
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

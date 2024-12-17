@@ -43,8 +43,11 @@ namespace WeatherThingy.Sources.ViewModels
                 if (item.time.HasValue) // Ensure time is not null
                 {
                     var retrieved = new plot();
+                    var retrieved_min = new plot();
                     retrieved.node_id = item.node_id;
+                    retrieved_min.node_id = item.node_id + "_min";
                     plots.Add(retrieved);
+                    plots.Add(retrieved_min);
 
                 }
 
@@ -103,10 +106,14 @@ namespace WeatherThingy.Sources.ViewModels
             Series.Clear();
             nodes.Clear();
 
+
             nodes.Add("lht-gronau"); nodes.Add("lht-wierden"); nodes.Add("mkr-saxion");
             try
             {
-                
+                double filtered_value;
+                TimeSpan timeDiff = end - start;
+                int daysDifference = timeDiff.Days;
+
                 foreach (var node in nodes)
                 {
                      
@@ -124,10 +131,15 @@ namespace WeatherThingy.Sources.ViewModels
                         {
 
                             var time_stamp = item.time.HasValue ? item.time.Value : item.the_day.Value;
-
-
-                            // Add data to chart
-                            plots[index].datapoints.Add(new DateTimePoint(time_stamp, item.humidity.Value));
+                            
+                            if (daysDifference > 14)
+                            {
+                                filtered_value = item.max_humidity.Value;
+                                plots[index + 1].datapoints.Add(new DateTimePoint(time_stamp, item.min_humidity.Value));
+                            }
+                            else filtered_value = item.humidity.Value;
+                                // Add data to chart
+                                plots[index].datapoints.Add(new DateTimePoint(time_stamp, filtered_value));
                         }
 
                     }
@@ -139,6 +151,17 @@ namespace WeatherThingy.Sources.ViewModels
 
                             Name = plots[index].node_id
                         });
+                    if (daysDifference > 14)
+                    {
+                        Series.Add(
+                        new LineSeries<DateTimePoint>
+                        {
+                            Values = plots[index+1].datapoints,
+
+                            Name = plots[index+1].node_id
+                        });
+
+                    }
 
                 }
     }

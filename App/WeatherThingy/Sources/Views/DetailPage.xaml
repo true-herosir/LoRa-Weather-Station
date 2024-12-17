@@ -34,6 +34,7 @@
                 Grid.Row="0"/>
             <Button 
                 Text="3 Days"
+                Clicked="OnThreeDayDataClicked"
                 Grid.Row="0" />
             <Button 
                 Text="1 Week"
@@ -42,9 +43,11 @@
 
             <Button 
                 Text="2 Weeks"
+                Clicked="OnTwoWeekDataClicked"
                 Grid.Row="0" />
             <Button 
                 Text="1 Month"
+                Clicked="OnMonthDataClicked"
                 Grid.Row="0" />
             <Button 
                 Text="Custom range"

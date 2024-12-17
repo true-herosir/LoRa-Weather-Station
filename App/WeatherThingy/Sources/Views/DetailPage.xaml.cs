@@ -68,5 +68,55 @@ namespace WeatherThingy.Sources.Views
 
             }
         }
+
+        private async void OnThreeDayDataClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is DetailViewModel viewModel)
+            {
+
+                //Chart.Series = null; // Clear existing series
+                var start = DateTime.Now.AddDays(-3);
+                var end = DateTime.Now;
+
+                Chart.IsVisible = false;
+                await viewModel.ShowData(start, end);
+                Chart.CoreChart.Update();
+                Chart.IsVisible = true;
+
+            }
+        }
+
+        private async void OnTwoWeekDataClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is DetailViewModel viewModel)
+            {
+
+                //Chart.Series = null; // Clear existing series
+                var start = DateTime.Now.AddDays(-14);
+                var end = DateTime.Now;
+
+                Chart.IsVisible = false;
+                await viewModel.ShowData(start, end);
+                Chart.CoreChart.Update();
+                Chart.IsVisible = true;
+
+            }
+        }
+        private async void OnMonthDataClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is DetailViewModel viewModel)
+            {
+
+                //Chart.Series = null; // Clear existing series
+                var start = DateTime.Now.AddMonths(-1);
+                var end = DateTime.Now;
+
+                Chart.IsVisible = false;
+                await viewModel.ShowData(start, end);
+                Chart.CoreChart.Update();
+                Chart.IsVisible = true;
+
+            }
+        }
     }
 }

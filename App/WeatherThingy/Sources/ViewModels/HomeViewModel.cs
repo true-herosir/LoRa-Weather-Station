@@ -8,6 +8,7 @@ namespace WeatherThingy.Sources.ViewModels;
 public partial class HomeViewModel : ObservableObject
 {
     public ObservableCollection<Datum> MostRecent { get; } = new();
+    public ObservableCollection<Datum> FilteredNode { get; } = new();
     public ObservableCollection<string> NodeId { get; } = new();
 
     private IWeatherThingyService weather_thingy_service;
@@ -15,7 +16,14 @@ public partial class HomeViewModel : ObservableObject
     public HomeViewModel()
     {
         weather_thingy_service = new WeatherThingyService();
-        Task.Run(async () => await GetMostRecentData());
+        _ = InitializeData();
+    }
+
+    private async Task InitializeData()
+    {
+        await GetMostRecentData();
+        if (NodeId.Any())
+            await GetNodeByLocation(NodeId[0]);
     }
 
 
@@ -39,6 +47,31 @@ public partial class HomeViewModel : ObservableObject
         {
             // Replace with proper logging
             Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task GetNodeByLocation(string location)
+    {
+        if (string.IsNullOrEmpty(location))
+            return;
+
+        try
+        {
+            // Assuming MostRecent is an ObservableCollection or IQueryable
+            var filteredNodes = MostRecent.Where(n => n.location == location);
+
+            // If you need to update the UI or another collection with the results
+            FilteredNode.Clear();
+            foreach (var node in filteredNodes)
+            {
+                FilteredNode.Add(node); // Assuming FilteredNodes is a bindable collection
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle potential exceptions (e.g., logging)
+            Debug.WriteLine($"Error in GetNodeByLocation: {ex.Message}");
         }
     }
 }

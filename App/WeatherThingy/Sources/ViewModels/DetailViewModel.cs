@@ -8,6 +8,8 @@ using LiveChartsCore.Kernel.Sketches;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 
 namespace WeatherThingy.Sources.ViewModels
@@ -18,19 +20,48 @@ namespace WeatherThingy.Sources.ViewModels
         public string node_id { get; set; }
     }
 
-    public class DetailViewModel
+    public class DetailViewModel : INotifyPropertyChanged
     {
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public DateTime _lowdate;
+        public DateTime LowDate { 
+            get => _lowdate;
+            set {
+                if (_lowdate != value) // Update only if the value is different
+                {
+                    _lowdate = value;
+                    OnPropertyChanged(); // Notify subscribers
+                }
+            }
+        }
+
+        public DateTime _highdate;
+        public DateTime HighDate
+        {
+            get => _highdate;
+            set
+            {
+                if (_highdate != value) // Update only if the value is different
+                {
+                    _highdate = value;
+                    OnPropertyChanged(); // Notify subscribers
+                }
+            }
+        }
         public DateTime MinDate { get; } = new DateTime(2024, 11, 22);
         public DateTime MaxDate { get; } = DateTime.Now;
         public List<plot> plots = new List<plot>();
         public List<string> nodes = new List<string>();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         // ObservableCollection for chart data
         public ObservableCollection<DateTimePoint> HumiditySeriesData { get; set; } = new ObservableCollection<DateTimePoint>();
-        //public ObservableCollection<DateTimePoint> HumiditySeriesData2 { get; set; } = new ObservableCollection<DateTimePoint>();
-
-        // Property to bind to the chart
-
-        //public ISeries[] Series { get; set; } = new ISeries[] { };
         public ObservableCollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>();
 
 
@@ -63,19 +94,6 @@ namespace WeatherThingy.Sources.ViewModels
 
 
         }
-
-        //  public ISeries[] Series => new ISeries[]
-        //{
-        //      new LineSeries<DateTimePoint>
-        //      {
-        //          Values = HumiditySeriesData,
-
-        //          Name = "test"
-        //      }
-        //};
-
-
-
 
         //X-Axis configuration with DateTime label formatting
         public Axis[] XAxes { get; set; } = new Axis[]

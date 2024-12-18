@@ -52,10 +52,6 @@
             <Button 
                 Text="Custom range"
                 Grid.Row="0" />
-            <HorizontalStackLayout.GestureRecognizers>
-                <PointerGestureRecognizer PointerEntered="OnPointerEntered"
-                                          PointerExited="OnPointerExited"/>
-            </HorizontalStackLayout.GestureRecognizers>
         </HorizontalStackLayout>
         <HorizontalStackLayout
             VerticalOptions="Center" 
@@ -63,9 +59,11 @@
             Grid.Row="0"
             Grid.Column="1">
             <DatePicker MaximumDate="{Binding MaxDate}"
-                        MinimumDate="{Binding MinDate}"/>
+                        MinimumDate="{Binding MinDate}"
+                        Date="{Binding LowDate}"/>
             <DatePicker MaximumDate="{Binding MaxDate}"
-                        MinimumDate="{Binding MinDate}"/>
+                        MinimumDate="{Binding MinDate}"
+                        Date="{Binding HighDate}"/>
         </HorizontalStackLayout>
         <!-- Chart in the second row -->
         <lvc:CartesianChart 

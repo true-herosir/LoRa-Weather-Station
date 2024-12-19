@@ -5,10 +5,30 @@
              x:Class="WeatherThingy.App">
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
+            <!--<ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary.MergedDictionaries>-->
+
+         <Color x:Key="BackgroundColourMain">#cdebf9</Color>
+            <Color x:Key="BackgroundColourAccent">#627d98</Color>
+            <Color x:Key="BackgroundColourLightAccent">#89c2d9</Color>
+            <Color x:Key="TextColourMain">#333333</Color>
+            <Style x:Key="PageStyle" TargetType="Page">
+                <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColourMain}"/>
+            </Style>
+            <Style TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColourLightAccent}"/>
+                <Setter Property="CornerRadius" Value="0"/>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource TextColourMain}"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColourAccent}"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

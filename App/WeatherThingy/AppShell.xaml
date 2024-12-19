@@ -6,9 +6,15 @@
     xmlns:local="clr-namespace:WeatherThingy"
     xmlns:views="clr-namespace:WeatherThingy.Sources.Views"
     Shell.FlyoutBehavior="Disabled"
-    Title="WeatherThingy"
-    BackgroundColor="#7AB2D3">
+    Title="WeatherThingy">
 
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Shell" ApplyToDerivedTypes="True">
+                <Setter Property="Shell.BackgroundColor" Value="{StaticResource BackgroundColourAccent}"/>
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
     <TabBar>
         <ShellContent
         Title="Home"

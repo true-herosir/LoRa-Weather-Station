@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WeatherThingy.Sources.Views.HomePage"
              xmlns:viewModel="clr-namespace:WeatherThingy.Sources.ViewModels;assembly=WeatherThingy"
-             Title="HomePage">
+             Style="{StaticResource PageStyle}">
 
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="20">
@@ -14,20 +14,18 @@
                    Margin="0,0,0,10"
                    AutomationProperties.Name="Location Section" />
 
-            <Border
+            <!--<Border
                     Padding="10" 
-                    Margin="0,10,0,10">
+                    Margin="0,10,0,10">-->
                 <CollectionView ItemsSource="{Binding NodeId}" 
-                    ItemsLayout="HorizontalList" 
                     HorizontalOptions="Fill"
                     AutomationProperties.Name="Node ID List">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="5" />
+                    </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Button Text="{Binding .}" 
-                                    HorizontalOptions="Center" 
-                                    VerticalOptions="Center" 
-                                    Padding="5"
-                                    FontAttributes="Bold">
+                            <Button Text="{Binding .}">
                                 <Button.GestureRecognizers>
                                     <TapGestureRecognizer 
                                          CommandParameter="{Binding .}"
@@ -51,19 +49,21 @@
                         </VerticalStackLayout>
                     </CollectionView.EmptyView>
                 </CollectionView>
-            </Border>
+            <!--</Border>-->
 
 
             <!-- Most Recent Data Collection -->
             <Label Text="Most Recent Data" FontSize="18" FontAttributes="Bold" Margin="0,0,0,10"
                    AutomationProperties.Name="Most Recent Data Section" />
-            <Border Padding="10">
+            <!--<Border>-->
                 <RefreshView Command="{Binding RefreshLocationCommand}" IsRefreshing="{Binding IsRefreshing}">
                     <CollectionView ItemsSource="{Binding FilteredNode}" SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Frame CornerRadius="10" Padding="10" Margin="10"
-                                      >
+                            <Frame>
                                     <Grid ColumnSpacing="10" RowSpacing="5">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -80,7 +80,7 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-
+                        
                                         <!-- Node ID -->
                                         <Label Grid.Row="0" Grid.Column="0" Text="Node ID:" FontAttributes="Bold" />
                                         <Label Grid.Row="0" Grid.Column="1" Text="{Binding node_id}" />
@@ -128,7 +128,7 @@
                         </CollectionView.EmptyView>
                     </CollectionView>
                 </RefreshView>
-            </Border>
+            <!--</Border>-->
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

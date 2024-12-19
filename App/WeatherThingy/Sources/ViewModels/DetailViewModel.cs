@@ -143,6 +143,7 @@ namespace WeatherThingy.Sources.ViewModels
                         index++;
                     }
                     plots[index].datapoints.Clear();
+                    plots[index+1].datapoints.Clear();
                     foreach (var item in data.data)
                     {
                         if (item.time.HasValue || item.the_day.HasValue) // Ensure time is not null
@@ -153,6 +154,7 @@ namespace WeatherThingy.Sources.ViewModels
                             if (daysDifference > 14)
                             {
                                 filtered_value = item.max_humidity.Value;
+                                
                                 plots[index + 1].datapoints.Add(new DateTimePoint(time_stamp, item.min_humidity.Value));
                             }
                             else filtered_value = item.humidity.Value;
@@ -167,7 +169,7 @@ namespace WeatherThingy.Sources.ViewModels
                         {
                             Values = plots[index].datapoints,
 
-                            Name = plots[index].node_id
+                            Name = daysDifference > 14? plots[index].node_id + "_max" : plots[index].node_id ;
                         });
                     if (daysDifference > 14)
                     {

@@ -13,16 +13,6 @@ namespace WeatherThingy.Sources.Views
             BindingContext = new DetailViewModel();
         }
 
-        private void OnPointerEntered(object sender, EventArgs e)
-        {
-            if (sender is Button button) button.Scale = 1.10;
-        }
-
-        private void OnPointerExited(object sender, EventArgs e)
-        {
-            if (sender is Button button) button.Scale = 1;
-        }
-
         // Example: Trigger ShowData when the page is loaded or when a button is clicked
         protected override void OnAppearing()
         {
@@ -37,30 +27,72 @@ namespace WeatherThingy.Sources.Views
         // Alternatively, you can bind it to a button click
         private async void OnDayDataClicked(object sender, EventArgs e)
         {
+            //Chart.Series = null; // Clear existing series
+            var start = DateTime.Now.AddDays(-1);
+            var end = DateTime.Now;
+
+            await OnDataExtract(sender, e, start, end);
+        }
+
+        private async void OnWeekDataClicked(object sender, EventArgs e)
+        {
+            //Chart.Series = null; // Clear existing series
+            var start = DateTime.Now.AddDays(-7);
+            var end = DateTime.Now;
+
+            await OnDataExtract(sender, e, start, end);
+        }
+
+        private async void OnThreeDayDataClicked(object sender, EventArgs e)
+        {
+            //Chart.Series = null; // Clear existing series
+            var start = DateTime.Now.AddDays(-3);
+            var end = DateTime.Now;
+
+            await OnDataExtract(sender, e, start, end);
+        }
+
+        private async void OnTwoWeekDataClicked(object sender, EventArgs e)
+        {
             if (BindingContext is DetailViewModel viewModel)
             {
-
                 //Chart.Series = null; // Clear existing series
-                var start = DateTime.Now.AddDays(-1);
+                var start = DateTime.Now.AddDays(-14);
                 var end = DateTime.Now;
 
-                Chart.IsVisible = false;
-                await viewModel.ShowData(start, end);
-                Chart.CoreChart.Update();
-                Chart.IsVisible = true;
+                await OnDataExtract(sender, e, start, end);
+
+            }
+        }
+        private async void OnMonthDataClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is DetailViewModel viewModel)
+            {
+                var start = DateTime.Now.AddMonths(-1);
+                var end = DateTime.Now;
+
+                await OnDataExtract(sender, e, start, end);
 
             }
         }
 
-        private async void OnWeekDataClicked(object sender, EventArgs e)
+        private async void OnCustomRangeClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is DetailViewModel viewModel)
+            {
+                var start = viewModel.LowDate;
+                var end = viewModel.HighDate;
+                if (start > end) { return; } //TODO: ADD LABEL FOR ERROR TEXT AND BIND IT
+                await OnDataExtract(sender, e, start, end);
+
+            }
+        }
+        private async Task OnDataExtract(object sender, EventArgs e, DateTime start, DateTime end)
         {
             if (BindingContext is DetailViewModel viewModel)
             {
 
                 //Chart.Series = null; // Clear existing series
-                var start = DateTime.Now.AddDays(-7);
-                var end = DateTime.Now;
-
                 Chart.IsVisible = false;
                 await viewModel.ShowData(start, end);
                 Chart.CoreChart.Update();

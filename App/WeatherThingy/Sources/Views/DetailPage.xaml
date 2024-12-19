@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
+
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              x:Class="WeatherThingy.Sources.Views.DetailPage"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -32,6 +34,7 @@
                 Grid.Row="0"/>
             <Button 
                 Text="3 Days"
+                Clicked="OnThreeDayDataClicked"
                 Grid.Row="0" />
             <Button 
                 Text="1 Week"
@@ -40,17 +43,16 @@
 
             <Button 
                 Text="2 Weeks"
+                Clicked="OnTwoWeekDataClicked"
                 Grid.Row="0" />
             <Button 
                 Text="1 Month"
+                Clicked="OnMonthDataClicked"
                 Grid.Row="0" />
             <Button 
                 Text="Custom range"
+                Clicked="OnCustomRangeClicked"
                 Grid.Row="0" />
-            <HorizontalStackLayout.GestureRecognizers>
-                <PointerGestureRecognizer PointerEntered="OnPointerEntered"
-                                          PointerExited="OnPointerExited"/>
-            </HorizontalStackLayout.GestureRecognizers>
         </HorizontalStackLayout>
         <HorizontalStackLayout
             VerticalOptions="Center" 
@@ -58,9 +60,11 @@
             Grid.Row="0"
             Grid.Column="1">
             <DatePicker MaximumDate="{Binding MaxDate}"
-                        MinimumDate="{Binding MinDate}"/>
+                        MinimumDate="{Binding MinDate}"
+                        Date="{Binding LowDate}"/>
             <DatePicker MaximumDate="{Binding MaxDate}"
-                        MinimumDate="{Binding MinDate}"/>
+                        MinimumDate="{Binding MinDate}"
+                        Date="{Binding HighDate}"/>
         </HorizontalStackLayout>
         <!-- Chart in the second row -->
         <lvc:CartesianChart 

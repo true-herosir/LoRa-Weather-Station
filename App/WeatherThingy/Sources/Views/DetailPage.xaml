@@ -6,7 +6,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
              xmlns:vms="clr-namespace:WeatherThingy.Sources.ViewModels;assembly=WeatherThingy"
-             BindingContext="{Binding Source={StaticResource DetailViewModel}}">
+             BindingContext="{Binding Source={StaticResource DetailViewModel}}"
+             Style="{StaticResource PageStyle}">
 
 
     <!-- LiveCharts for the chart -->
@@ -76,7 +77,8 @@
             IsVisible="False"
             Grid.Row="1" 
             Grid.ColumnSpan="2"
-            ZoomMode="X"/>
+            LegendPosition="Bottom"
+            />
     </Grid>
 
 </ContentPage>

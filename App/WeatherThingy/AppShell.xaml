@@ -11,19 +11,24 @@
     <Shell.Resources>
         <ResourceDictionary>
             <Style TargetType="Shell" ApplyToDerivedTypes="True">
-                <Setter Property="Shell.BackgroundColor" Value="{StaticResource BackgroundColourAccent}"/>
+                <Setter Property="Shell.BackgroundColor" Value="{StaticResource Navigation}"/>
             </Style>
         </ResourceDictionary>
     </Shell.Resources>
-    <TabBar>
-        <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate views:HomePage}"
-        Route="MainPage"/>
-        <ShellContent
-        Title="Detail"
-        ContentTemplate="{DataTemplate views:DetailPage}"
-        Route="NewsPage"/>
-    </TabBar>
+
+
+    <FlyoutItem Title="Navigation">
+        <FlyoutItem.Icon>
+            <FontImageSource FontFamily="FAS"/>
+        </FlyoutItem.Icon>
+        <Tab Title="Menu">
+            <Tab.Icon>
+                <FontImageSource FontFamily="FAS"/>
+            </Tab.Icon>
+            <ShellContent Title="Home" ContentTemplate="{DataTemplate views:HomePage}" Route="MainPage" />
+            <ShellContent Title="Analytic" ContentTemplate="{DataTemplate views:DetailPage}" Route="DetailPage" />
+        </Tab>
+       
+    </FlyoutItem>
 
 </Shell>

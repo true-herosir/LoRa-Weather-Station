@@ -9,126 +9,116 @@
         <VerticalStackLayout Spacing="10" Padding="20">
             <!-- Node ID Collection -->
             <Label Text="Location" 
-                   FontSize="18" 
-                   FontAttributes="Bold" 
-                   Margin="0,0,0,10"
-                   AutomationProperties.Name="Location Section" />
+                   Style="{StaticResource SectionHeaderStyle}"
+                   />
 
-            <!--<Border
-                    Padding="10" 
-                    Margin="0,10,0,10">-->
-                <CollectionView ItemsSource="{Binding NodeId}" 
-                    HorizontalOptions="Fill"
-                    AutomationProperties.Name="Node ID List">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="5" />
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Button Text="{Binding .}">
-                                <Button.GestureRecognizers>
-                                    <TapGestureRecognizer 
+            <CollectionView ItemsSource="{Binding NodeId}" 
+                    HorizontalOptions="Fill">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="5" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding .}" Style="{StaticResource LocationButtonStyle}">
+                            <Button.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:HomeViewModel}}, Path=LoadLocationCommand}" 
                                          CommandParameter="{Binding .}"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:HomeViewModel}}, Path=RefreshLocationCommand}" 
+                                        
                                     />
-                                </Button.GestureRecognizers>
-                            </Button>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
+                            </Button.GestureRecognizers>
+                        </Button>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
 
-                    <!-- Empty View -->
-                    <CollectionView.EmptyView>
-                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
-                            <Image Source="empty_location.png" 
+                <!-- Empty View -->
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                        <Image Source="empty_location.png" 
                                    HeightRequest="100" 
                                    WidthRequest="100" 
                                    AutomationProperties.Name="Empty Locations Image" />
-                            <Label Text="No locations available."
+                        <Label Text="No locations available."
                                    FontSize="16" 
                                    AutomationProperties.Name="Empty Locations Message" />
-                        </VerticalStackLayout>
-                    </CollectionView.EmptyView>
-                </CollectionView>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
             <!--</Border>-->
 
 
             <!-- Most Recent Data Collection -->
-            <Label Text="Most Recent Data" FontSize="18" FontAttributes="Bold" Margin="0,0,0,10"
-                   AutomationProperties.Name="Most Recent Data Section" />
-            <!--<Border>-->
-                <RefreshView Command="{Binding RefreshLocationCommand}" IsRefreshing="{Binding IsRefreshing}">
-                    <CollectionView ItemsSource="{Binding FilteredNode}" SelectionMode="None">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
-                    </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                            <Frame>
-                                    <Grid ColumnSpacing="10" RowSpacing="5">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="2*" />
-                                        </Grid.ColumnDefinitions>
-                        
-                                        <!-- Node ID -->
-                                        <Label Grid.Row="0" Grid.Column="0" Text="Node ID:" FontAttributes="Bold" />
-                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding node_id}" />
+            <Label Text="Most Recent Data" 
+                   Style="{StaticResource SectionHeaderStyle}"/>
+            <CollectionView ItemsSource="{Binding FilteredNode}" SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame>
+                            <Grid ColumnSpacing="10" RowSpacing="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
 
-                                        <!-- Time -->
-                                        <Label Grid.Row="1" Grid.Column="0" Text="Date:" FontAttributes="Bold" />
-                                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding time}" />
+                                <!-- Node ID -->
+                                <Label Grid.Row="0" Grid.Column="0" Text="Node ID:" />
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding node_id}" />
 
-                                        <!-- Pressure -->
-                                        <Label Grid.Row="2" Grid.Column="0" Text="Pressure (hPa):" FontAttributes="Bold" />
-                                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding pressure}" />
+                                <!-- Time -->
+                                <Label Grid.Row="1" Grid.Column="0" Text="Date:" />
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding time}" />
 
-                                        <!-- Illumination -->
-                                        <Label Grid.Row="3" Grid.Column="0" Text="Illumination (lux):" FontAttributes="Bold" />
-                                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding illumination}" />
+                                <!-- Pressure -->
+                                <Label Grid.Row="2" Grid.Column="0" Text="Pressure (hPa):" />
+                                <Label Grid.Row="2" Grid.Column="1" Text="{Binding pressure}" />
 
-                                        <!-- Humidity -->
-                                        <Label Grid.Row="4" Grid.Column="0" Text="Humidity (%):" FontAttributes="Bold" />
-                                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding humidity}" />
+                                <!-- Illumination -->
+                                <Label Grid.Row="3" Grid.Column="0" Text="Illumination (lux):" />
+                                <Label Grid.Row="3" Grid.Column="1" Text="{Binding illumination}" />
 
-                                        <!-- Location -->
-                                        <Label Grid.Row="5" Grid.Column="0" Text="Location:" FontAttributes="Bold" />
-                                        <Label Grid.Row="5" Grid.Column="1" Text="{Binding location}" />
+                                <!-- Humidity -->
+                                <Label Grid.Row="4" Grid.Column="0" Text="Humidity (%):" />
+                                <Label Grid.Row="4" Grid.Column="1" Text="{Binding humidity}" />
 
-                                        <!-- Temperature Indoor -->
-                                        <Label Grid.Row="6" Grid.Column="0" Text="Temp. Indoor (°C):" FontAttributes="Bold" />
-                                        <Label Grid.Row="6" Grid.Column="1" Text="{Binding temperature_indoor}" />
+                                <!-- Location -->
+                                <Label Grid.Row="5" Grid.Column="0" Text="Location:" />
+                                <Label Grid.Row="5" Grid.Column="1" Text="{Binding location}" />
 
-                                        <!-- Temperature Outdoor -->
-                                        <Label Grid.Row="7" Grid.Column="0" Text="Temp. Outdoor (°C):" FontAttributes="Bold" />
-                                        <Label Grid.Row="7" Grid.Column="1" Text="{Binding temperature_outdoor}" />
+                                <!-- Temperature Indoor -->
+                                <Label Grid.Row="6" Grid.Column="0" Text="Temp. Indoor (°C):" />
+                                <Label Grid.Row="6" Grid.Column="1" Text="{Binding temperature_indoor}" />
 
-                                        <!-- Battery Status -->
-                                        <Label Grid.Row="8" Grid.Column="0" Text="Battery :" FontAttributes="Bold" />
-                                        <Image Grid.Row="8" Grid.Column="1" Source="{Binding battery_status}" HeightRequest="20" HorizontalOptions="Start"/>
+                                <!-- Temperature Outdoor -->
+                                <Label Grid.Row="7" Grid.Column="0" Text="Temp. Outdoor (°C):" />
+                                <Label Grid.Row="7" Grid.Column="1" Text="{Binding temperature_outdoor}" />
 
-                                    </Grid>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                        <CollectionView.EmptyView>
-                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                <Label Text="No data available." />
-                            </StackLayout>
-                        </CollectionView.EmptyView>
-                    </CollectionView>
-                </RefreshView>
-            <!--</Border>-->
+                                <!-- Battery Status -->
+                                <Label Grid.Row="8" Grid.Column="0" Text="Battery :" FontAttributes="Bold" />
+                                <Image Grid.Row="8" Grid.Column="1" Source="{Binding battery_status}" HeightRequest="20" HorizontalOptions="Start"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="No data available." />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

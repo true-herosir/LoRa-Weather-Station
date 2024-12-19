@@ -10,25 +10,99 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>-->
 
-         <Color x:Key="BackgroundColourMain">#cdebf9</Color>
-            <Color x:Key="BackgroundColourAccent">#627d98</Color>
-            <Color x:Key="BackgroundColourLightAccent">#89c2d9</Color>
-            <Color x:Key="TextColourMain">#333333</Color>
+            <!-- Enhanced Color Palette -->
+            <!-- Colors -->
+            <Color x:Key="Background">#E6F7FF</Color>
+            <Color x:Key="Navigation">#0288D1</Color>
+            <Color x:Key="Frame">#F0FAFF</Color>
+            <Color x:Key="Button">#03A9F4</Color>
+            <Color x:Key="ButtonPressed">#0288D1</Color>
+            <Color x:Key="TextLabel">#212121</Color>
+            <Color x:Key="SubText">#FAFAFA</Color>
+            <Color x:Key="EmptyText">#9E9E9E</Color>
+
+            <!-- Page Style -->
             <Style x:Key="PageStyle" TargetType="Page">
-                <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColourMain}"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
             </Style>
-            <Style TargetType="Frame">
-                <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColourLightAccent}"/>
-                <Setter Property="CornerRadius" Value="0"/>
+
+            <!-- Frame Style -->
+            <Style TargetType="Frame" x:Key="CardFrameStyle">
+                <Setter Property="BackgroundColor" Value="{StaticResource Frame}" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="{StaticResource Navigation}" Opacity="0.1" Offset="1,0" Radius="10" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Margin" Value="10" />
+                <Setter Property="Padding" Value="10" />
             </Style>
-            <Style TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource TextColourMain}"/>
+
+            <!-- Label Styles -->
+            <Style TargetType="Label" x:Key="DefaultLabelStyle">
+                <Setter Property="TextColor" Value="{StaticResource TextLabel}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="5" />
             </Style>
-            <Style TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColourAccent}"/>
-                <Setter Property="FontAttributes" Value="Bold"/>
+
+            <Style TargetType="Label" x:Key="SectionHeaderStyle">
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource Navigation}" />
+                <Setter Property="Margin" Value="0,0,0,10" />
             </Style>
-            
+
+            <Style TargetType="Label" x:Key="EmptyViewLabelStyle">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource EmptyText}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Button Styles -->
+            <Style TargetType="Button" x:Key="DefaultButtonStyle">
+                <Setter Property="BackgroundColor" Value="{StaticResource Button}" />
+                <Setter Property="TextColor" Value="{StaticResource SubText}" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="{StaticResource Navigation}" Opacity="0.3" Offset="3,3" Radius="5" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource ButtonPressed}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <Style TargetType="Button" x:Key="LocationButtonStyle" BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="CornerRadius" Value="5" />
+            </Style>
+
+            <!-- Specialized Data Card Style -->
+            <Style TargetType="Frame" x:Key="DataCardFrameStyle" BasedOn="{StaticResource CardFrameStyle}">
+                <Setter Property="Padding" Value="15" />
+            </Style>
+
+            <!-- Data Label Style -->
+            <Style TargetType="Label" x:Key="DataLabelStyle" BasedOn="{StaticResource DefaultLabelStyle}">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Margin" Value="0" />
+            </Style>
+
+            <!-- Dynamic Resources for Font Sizes -->
+            <!--<DynamicResource x:Key="FontSizeMedium" Key="FontSize" Value="16" />-->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

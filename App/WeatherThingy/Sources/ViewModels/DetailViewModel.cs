@@ -108,10 +108,10 @@ namespace WeatherThingy.Sources.ViewModels
                             return "0";
                         }
                     var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
-                    return dateTime.ToString("dd HH:mm");    // Display only day, hour, minute
+                    return dateTime.ToString("d-M HH:mm");    // Display only day, hour, minute
                 },
                 UnitWidth = TimeSpan.FromMinutes(30).Ticks, // Adjust the spacing for your data
-            }
+            }   
         };
 
 
@@ -161,24 +161,22 @@ namespace WeatherThingy.Sources.ViewModels
                     }
 
                     Series.Add(
-                        new LineSeries<DateTimePoint>
+                        new StepLineSeries<DateTimePoint>
                         {
                             Values = plots[index].datapoints,
 
                             Name = daysDifference > 14 ? plots[index].node_id + "_max" : plots[index].node_id,
-                            GeometrySize = 0,
-                            LineSmoothness = 0
+                            GeometrySize = 0
                         });
                     if (daysDifference > 14)
                     {
                         Series.Add(
-                        new LineSeries<DateTimePoint>
+                        new StepLineSeries<DateTimePoint>
                         {
                             Values = plots[index + 1].datapoints,
 
                             Name = plots[index + 1].node_id,
                             GeometrySize = 0,
-                            LineSmoothness = 0
                         });
 
                     }

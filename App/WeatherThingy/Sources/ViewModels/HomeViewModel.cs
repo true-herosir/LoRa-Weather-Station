@@ -6,11 +6,11 @@ namespace WeatherThingy.Sources.ViewModels
     public partial class HomeViewModel : ObservableObject
     {
         public ObservableCollection<Datum> MostRecent { get; } = new();
-        public ObservableCollection<Datum> FilteredNode { get; } = new();
+        public ObservableCollection<Datum> FilteredNode { get; set; } = new();
         public ObservableCollection<string> NodeId { get; } = new();
 
         //public ICommand RefreshCommand { get; }
-        public ICommand RefreshLocationCommand { get; }
+        public ICommand LoadLocationCommand { get; }
 
         private bool _isRefreshing;
         public bool IsRefreshing
@@ -37,7 +37,7 @@ namespace WeatherThingy.Sources.ViewModels
 
             // Initialize commands
             //RefreshCommand = new RelayCommand(OnRefresh);
-            RefreshLocationCommand = new RelayCommand<string>(OnRefreshLocation);
+            LoadLocationCommand = new RelayCommand<string>(OnClickedLocation);
 
             // Initialize data asynchronously
             _ = InitializeData();
@@ -54,47 +54,15 @@ namespace WeatherThingy.Sources.ViewModels
         }
 
 
-        //private async void OnRefresh()
-        //{
-        //    IsRefreshing = true;
-        //    try
-        //    {
-        //        RefreshData();
-        //    }
-        //    finally
-        //    {
-        //        IsRefreshing = false;
-        //    }
-        //}
-
-        // Refresh method with location parameter
-        private async void OnRefreshLocation(string location)
+        private async void OnClickedLocation(string location)
         {
-            IsRefreshing = true;
-            try
+            Console.WriteLine("click button " + location);
+            // Refresh data for a specific location
+            if (!string.IsNullOrEmpty(location))
             {
-                // Refresh data for a specific location
-                if (!string.IsNullOrEmpty(location))
-                {
-                    await GetNodeByLocationCommand(location);
-                }
-            }
-            finally
-            {
-                IsRefreshing = false;
+                await GetNodeByLocationCommand(location);
             }
         }
-
-        // Common method to clear collections and refresh data
-        //private async Task RefreshData()
-        //{
-        //    MostRecent.Clear();
-        //    FilteredNode.Clear();
-        //    NodeId.Clear();
-
-        //    await Task.Delay(500); // Simulate a delay for refreshing data
-        //    await GetMostRecentDataCommand();
-        //}
 
         // Get the most recent data
         [RelayCommand]
@@ -126,7 +94,7 @@ namespace WeatherThingy.Sources.ViewModels
                                 break;
                         }
                     }
-                   
+
                 }
             }
             catch (Exception ex)

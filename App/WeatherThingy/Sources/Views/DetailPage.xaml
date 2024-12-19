@@ -75,7 +75,8 @@
             HorizontalOptions="FillAndExpand"
             IsVisible="False"
             Grid.Row="1" 
-            Grid.ColumnSpan="2"/>
+            Grid.ColumnSpan="2"
+            ZoomMode="X"/>
     </Grid>
 
 </ContentPage>

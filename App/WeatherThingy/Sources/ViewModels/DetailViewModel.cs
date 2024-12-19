@@ -165,7 +165,9 @@ namespace WeatherThingy.Sources.ViewModels
                         {
                             Values = plots[index].datapoints,
 
-                            Name = daysDifference > 14 ? plots[index].node_id + "_max" : plots[index].node_id
+                            Name = daysDifference > 14 ? plots[index].node_id + "_max" : plots[index].node_id,
+                            GeometrySize = 0,
+                            LineSmoothness = 0
                         });
                     if (daysDifference > 14)
                     {
@@ -174,7 +176,9 @@ namespace WeatherThingy.Sources.ViewModels
                         {
                             Values = plots[index + 1].datapoints,
 
-                            Name = plots[index + 1].node_id
+                            Name = plots[index + 1].node_id,
+                            GeometrySize = 0,
+                            LineSmoothness = 0
                         });
 
                     }

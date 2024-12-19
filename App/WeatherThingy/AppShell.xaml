@@ -16,8 +16,20 @@
         </ResourceDictionary>
     </Shell.Resources>
 
+    <TabBar>
+        <ShellContent
+     Title="Home"
+     ContentTemplate="{DataTemplate views:HomePage}"
+     Route="MainPage"
+     Icon="live.png"/>
 
-    <FlyoutItem Title="Navigation">
+        <ShellContent
+     Title="Detail"
+     ContentTemplate="{DataTemplate views:DetailPage}"
+     Route="DetailPage"
+     Icon="graph.png"/>
+    </TabBar>
+    <!--<FlyoutItem Title="Navigation">
         <FlyoutItem.Icon>
             <FontImageSource FontFamily="FAS"/>
         </FlyoutItem.Icon>
@@ -29,6 +41,6 @@
             <ShellContent Title="Analytic" ContentTemplate="{DataTemplate views:DetailPage}" Route="DetailPage" />
         </Tab>
        
-    </FlyoutItem>
+    </FlyoutItem>-->
 
 </Shell>

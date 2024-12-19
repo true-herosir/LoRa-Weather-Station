@@ -8,9 +8,12 @@
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="20">
             <!-- Node ID Collection -->
-            <Label Text="Location" 
+            <HorizontalStackLayout>
+                <Image Source="sun.png" HeightRequest="50"/>
+                <Label Text="Location" 
                    Style="{StaticResource SectionHeaderStyle}"
                    />
+            </HorizontalStackLayout>
 
             <CollectionView ItemsSource="{Binding NodeId}" 
                     HorizontalOptions="Fill">
@@ -19,7 +22,8 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Button Text="{Binding .}" Style="{StaticResource LocationButtonStyle}">
+                        <Button Text="{Binding .}" Style="{StaticResource DefaultButtonStyle}">
+                        <!--<Button Text="{Binding .}" Style="{StaticResource LocationButtonStyle}">-->
                             <Button.GestureRecognizers>
                                 <TapGestureRecognizer 
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:HomeViewModel}}, Path=LoadLocationCommand}" 
@@ -59,56 +63,61 @@
                         <Frame>
                             <Grid ColumnSpacing="10" RowSpacing="5">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
+                                    <!--<RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />-->
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Node ID -->
-                                <Label Grid.Row="0" Grid.Column="0" Text="Node ID:" />
-                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding node_id}" />
-
-                                <!-- Time -->
-                                <Label Grid.Row="1" Grid.Column="0" Text="Date:" />
-                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding time}" />
-
-                                <!-- Pressure -->
-                                <Label Grid.Row="2" Grid.Column="0" Text="Pressure (hPa):" />
-                                <Label Grid.Row="2" Grid.Column="1" Text="{Binding pressure}" />
-
-                                <!-- Illumination -->
-                                <Label Grid.Row="3" Grid.Column="0" Text="Illumination (lux):" />
-                                <Label Grid.Row="3" Grid.Column="1" Text="{Binding illumination}" />
-
-                                <!-- Humidity -->
-                                <Label Grid.Row="4" Grid.Column="0" Text="Humidity (%):" />
-                                <Label Grid.Row="4" Grid.Column="1" Text="{Binding humidity}" />
+                                <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="3" HorizontalOptions="Start" VerticalOptions="Center" Spacing="20">
+                                    <!-- Battery -->
+                                    <Image Source="{Binding battery_status}" HeightRequest="35" HorizontalOptions="Start"/>
+                                    <!-- Node ID -->
+                                    <Label Text="{Binding node_id}" FontAttributes="Bold" FontSize="20" HorizontalOptions="Center"/>
+                                    <!-- Time -->
+                                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding time}" FontAttributes="Bold" FontSize="20"/>
+                                </HorizontalStackLayout>
 
                                 <!-- Location -->
-                                <Label Grid.Row="5" Grid.Column="0" Text="Location:" />
-                                <Label Grid.Row="5" Grid.Column="1" Text="{Binding location}" />
+                                <Image Grid.Row="1" Grid.Column="0" Source="location.png"/>
+                                <Label Grid.Row="1" Grid.Column="1" Text="Location:" FontAttributes="Bold"/>
+                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding location}"/>
+
+                                <!-- Pressure -->
+                                <Image Grid.Row="2" Grid.Column="0" Source="pressure.png"/>
+                                <Label Grid.Row="2" Grid.Column="1" Text="Pressure (hPa):" FontAttributes="Bold"/>
+                                <Label Grid.Row="2" Grid.Column="2" Text="{Binding pressure, TargetNullValue='N/A', FallbackValue='ERROR'}"/>
+
+                                <!-- Illumination -->
+                                <Image Grid.Row="3" Grid.Column="0" Source="illumination.png"/>
+                                <Label Grid.Row="3" Grid.Column="1" Text="Illumination (lux):" FontAttributes="Bold" />
+                                <Label Grid.Row="3" Grid.Column="2" Text="{Binding illumination, TargetNullValue='N/A', FallbackValue='ERROR'}" />
+
+                                <!-- Humidity -->
+                                <Image Grid.Row="4" Grid.Column="0" Source="humidity.png"/>
+                                <Label Grid.Row="4" Grid.Column="1" Text="Humidity (%):" FontAttributes="Bold" />
+                                <Label Grid.Row="4" Grid.Column="2" Text="{Binding humidity, TargetNullValue='N/A', FallbackValue='ERROR'}" />
 
                                 <!-- Temperature Indoor -->
-                                <Label Grid.Row="6" Grid.Column="0" Text="Temp. Indoor (°C):" />
-                                <Label Grid.Row="6" Grid.Column="1" Text="{Binding temperature_indoor}" />
+                                <Image Grid.Row="5" Grid.Column="0" Source="temp_inside.png"/>
+                                <Label Grid.Row="5" Grid.Column="1" Text="Temp. Indoor (°C):" FontAttributes="Bold" />
+                                <Label Grid.Row="5" Grid.Column="2" Text="{Binding temperature_indoor, TargetNullValue='N/A', FallbackValue='ERROR'}" />
 
                                 <!-- Temperature Outdoor -->
-                                <Label Grid.Row="7" Grid.Column="0" Text="Temp. Outdoor (°C):" />
-                                <Label Grid.Row="7" Grid.Column="1" Text="{Binding temperature_outdoor}" />
+                                <Image Grid.Row="6" Grid.Column="0" Source="temp_outside.png"/>
+                                <Label Grid.Row="6" Grid.Column="1" Text="Temp. Outdoor (°C):" FontAttributes="Bold" />
+                                <Label Grid.Row="6" Grid.Column="2" Text="{Binding temperature_outdoor, TargetNullValue='N/A', FallbackValue='ERROR'}" />
 
-                                <!-- Battery Status -->
-                                <Label Grid.Row="8" Grid.Column="0" Text="Battery :" FontAttributes="Bold" />
-                                <Image Grid.Row="8" Grid.Column="1" Source="{Binding battery_status}" HeightRequest="20" HorizontalOptions="Start"/>
                             </Grid>
                         </Frame>
                     </DataTemplate>

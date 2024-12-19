@@ -92,6 +92,9 @@ namespace WeatherThingy.Sources.ViewModels
                             case "4":
                                 datum.battery_status = "bat4.png";
                                 break;
+                            default:
+                                datum.battery_status = "na.png";
+                                break;
                         }
                     }
 

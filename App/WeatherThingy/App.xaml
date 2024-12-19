@@ -12,9 +12,10 @@
 
             <!-- Enhanced Color Palette -->
             <!-- Colors -->
-            <Color x:Key="Background">#E6F7FF</Color>
+            <Color x:Key="Background">#A2CFFE</Color> 
             <Color x:Key="Navigation">#0288D1</Color>
-            <Color x:Key="Frame">#F0FAFF</Color>
+            <!--<Color x:Key="Frame">#F0FAFF</Color>-->
+            <Color x:Key="Frame">#E6F7FF</Color>
             <Color x:Key="Button">#03A9F4</Color>
             <Color x:Key="ButtonPressed">#0288D1</Color>
             <Color x:Key="TextLabel">#212121</Color>
@@ -37,10 +38,23 @@
                 </Setter>
                 <Setter Property="Margin" Value="10" />
                 <Setter Property="Padding" Value="10" />
+                <Setter Property="Opacity" Value="0.8"/>
+                <!--<Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#A3C8FF" Offset="0.0" />
+                            --><!-- Light Blue --><!--
+                            <GradientStop Color="#D6E8FF" Offset="0.8" />
+                            --><!-- Very Light Blue --><!--
+                            <GradientStop Color="White" Offset="1.0" />
+                            --><!-- Slightly White --><!--
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>-->
             </Style>
-
             <!-- Label Styles -->
-            <Style TargetType="Label" x:Key="DefaultLabelStyle">
+            <!--x:Key="DefaultLabelStyle-->
+            <Style TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource TextLabel}" />
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -84,22 +98,25 @@
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
+                <Setter Property="Opacity" Value="0.8"/>
             </Style>
-
-            <Style TargetType="Button" x:Key="LocationButtonStyle" BasedOn="{StaticResource DefaultButtonStyle}">
+            <!--x:Key="LocationButtonStyle"-->
+            <Style TargetType="Button"  BasedOn="{StaticResource DefaultButtonStyle}">
                 <Setter Property="CornerRadius" Value="5" />
             </Style>
 
             <!-- Specialized Data Card Style -->
-            <Style TargetType="Frame" x:Key="DataCardFrameStyle" BasedOn="{StaticResource CardFrameStyle}">
+            <!--x:Key="DataCardFrameStyle"-->
+            <Style TargetType="Frame" BasedOn="{StaticResource CardFrameStyle}">
                 <Setter Property="Padding" Value="15" />
             </Style>
 
             <!-- Data Label Style -->
-            <Style TargetType="Label" x:Key="DataLabelStyle" BasedOn="{StaticResource DefaultLabelStyle}">
+            <!--<Style TargetType="Label" x:Key="DataLabelStyle" BasedOn="{StaticResource DefaultLabelStyle}">
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="Margin" Value="0" />
-            </Style>
+                <Setter Property="TextColor" Value=""/>
+            </Style>-->
 
             <!-- Dynamic Resources for Font Sizes -->
             <!--<DynamicResource x:Key="FontSizeMedium" Key="FontSize" Value="16" />-->

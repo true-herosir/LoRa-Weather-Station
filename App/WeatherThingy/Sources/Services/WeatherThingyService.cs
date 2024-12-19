@@ -192,7 +192,7 @@ namespace WeatherThingy.Sources.Services
             int table = 0;
             string start_st;
             string end_st;
-            int page_size = location.Contains("lht") ? 250 : 900;
+            int page_size = location.Contains("lht") ? 350 : 900;
 
             if (daysDifference < 0) throw new InvalidDataException("End date cannot be before start date");
             else if (daysDifference <= 3)
@@ -202,11 +202,12 @@ namespace WeatherThingy.Sources.Services
                 end_st = "end_time=" + end.ToString("yyyy-MM-dd'%20'HH'%3A'mm'%3A'00.000");
 
             }
-            else if (daysDifference > 3 && daysDifference < 14)
+            else if (daysDifference > 3 && daysDifference <= 14)
             {
                 table = 2;
                 start_st = "start_date=" + start.ToString("yyyy-MM-dd");
                 end_st = "end_date=" + end.ToString("yyyy-MM-dd");
+
             }
             else
             {

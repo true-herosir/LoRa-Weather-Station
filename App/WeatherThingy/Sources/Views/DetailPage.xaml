@@ -9,76 +9,105 @@
              BindingContext="{Binding Source={StaticResource DetailViewModel}}"
              Style="{StaticResource PageStyle}">
 
-
-    <!-- LiveCharts for the chart -->
-    <Grid>
-        <!-- Define rows for the layout -->
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <!-- Button -->
-            <RowDefinition Height="*" />
-            <!-- Chart -->
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="70*"/>
-            <ColumnDefinition Width="30*"/>
-        </Grid.ColumnDefinitions>
-        <!-- Button in the first row -->
-        <HorizontalStackLayout 
-            VerticalOptions="Center" 
-            HorizontalOptions="Center"
-            Grid.Row="0"
-            Grid.Column="0">
-            <Button 
+    <ScrollView>
+        <!-- LiveCharts for the chart -->
+        <Grid Margin="20">
+            <!-- Define rows for the layout -->
+            <Grid.RowDefinitions>
+                <!--Value-->
+                <RowDefinition Height="Auto" />
+                <!--Sensors-->
+                <RowDefinition Height="Auto" />
+                <!--Date Range-->
+                <RowDefinition Height="Auto" />
+                <!--Label-->
+                <RowDefinition Height="Auto" />
+                <!-- Button -->
+                <RowDefinition Height="*" />
+                <!-- Chart -->
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70*"/>
+                <ColumnDefinition Width="30*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Button in the first row -->
+            <HorizontalStackLayout 
+             Grid.Row="0">
+                <Button 
+                 Text="Humidity"
+                 Grid.Row="0"/>
+                <Button 
+                 Text="Illumination"
+                 Grid.Row="0" />
+                <Button 
+                 Text="Pressure"
+                 Grid.Row="0" />
+                <Button 
+                 Text="Temperature Indoor"
+                 Grid.Row="0" />
+                <Button 
+                 Text="Temperature Outdoor"
+                 Grid.Row="0" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout 
+                 Grid.Row="1">
+                <Button 
+                     Text="mkr"
+                     Grid.Row="1"/>
+                <Button 
+                     Text="lht"
+                     Grid.Row="1" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout             
+                Grid.Row="2">
+                <Button 
                 Text="1 Day"
                 Clicked="OnDayDataClicked"
                 Grid.Row="0"/>
-            <Button 
+                <Button 
                 Text="3 Days"
                 Clicked="OnThreeDayDataClicked"
                 Grid.Row="0" />
-            <Button 
+                <Button 
                 Text="1 Week"
                 Clicked="OnWeekDataClicked"
                 Grid.Row="0" />
 
-            <Button 
+                <Button 
                 Text="2 Weeks"
                 Clicked="OnTwoWeekDataClicked"
                 Grid.Row="0" />
-            <Button 
+                <Button 
                 Text="1 Month"
                 Clicked="OnMonthDataClicked"
                 Grid.Row="0" />
-            <Button 
-                Text="Custom range"
-                Clicked="OnCustomRangeClicked"
-                Grid.Row="0" />
-        </HorizontalStackLayout>
-        <HorizontalStackLayout
-            VerticalOptions="Center" 
-            HorizontalOptions="Center"
-            Grid.Row="0"
-            Grid.Column="1">
-            <DatePicker MaximumDate="{Binding MaxDate}"
-                        MinimumDate="{Binding MinDate}"
-                        Date="{Binding LowDate}"/>
-            <DatePicker MaximumDate="{Binding MaxDate}"
-                        MinimumDate="{Binding MinDate}"
-                        Date="{Binding HighDate}"/>
-        </HorizontalStackLayout>
-        <!-- Chart in the second row -->
-        <lvc:CartesianChart 
+                <DatePicker MaximumDate="{Binding MaxDate}"
+                   MinimumDate="{Binding MinDate}"
+                   Date="{Binding LowDate}"/>
+                <DatePicker MaximumDate="{Binding MaxDate}"
+                   MinimumDate="{Binding MinDate}"
+                   Date="{Binding HighDate}"/>
+                <Button 
+                    Text="Search"
+                    Clicked="OnCustomRangeClicked"
+                    Grid.Row="0" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Grid.Row="3">
+                <Label Text="The graph showing Illumination" Style="{StaticResource SectionHeaderStyle}"/>
+            </HorizontalStackLayout>
+            <!-- Chart in the second row -->
+            <lvc:CartesianChart 
             x:Name="Chart" 
             Series="{Binding Series}" 
             XAxes="{Binding XAxes}"
             VerticalOptions="FillAndExpand"
             HorizontalOptions="FillAndExpand"
             IsVisible="False"
-            Grid.Row="1" 
+            Grid.Row="4" 
             Grid.ColumnSpan="2"
             LegendPosition="Bottom"
             />
-    </Grid>
+        </Grid>
+    </ScrollView>
 
 </ContentPage>

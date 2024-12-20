@@ -149,11 +149,11 @@ namespace WeatherThingy.Sources.ViewModels
 
                             if (daysDifference > 14)
                             {
-                                filtered_value = item.max_humidity.Value;
+                                filtered_value = item.max_illumination.Value;
 
-                                plots[index + 1].datapoints.Add(new DateTimePoint(time_stamp, item.min_humidity.Value));
+                                plots[index + 1].datapoints.Add(new DateTimePoint(time_stamp, item.min_illumination.Value));
                             }
-                            else filtered_value = item.humidity.Value;
+                            else filtered_value = item.illumination.Value;
                             // Add data to chart
                             plots[index].datapoints.Add(new DateTimePoint(time_stamp, filtered_value));
                         }

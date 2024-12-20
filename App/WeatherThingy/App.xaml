@@ -41,7 +41,7 @@
                 <Setter Property="Opacity" Value="0.8"/>
                 <!--<Setter Property="Background">
                     <Setter.Value>
-                        <LinearGradientBrush>
+                         <LinearGradientBrush>
                             <GradientStop Color="#A3C8FF" Offset="0.0" />
                             --><!-- Light Blue --><!--
                             <GradientStop Color="#D6E8FF" Offset="0.8" />

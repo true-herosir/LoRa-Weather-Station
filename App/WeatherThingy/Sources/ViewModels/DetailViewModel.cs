@@ -58,12 +58,11 @@ namespace WeatherThingy.Sources.ViewModels
         public DateTime MinDate { get; } = new DateTime(2024, 11, 22);
         public DateTime MaxDate { get; } = DateTime.Now;
         public List<Plot> plots = new List<Plot>();
-        public List<string> nodes = new List<string>();
+        //public List<string> nodes = new List<string>();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         // ObservableCollection for chart data
-        public ObservableCollection<DateTimePoint> HumiditySeriesData { get; set; } = new ObservableCollection<DateTimePoint>();
         public ObservableCollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>();
 
 
@@ -115,16 +114,19 @@ namespace WeatherThingy.Sources.ViewModels
         };
 
 
-        public async Task ShowData(DateTime start, DateTime end)
+        public async Task ShowData(DateTime start, DateTime end, string value, List<string> nodes)
         {
             Series.Clear();
-            nodes.Clear();
+            //nodes.Clear(); //???????????????????????????????? not sure if we need this or not
 
+            //string humidity = "humidity";
+            //string temperature_indoor = "temperature_indoor";
 
-            nodes.Add("lht-gronau"); nodes.Add("lht-wierden"); nodes.Add("mkr-saxion");
+            //nodes.Add("lht-gronau"); nodes.Add("lht-wierden");
+            //nodes.Add("mkr-saxion");
             try
             {
-                double filtered_value;
+                double? filtered_value;
                 TimeSpan timeDiff = end - start;
                 int daysDifference = timeDiff.Days;
 
@@ -146,16 +148,17 @@ namespace WeatherThingy.Sources.ViewModels
                         {
 
                             var time_stamp = item.time.HasValue ? item.time.Value : item.the_day.Value;
-
+                            
                             if (daysDifference > 14)
                             {
-                                filtered_value = item.max_illumination.Value;
-
-                                plots[index + 1].datapoints.Add(new DateTimePoint(time_stamp, item.min_illumination.Value));
+                                filtered_value = GetPropertyValue(item, "max_" + value);
+                                plots[index + 1].datapoints.Add(new DateTimePoint(time_stamp, GetPropertyValue(item, "min_"+value)));
                             }
-                            else filtered_value = item.illumination.Value;
-                            // Add data to chart
+                            else filtered_value = GetPropertyValue(item, value);
+                            // Add data to chart if the value is not null
+                            if (filtered_value != null)
                             plots[index].datapoints.Add(new DateTimePoint(time_stamp, filtered_value));
+                            //plots[index].datapoints.Add(new DateTimePoint(time_stamp, filtered_value));
                         }
 
                     }
@@ -189,6 +192,16 @@ namespace WeatherThingy.Sources.ViewModels
                 // Handle exceptions, such as network errors or invalid data
                 Console.WriteLine($"Error fetching data: {ex.Message}");
             }
+        }
+
+        private double? GetPropertyValue(object obj,  string propertyName)
+        {
+            var prop = obj.GetType().GetProperty(propertyName);
+            if (prop != null && prop.GetValue(obj) != null)
+            {
+                return (double)prop.GetValue(obj);
+            }
+            return null;
         }
     }
 }

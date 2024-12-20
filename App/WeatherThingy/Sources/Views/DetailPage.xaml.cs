@@ -7,6 +7,7 @@ namespace WeatherThingy.Sources.Views
 {
     public partial class DetailPage : ContentPage
     {
+        public List<string> node_ids { get; set; } = new() { "lht-gronau", "mkr-saxion" };
         public DetailPage()
         {
             InitializeComponent();
@@ -94,7 +95,7 @@ namespace WeatherThingy.Sources.Views
 
                 //Chart.Series = null; // Clear existing series
                 Chart.IsVisible = false;
-                await viewModel.ShowData(start, end);
+                await viewModel.ShowData(start, end, "humidity", node_ids);
                 Chart.CoreChart.Update();
                 Chart.IsVisible = true;
 

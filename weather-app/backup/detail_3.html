@@ -1,0 +1,314 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line Graph Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Line Graph Example</h1>
+    <div class="chart-container">
+        <canvas id="lineChart"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('lineChart').getContext('2d');
+        const lineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Sample Data',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saxion Weather Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            padding: 2rem;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.8;
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .weather-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .weather-card h2 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .weather-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .weather-card .time {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 2rem;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #chartContainer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Saxion Weather Dashboard</h1>
+            <p>Location: <span id="location">Loading...</span></p>
+        </div>
+
+        <div class="weather-grid" id="weatherGrid">
+            <div class="loading">Loading weather data...</div>
+        </div>
+
+        <div id="chartContainer">
+            <canvas id="weatherChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        async function fetchWeatherData() {
+            try {
+                const response = await fetch('http://84.85.32.192:7086/api/Nodes/node_location?location=enschede&page=1&page_size=10');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                document.getElementById('weatherGrid').innerHTML = `
+                    <div class="error">
+                        Error loading weather data. Please try again later.
+                    </div>
+                `;
+                return null;
+            }
+        }
+
+        function formatTime(timeString) {
+            const date = new Date(timeString);
+            return date.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        function formatDate(timeString) {
+            const date = new Date(timeString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function createWeatherCards(data) {
+            const weatherGrid = document.getElementById('weatherGrid');
+            const latestData = data.data[0];
+            
+            document.getElementById('location').textContent = 
+                `${latestData.location} - ${latestData.gateway_location}`;
+
+            const cards = `
+                <div class="weather-card">
+                    <h2>Indoor Temperature</h2>
+                    <p class="value">${latestData.temperature_indoor.toFixed(1)}°C</p>
+                    <p class="time">Last updated: ${formatTime(latestData.time)}</p>
+                </div>
+                <div class="weather-card">
+                    <h2>Outdoor Temperature</h2>
+                    <p class="value">${latestData.temperature_outdoor.toFixed(1)}°C</p>
+                    <p class="time">Last updated: ${formatTime(latestData.time)}</p>
+                </div>
+                <div class="weather-card">
+                    <h2>Humidity</h2>
+                    <p class="value">${latestData.humidity.toFixed(1)}%</p>
+                    <p class="time">Last updated: ${formatTime(latestData.time)}</p>
+                </div>
+            `;
+            weatherGrid.innerHTML = cards;
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('weatherChart').getContext('2d');
+            
+            // Reverse the data array to show oldest to newest
+            const chartData = data.data.reverse();
+            
+            const labels = chartData.map(item => formatTime(item.time));
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Indoor Temperature (°C)',
+                        data: chartData.map(item => item.temperature_indoor),
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Outdoor Temperature (°C)',
+                        data: chartData.map(item => item.temperature_outdoor),
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: 'white'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: `Temperature Trends - ${formatDate(chartData[0].time)}`,
+                            color: 'white'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                color: 'white'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'white'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function init() {
+            const data = await fetchWeatherData();
+            if (data) {
+                createWeatherCards(data);
+                updateChart(data);
+            }
+        }
+
+        init();
+
+        // Refresh data every 5 minutes
+        setInterval(init, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Most Recent Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .data-card {
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #fafafa;
+            transition: transform 0.2s;
+        }
+        .data-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .data-card h3 {
+            margin: 0 0 10px;
+            color: #333;
+        }
+        .data-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .last-updated {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Most Recent Sensor Data</h1>
+    </header>
+    <div class="container">
+        <div id="lastUpdated" class="last-updated"></div>
+        <div id="dataContainer"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://84.85.32.192:7086/api/Most_Recent?page=1&page_size=10';
+        const REFRESH_INTERVAL = 60000; // Refresh every 60 seconds
+
+        async function fetchData() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                throw error;
+            }
+        }
+
+        function getMostRecentData(data) {
+            const sortedData = data.data.sort((a, b) => new Date(b.time) - new Date(a.time));
+            const recentData = sortedData.reduce((acc, curr) => {
+                if (!acc[curr.node_id]) {
+                    acc[curr.node_id] = curr;
+                }
+                return acc;
+            }, {});
+            return Object.values(recentData);
+        }
+
+        function formatValue(value, unit) {
+            if (value === null || value === undefined) return 'N/A';
+            return `${value}${unit}`;
+        }
+
+        function displayData(data) {
+            const container = document.getElementById('dataContainer');
+            container.innerHTML = '';
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'data-card';
+                card.innerHTML = `
+                    <h3>Node ID: ${item.node_id}</h3>
+                    <p><strong>Time:</strong> ${new Date(item.time).toLocaleString()}</p>
+                    <p><strong>Location:</strong> ${item.location}</p>
+                    <p><strong>Temperature Indoor:</strong> ${formatValue(item.temperature_indoor, '°C')}</p>
+                    <p><strong>Temperature Outdoor:</strong> ${formatValue(item.temperature_outdoor, '°C')}</p>
+                    <p><strong>Humidity:</strong> ${formatValue(item.humidity, '%')}</p>
+                    <p><strong>Pressure:</strong> ${formatValue(item.pressure, ' hPa')}</p>
+                    <p><strong>Illumination:</strong> ${formatValue(item.illumination, ' lux')}</p>
+                    <p><strong>Battery Status:</strong> ${item.battery_status ?? 'N/A'}</p>
+                `;
+                container.appendChild(card);
+            });
+
+            // Update last updated time
+            const lastUpdated = document.getElementById('lastUpdated');
+            lastUpdated.textContent = `Last updated: ${new Date().toLocaleString()}`;
+        }
+
+        function showError(message) {
+            const container = document.getElementById('dataContainer');
+            container.innerHTML = `
+                <div class="error-message">
+                    ${message}
+                </div>
+            `;
+        }
+
+        function showLoading() {
+            const container = document.getElementById('dataContainer');
+            container.innerHTML = '<div class="loading">Loading data...</div>';
+        }
+
+        async function updateData() {
+            try {
+                showLoading();
+                const data = await fetchData();
+                const recentData = getMostRecentData(data);
+                displayData(recentData);
+            } catch (error) {
+                showError('Failed to fetch sensor data. Please try again later.');
+            }
+        }
+
+        // Initial load
+        updateData();
+
+        // Set up periodic refresh
+        setInterval(updateData, REFRESH_INTERVAL);
+    </script>
+</body>
+</html>

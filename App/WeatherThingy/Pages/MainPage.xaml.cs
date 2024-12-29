@@ -57,10 +57,10 @@ namespace WeatherThingy.Pages
             await Navigation.PushAsync(new EnschedePage());
         }
 
-        private async void OnGronauButtonClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new DetailPage());
-        }
+        //private async void OnGronauButtonClicked(object sender, EventArgs e)
+        //{
+        //    await Navigation.PushAsync(new DetailPage());
+        //}
 
         private async void OnWierdenButtonClicked(object sender, EventArgs e)
         {

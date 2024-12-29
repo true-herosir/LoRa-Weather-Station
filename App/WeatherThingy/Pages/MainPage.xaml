@@ -136,7 +136,7 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Grid.Column="1">
-                        <ImageButton
+                        <!--<ImageButton
                             x:Name="GronauButton"
                             Source="gronau.png"
                             Clicked="OnGronauButtonClicked"
@@ -149,7 +149,7 @@
                                        PointerExited="OnPointerExited"/>
                             </ImageButton.GestureRecognizers>
                             
-                        </ImageButton>
+                        </ImageButton>-->
                        
                         <Label 
                             Text="Gronau"

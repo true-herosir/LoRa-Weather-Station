@@ -34,50 +34,74 @@
             <HorizontalStackLayout 
              Grid.Row="0">
                 <Button 
+                 x:Name="humidity"
                  Text="Humidity"
-                 Grid.Row="0"/>
+                 Grid.Row="0"
+                 Clicked="OnParameterDisplayClicked"
+                 BackgroundColor="{StaticResource ButtonPressed}"/>
                 <Button 
+                 x:Name="illumination"
                  Text="Illumination"
-                 Grid.Row="0" />
+                 Grid.Row="0" 
+                 Clicked="OnParameterDisplayClicked"/>
                 <Button 
+                 x:Name="pressure"
                  Text="Pressure"
-                 Grid.Row="0" />
+                 Grid.Row="0" 
+                 Clicked="OnParameterDisplayClicked"/>
                 <Button 
+                 x:Name="temperature_indoor"
                  Text="Temperature Indoor"
-                 Grid.Row="0" />
+                 Grid.Row="0" 
+                 Clicked="OnParameterDisplayClicked"/>
                 <Button 
+                 x:Name="temperature_outdoor"
                  Text="Temperature Outdoor"
-                 Grid.Row="0" />
+                 Grid.Row="0" 
+                 Clicked="OnParameterDisplayClicked"/>
             </HorizontalStackLayout>
-            <HorizontalStackLayout 
-                 Grid.Row="1">
+            <HorizontalStackLayout             
+                Grid.Row="1">
                 <Button 
-                     Text="mkr"
-                     Grid.Row="1"/>
+                    Text="lht-gronau"
+                    Grid.Row="0" 
+                    Clicked="OnNodeButtonClicked"
+                    BackgroundColor="{StaticResource ButtonPressed}"/>
                 <Button 
-                     Text="lht"
-                     Grid.Row="1" />
+                    Text="mkr-saxion"
+                    Grid.Row="0" 
+                    Clicked="OnNodeButtonClicked"/>
+                <Button 
+                    Text="mkr-wierden"
+                    Grid.Row="0" 
+                    Clicked="OnNodeButtonClicked"/>
             </HorizontalStackLayout>
             <HorizontalStackLayout             
                 Grid.Row="2">
                 <Button 
+                x:Name="OneDayButton"
                 Text="1 Day"
                 Clicked="OnDayDataClicked"
-                Grid.Row="0"/>
+                Grid.Row="0"
+                BackgroundColor="{StaticResource ButtonPressed}"/>
                 <Button 
+                x:Name="ThreeDaysButton"
                 Text="3 Days"
                 Clicked="OnThreeDayDataClicked"
                 Grid.Row="0" />
                 <Button 
+                x:Name="OneWeekButton"
                 Text="1 Week"
                 Clicked="OnWeekDataClicked"
                 Grid.Row="0" />
 
                 <Button 
+                x:Name="TwoWeeksButton"
                 Text="2 Weeks"
                 Clicked="OnTwoWeekDataClicked"
                 Grid.Row="0" />
                 <Button 
+                x:Name="OneMonthButton"
                 Text="1 Month"
                 Clicked="OnMonthDataClicked"
                 Grid.Row="0" />
@@ -88,6 +112,7 @@
                    MinimumDate="{Binding MinDate}"
                    Date="{Binding HighDate}"/>
                 <Button 
+                    x:Name="SearchButton"
                     Text="Search"
                     Clicked="OnCustomRangeClicked"
                     Grid.Row="0" />

@@ -10,183 +10,219 @@ using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 
 namespace WeatherThingy.Sources.ViewModels
 {
     public class Plot
     {
-        public ObservableCollection<DateTimePoint> datapoints { get; set; } = new ObservableCollection<DateTimePoint>();
-        public string node_id { get; set; }
+        public ObservableCollection<DateTimePoint> Datapoints { get; } = new ObservableCollection<DateTimePoint>();
+        public string NodeId { get; set; }
     }
 
-    public class DetailViewModel : INotifyPropertyChanged
+    public partial class DetailViewModel : ObservableObject
     {
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private string _selectedParameter;
+        public string SelectedParameter
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get => _selectedParameter;
+            set
+            {
+                if (SetProperty(ref _selectedParameter, value))
+                {
+                    UpdateAxes();
+                }
+            }
         }
 
-        public DateTime _lowdate;
+        private TimeSpan _selectedTimeDuration = TimeSpan.FromMinutes(1);
+        public TimeSpan SelectedTimeDuration
+        {
+            get => _selectedTimeDuration;
+            set
+            {
+                if (SetProperty(ref _selectedTimeDuration, value))
+                {
+                    UpdateAxes();
+                }
+            }
+        }
+
+        private void UpdateAxes()
+        {
+            if (XAxes != null && XAxes.Length > 0)
+            {
+                XAxes[0].UnitWidth = SelectedTimeDuration.Ticks;
+            }
+
+            if (YAxes != null && YAxes.Length > 0)
+            {
+                YAxes[0].Name = _selectedParameter;
+
+                switch (_selectedParameter.ToLower())
+                {
+                    case "humidity":
+                        YAxes[0].Name = "Humidity (%)";
+                        YAxes[0].Labeler = value => value.ToString("N2"); // Percentage format
+                        break;
+                    case "illumination":
+                        YAxes[0].Name = "Illumination (lux)";
+                        YAxes[0].Labeler = value => value.ToString("N2"); // Default formatting
+                        break;
+                    case "pressure":
+                        YAxes[0].Name = "Pressure (hPa)";
+                        YAxes[0].Labeler = value => value.ToString("N2"); // Default formatting
+                        break;
+                    case "temperature indoor":
+                        YAxes[0].Name = "Temp. Indoor (°C)";
+                        YAxes[0].Labeler = value => value.ToString("N2"); // Default formatting
+                        break;
+                    case "temperature outdoor":
+                        YAxes[0].Name = "Temp. Outdoor (°C)";
+                        YAxes[0].Labeler = value => value.ToString("N2"); // Default formatting
+                        break;
+                    default:
+                        YAxes[0].Labeler = value => value.ToString("N2"); // Default formatting
+                        break;
+                }
+            }
+        }
+
+        private DateTime _lowDate;
         public DateTime LowDate
         {
-            get => _lowdate;
-            set
-            {
-                if (_lowdate != value) // Update only if the value is different
-                {
-                    _lowdate = value;
-                    OnPropertyChanged(); // Notify subscribers
-                }
-            }
+            get => _lowDate;
+            set => SetProperty(ref _lowDate, value);
         }
 
-        public DateTime _highdate;
+        private DateTime _highDate;
         public DateTime HighDate
         {
-            get => _highdate;
-            set
-            {
-                if (_highdate != value) // Update only if the value is different
-                {
-                    _highdate = value;
-                    OnPropertyChanged(); // Notify subscribers
-                }
-            }
+            get => _highDate;
+            set => SetProperty(ref _highDate, value);
         }
+
         public DateTime MinDate { get; } = new DateTime(2024, 11, 22);
         public DateTime MaxDate { get; } = DateTime.Now;
-        public List<Plot> plots = new List<Plot>();
-        //public List<string> nodes = new List<string>();
-
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public List<Plot> Plots { get; } = new List<Plot>();
 
         // ObservableCollection for chart data
-        public ObservableCollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>();
+        public ObservableCollection<ISeries> Series { get; } = new ObservableCollection<ISeries>();
 
+        public DetailViewModel()
+        {
+            InitializePlotsAsync();
+        }
 
-
-        public async Task<List<Plot>> initialize_plots()
+        private async Task InitializePlotsAsync()
         {
             var data = await new WeatherThingyService().GetNodeData();
             foreach (var item in data.data)
             {
                 if (item.time.HasValue) // Ensure time is not null
                 {
-                    var retrieved = new Plot();
-                    var retrieved_min = new Plot();
-                    retrieved.node_id = item.node_id;
-                    retrieved_min.node_id = item.node_id + "_min";
-                    plots.Add(retrieved);
-                    plots.Add(retrieved_min);
-
+                    var retrieved = new Plot { NodeId = item.node_id };
+                    var retrievedMin = new Plot { NodeId = item.node_id + "_min" };
+                    Plots.Add(retrieved);
+                    Plots.Add(retrievedMin);
                 }
-
             }
-            return plots;
-
         }
 
-
-        public DetailViewModel()
-        {
-            initialize_plots();
-
-        }
-
-        //X-Axis configuration with DateTime label formatting
+        // X-Axis configuration with DateTime label formatting
         public Axis[] XAxes { get; set; } = new Axis[]
         {
-            new Axis
-            {
-                Labeler = value =>
+                new Axis
                 {
-                    if (value < DateTime.MinValue.Ticks || value > DateTime.MaxValue.Ticks)
+                    Labeler = value =>
+                    {
+                        if (value < DateTime.MinValue.Ticks || value > DateTime.MaxValue.Ticks)
                         {
                             return "0";
                         }
-                    var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
-                    return dateTime.ToString("d-M HH:mm");    // Display only day, hour, minute
-                },
-                UnitWidth = TimeSpan.FromMinutes(30).Ticks, // Adjust the spacing for your data
-            }   
+                        var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
+                        return dateTime.ToString("dd-MM HH:mm");    // Display only day, hour, minute
+                    },
+                    UnitWidth = TimeSpan.FromMinutes(1).Ticks, // Adjust the spacing for your data
+                    LabelsRotation = 120
+                }
         };
 
+        public Axis[] YAxes { get; set; } =
+        {
+                new Axis
+                {
+                    Name = "Value",
+                    NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
+                }
+            };
 
-        public async Task ShowData(DateTime start, DateTime end, string value, List<string> nodes)
+        public async Task ShowDataAsync(DateTime start, DateTime end, string value, List<string> nodes)
         {
             Series.Clear();
-            //nodes.Clear(); //???????????????????????????????? not sure if we need this or not
 
-            //string humidity = "humidity";
-            //string temperature_indoor = "temperature_indoor";
-
-            //nodes.Add("lht-gronau"); nodes.Add("lht-wierden");
-            //nodes.Add("mkr-saxion");
             try
             {
-                double? filtered_value;
+                double? filteredValue;
                 TimeSpan timeDiff = end - start;
                 int daysDifference = timeDiff.Days;
 
                 foreach (var node in nodes)
                 {
-
                     var data = await new WeatherThingyService().GetNodeData(node, start, end, 1);
-                    int index = 0;
-                    foreach (var plot in plots)
-                    {
-                        if (plot.node_id == node) break;
-                        index++;
-                    }
-                    plots[index].datapoints.Clear();
-                    plots[index + 1].datapoints.Clear();
+                    var plot = Plots.FirstOrDefault(p => p.NodeId == node);
+                    var plotMin = Plots.FirstOrDefault(p => p.NodeId == node + "_min");
+
+                    plot?.Datapoints.Clear();
+                    plotMin?.Datapoints.Clear();
+
                     foreach (var item in data.data)
                     {
                         if (item.time.HasValue || item.the_day.HasValue) // Ensure time is not null
                         {
+                            var timeStamp = item.time ?? item.the_day.Value;
 
-                            var time_stamp = item.time.HasValue ? item.time.Value : item.the_day.Value;
-                            
                             if (daysDifference > 14)
                             {
-                                filtered_value = GetPropertyValue(item, "max_" + value);
-                                plots[index + 1].datapoints.Add(new DateTimePoint(time_stamp, GetPropertyValue(item, "min_"+value)));
+                                filteredValue = GetPropertyValue(item, "max_" + value);
+                                plotMin?.Datapoints.Add(new DateTimePoint(timeStamp, GetPropertyValue(item, "min_" + value)));
                             }
-                            else filtered_value = GetPropertyValue(item, value);
-                            // Add data to chart if the value is not null
-                            if (filtered_value != null)
-                            plots[index].datapoints.Add(new DateTimePoint(time_stamp, filtered_value));
-                            //plots[index].datapoints.Add(new DateTimePoint(time_stamp, filtered_value));
-                        }
+                            else
+                            {
+                                filteredValue = GetPropertyValue(item, value);
+                            }
 
+                            // Add data to chart if the value is not null
+                            if (filteredValue != null)
+                            {
+                                plot?.Datapoints.Add(new DateTimePoint(timeStamp, filteredValue));
+                            }
+                        }
                     }
 
-                    Series.Add(
-                        new StepLineSeries<DateTimePoint>
+                    if (plot != null)
+                    {
+                        Series.Add(new StepLineSeries<DateTimePoint>
                         {
-                            Values = plots[index].datapoints,
-
-                            Name = daysDifference > 14 ? plots[index].node_id + "_max" : plots[index].node_id,
+                            Values = plot.Datapoints,
+                            Name = daysDifference > 14 ? plot.NodeId + "_max" : plot.NodeId,
                             GeometrySize = 0
                         });
-                    if (daysDifference > 14)
-                    {
-                        Series.Add(
-                        new StepLineSeries<DateTimePoint>
-                        {
-                            Values = plots[index + 1].datapoints,
-
-                            Name = plots[index + 1].node_id,
-                            GeometrySize = 0,
-                        });
-
                     }
 
+                    if (daysDifference > 14 && plotMin != null)
+                    {
+                        Series.Add(new StepLineSeries<DateTimePoint>
+                        {
+                            Values = plotMin.Datapoints,
+                            Name = plotMin.NodeId,
+                            GeometrySize = 0,
+                        });
+                    }
                 }
             }
-
             catch (Exception ex)
             {
                 // Handle exceptions, such as network errors or invalid data
@@ -194,14 +230,10 @@ namespace WeatherThingy.Sources.ViewModels
             }
         }
 
-        private double? GetPropertyValue(object obj,  string propertyName)
+        private double? GetPropertyValue(object obj, string propertyName)
         {
             var prop = obj.GetType().GetProperty(propertyName);
-            if (prop != null && prop.GetValue(obj) != null)
-            {
-                return (double)prop.GetValue(obj);
-            }
-            return null;
+            return prop?.GetValue(obj) as double?;
         }
     }
 }

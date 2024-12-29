@@ -8,28 +8,22 @@
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="20">
             <!-- Node ID Collection -->
-            <HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="10">
                 <Image Source="sun.png" HeightRequest="50"/>
-                <Label Text="Location" 
-                   Style="{StaticResource SectionHeaderStyle}"
-                   />
+                <Label Text="Location" Style="{StaticResource SectionHeaderStyle}"/>
             </HorizontalStackLayout>
 
-            <CollectionView ItemsSource="{Binding NodeId}" 
-                    HorizontalOptions="Fill">
+            <CollectionView ItemsSource="{Binding NodeId}" HorizontalOptions="Fill">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="5" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Button Text="{Binding .}" Style="{StaticResource DefaultButtonStyle}">
-                        <!--<Button Text="{Binding .}" Style="{StaticResource LocationButtonStyle}">-->
                             <Button.GestureRecognizers>
                                 <TapGestureRecognizer 
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:HomeViewModel}}, Path=LoadLocationCommand}" 
-                                         CommandParameter="{Binding .}"
-                                        
-                                    />
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:HomeViewModel}}, Path=LoadLocationCommand}" 
+                                    CommandParameter="{Binding .}"/>
                             </Button.GestureRecognizers>
                         </Button>
                     </DataTemplate>
@@ -38,29 +32,21 @@
                 <!-- Empty View -->
                 <CollectionView.EmptyView>
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
-                        <Image Source="empty_location.png" 
-                                   HeightRequest="100" 
-                                   WidthRequest="100" 
-                                   AutomationProperties.Name="Empty Locations Image" />
-                        <Label Text="No locations available."
-                                   FontSize="16" 
-                                   AutomationProperties.Name="Empty Locations Message" />
+                        <Image Source="empty_location.png" HeightRequest="100" WidthRequest="100" AutomationProperties.Name="Empty Locations Image" />
+                        <Label Text="No locations available." FontSize="16" AutomationProperties.Name="Empty Locations Message" />
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
             </CollectionView>
-            <!--</Border>-->
-
 
             <!-- Most Recent Data Collection -->
-            <Label Text="Most Recent Data" 
-                   Style="{StaticResource SectionHeaderStyle}"/>
+            <Label Text="Most Recent Data" Style="{StaticResource SectionHeaderStyle}"/>
             <CollectionView ItemsSource="{Binding FilteredNode}" SelectionMode="None">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame>
+                        <Frame Style="{StaticResource CardFrameStyle}">
                             <Grid ColumnSpacing="10" RowSpacing="5">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
@@ -70,8 +56,6 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
-                                    <!--<RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />-->
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="20"/>
@@ -85,7 +69,7 @@
                                     <!-- Node ID -->
                                     <Label Text="{Binding node_id}" FontAttributes="Bold" FontSize="20" HorizontalOptions="Center"/>
                                     <!-- Time -->
-                                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding time}" FontAttributes="Bold" FontSize="20"/>
+                                    <Label Text="{Binding time}" FontAttributes="Bold" FontSize="20"/>
                                 </HorizontalStackLayout>
 
                                 <!-- Location -->
@@ -117,7 +101,6 @@
                                 <Image Grid.Row="6" Grid.Column="0" Source="temp_outside.png"/>
                                 <Label Grid.Row="6" Grid.Column="1" Text="Temp. Outdoor (°C):" FontAttributes="Bold" />
                                 <Label Grid.Row="6" Grid.Column="2" Text="{Binding temperature_outdoor, TargetNullValue='N/A', FallbackValue='ERROR'}" />
-
                             </Grid>
                         </Frame>
                     </DataTemplate>

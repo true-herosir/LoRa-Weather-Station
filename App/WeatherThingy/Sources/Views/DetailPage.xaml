@@ -10,128 +10,58 @@
              Style="{StaticResource PageStyle}">
 
     <ScrollView>
-        <!-- LiveCharts for the chart -->
         <Grid Margin="20">
             <!-- Define rows for the layout -->
             <Grid.RowDefinitions>
-                <!--Value-->
                 <RowDefinition Height="Auto" />
-                <!--Sensors-->
                 <RowDefinition Height="Auto" />
-                <!--Date Range-->
                 <RowDefinition Height="Auto" />
-                <!--Label-->
                 <RowDefinition Height="Auto" />
-                <!-- Button -->
                 <RowDefinition Height="*" />
-                <!-- Chart -->
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="70*"/>
                 <ColumnDefinition Width="30*"/>
             </Grid.ColumnDefinitions>
-            <!-- Button in the first row -->
-            <HorizontalStackLayout 
-             Grid.Row="0">
-                <Button 
-                 x:Name="humidity"
-                 Text="Humidity"
-                 Grid.Row="0"
-                 Clicked="OnParameterDisplayClicked"
-                 BackgroundColor="{StaticResource ButtonPressed}"/>
-                <Button 
-                 x:Name="illumination"
-                 Text="Illumination"
-                 Grid.Row="0" 
-                 Clicked="OnParameterDisplayClicked"/>
-                <Button 
-                 x:Name="pressure"
-                 Text="Pressure"
-                 Grid.Row="0" 
-                 Clicked="OnParameterDisplayClicked"/>
-                <Button 
-                 x:Name="temperature_indoor"
-                 Text="Temperature Indoor"
-                 Grid.Row="0" 
-                 Clicked="OnParameterDisplayClicked"/>
-                <Button 
-                 x:Name="temperature_outdoor"
-                 Text="Temperature Outdoor"
-                 Grid.Row="0" 
-                 Clicked="OnParameterDisplayClicked"/>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout             
-                Grid.Row="1">
-                <Button 
-                    Text="lht-gronau"
-                    Grid.Row="0" 
-                    Clicked="OnNodeButtonClicked"
-                    BackgroundColor="{StaticResource ButtonPressed}"/>
-                <Button 
-                    Text="mkr-saxion"
-                    Grid.Row="0" 
-                    Clicked="OnNodeButtonClicked"/>
-                <Button 
-                    Text="mkr-wierden"
-                    Grid.Row="0" 
-                    Clicked="OnNodeButtonClicked"/>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout             
-                Grid.Row="2">
-                <Button 
-                x:Name="OneDayButton"
-                Text="1 Day"
-                Clicked="OnDayDataClicked"
-                Grid.Row="0"
-                BackgroundColor="{StaticResource ButtonPressed}"/>
-                <Button 
-                x:Name="ThreeDaysButton"
-                Text="3 Days"
-                Clicked="OnThreeDayDataClicked"
-                Grid.Row="0" />
-                <Button 
-                x:Name="OneWeekButton"
-                Text="1 Week"
-                Clicked="OnWeekDataClicked"
-                Grid.Row="0" />
 
-                <Button 
-                x:Name="TwoWeeksButton"
-                Text="2 Weeks"
-                Clicked="OnTwoWeekDataClicked"
-                Grid.Row="0" />
-                <Button 
-                x:Name="OneMonthButton"
-                Text="1 Month"
-                Clicked="OnMonthDataClicked"
-                Grid.Row="0" />
-                <DatePicker MaximumDate="{Binding MaxDate}"
-                   MinimumDate="{Binding MinDate}"
-                   Date="{Binding LowDate}"/>
-                <DatePicker MaximumDate="{Binding MaxDate}"
-                   MinimumDate="{Binding MinDate}"
-                   Date="{Binding HighDate}"/>
-                <Button 
-                    x:Name="SearchButton"
-                    Text="Search"
-                    Clicked="OnCustomRangeClicked"
-                    Grid.Row="0" />
+            <!-- Parameter Buttons -->
+            <HorizontalStackLayout Grid.Row="0" Spacing="10">
+                <Button x:Name="humidity" Text="Humidity" Clicked="OnParameterDisplayClicked" BackgroundColor="{StaticResource ButtonPressed}"/>
+                <Button x:Name="illumination" Text="Illumination" Clicked="OnParameterDisplayClicked"/>
+                <Button x:Name="pressure" Text="Pressure" Clicked="OnParameterDisplayClicked"/>
+                <Button x:Name="temperature_indoor" Text="Temperature Indoor" Clicked="OnParameterDisplayClicked"/>
+                <Button x:Name="temperature_outdoor" Text="Temperature Outdoor" Clicked="OnParameterDisplayClicked"/>
             </HorizontalStackLayout>
-            <HorizontalStackLayout Grid.Row="3">
-                <Label Text="The graph showing Illumination" Style="{StaticResource SectionHeaderStyle}"/>
+
+            <!-- Node Buttons -->
+            <HorizontalStackLayout Grid.Row="1" Spacing="10">
+                <Button Text="lht-gronau" Clicked="OnNodeButtonClicked" BackgroundColor="{StaticResource ButtonPressed}"/>
+                <Button Text="mkr-saxion" Clicked="OnNodeButtonClicked"/>
+                <Button Text="mkr-wierden" Clicked="OnNodeButtonClicked"/>
             </HorizontalStackLayout>
-            <!-- Chart in the second row -->
-            <lvc:CartesianChart 
-            x:Name="Chart" 
-            Series="{Binding Series}" 
-            XAxes="{Binding XAxes}"
-            VerticalOptions="FillAndExpand"
-            HorizontalOptions="FillAndExpand"
-            IsVisible="False"
-            Grid.Row="4" 
-            Grid.ColumnSpan="2"
-            LegendPosition="Bottom"
-            />
+
+            <!-- Date Range Buttons -->
+            <HorizontalStackLayout Grid.Row="2" Spacing="10">
+                <Button x:Name="OneDayButton" Text="1 Day" Clicked="OnDayDataClicked" BackgroundColor="{StaticResource ButtonPressed}"/>
+                <Button x:Name="ThreeDaysButton" Text="3 Days" Clicked="OnThreeDayDataClicked"/>
+                <Button x:Name="OneWeekButton" Text="1 Week" Clicked="OnWeekDataClicked"/>
+                <Button x:Name="TwoWeeksButton" Text="2 Weeks" Clicked="OnTwoWeekDataClicked"/>
+                <Button x:Name="OneMonthButton" Text="1 Month" Clicked="OnMonthDataClicked"/>
+                <DatePicker MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Date="{Binding LowDate}"/>
+                <DatePicker MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Date="{Binding HighDate}"/>
+                <Button x:Name="SearchButton" Text="Search" Clicked="OnCustomRangeClicked"/>
+            </HorizontalStackLayout>
+
+            <!-- Label -->
+            <HorizontalStackLayout Grid.Row="3" Spacing="10">
+                <Label Text="{Binding SelectedParameter, StringFormat='The graph showing {0}'}" Style="{StaticResource SectionHeaderStyle}"/>
+            </HorizontalStackLayout>
+
+            <!-- Chart -->
+            <lvc:CartesianChart x:Name="Chart" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"
+                                VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                IsVisible="False" Grid.Row="4" Grid.ColumnSpan="2" LegendPosition="Bottom">
+            </lvc:CartesianChart>
         </Grid>
     </ScrollView>
 

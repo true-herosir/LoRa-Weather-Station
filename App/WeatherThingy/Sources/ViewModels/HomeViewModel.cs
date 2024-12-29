@@ -3,13 +3,13 @@ using WeatherThingy.Sources.Services;
 
 namespace WeatherThingy.Sources.ViewModels
 {
+
     public partial class HomeViewModel : ObservableObject
     {
         public ObservableCollection<Datum> MostRecent { get; } = new();
         public ObservableCollection<Datum> FilteredNode { get; set; } = new();
         public ObservableCollection<string> NodeId { get; } = new();
 
-        //public ICommand RefreshCommand { get; }
         public ICommand LoadLocationCommand { get; }
 
         private bool _isRefreshing;
@@ -19,16 +19,14 @@ namespace WeatherThingy.Sources.ViewModels
             set => SetProperty(ref _isRefreshing, value);
         }
 
-        private readonly IWeatherThingyService _weatherThingyService;
-
-        // Use a dictionary for better status mapping
-        private static readonly Dictionary<string, string> BatteryStatusMap = new()
+        private bool _isButtonPressed;
+        public bool IsButtonPressed
         {
-            { "1", "bat1.png" },
-            { "2", "bat2.png" },
-            { "3", "bat3.png" },
-            { "4", "bat4.png" }
-        };
+            get => _isButtonPressed;
+            set => SetProperty(ref _isButtonPressed, value);
+        }
+
+        private readonly IWeatherThingyService _weatherThingyService;
 
         // Constructor
         public HomeViewModel(IWeatherThingyService weatherThingyService)
@@ -36,23 +34,18 @@ namespace WeatherThingy.Sources.ViewModels
             _weatherThingyService = weatherThingyService ?? throw new ArgumentNullException(nameof(weatherThingyService));
 
             // Initialize commands
-            //RefreshCommand = new RelayCommand(OnRefresh);
             LoadLocationCommand = new RelayCommand<string>(OnClickedLocation);
 
             // Initialize data asynchronously
-            _ = InitializeData();
+            _ = InitializeDataAsync();
         }
 
         // Initialize value by fetching the data
-        private async Task InitializeData()
+        private async Task InitializeDataAsync()
         {
-            MostRecent.Clear();
-            FilteredNode.Clear();
-            NodeId.Clear();
-            await GetMostRecentDataCommand();
-            await GetNodeByLocationCommand(NodeId.FirstOrDefault());
+            await GetMostRecentDataAsync();
+            await GetNodeByLocationAsync(NodeId.FirstOrDefault());
         }
-
 
         private async void OnClickedLocation(string location)
         {
@@ -60,17 +53,20 @@ namespace WeatherThingy.Sources.ViewModels
             // Refresh data for a specific location
             if (!string.IsNullOrEmpty(location))
             {
-                await GetNodeByLocationCommand(location);
+                await GetNodeByLocationAsync(location);
             }
         }
 
         // Get the most recent data
         [RelayCommand]
-        private async Task GetMostRecentDataCommand()
+        private async Task GetMostRecentDataAsync()
         {
             try
             {
                 var data = await _weatherThingyService.GetNodeData();
+                MostRecent.Clear();
+                NodeId.Clear();
+
                 foreach (var datum in data.data)
                 {
                     if (datum is not null)
@@ -78,26 +74,16 @@ namespace WeatherThingy.Sources.ViewModels
                         MostRecent.Add(datum);
                         if (!NodeId.Contains(datum.location))
                             NodeId.Add(datum.location);
-                        switch (datum.battery_status)
-                        {
-                            case "1":
-                                datum.battery_status = "bat1.png";
-                                break;
-                            case "2":
-                                datum.battery_status = "bat2.png";
-                                break;
-                            case "3":
-                                datum.battery_status = "bat3.png";
-                                break;
-                            case "4":
-                                datum.battery_status = "bat4.png";
-                                break;
-                            default:
-                                datum.battery_status = "na.png";
-                                break;
-                        }
-                    }
 
+                        datum.battery_status = datum.battery_status switch
+                        {
+                            "1" => "bat1.png",
+                            "2" => "bat2.png",
+                            "3" => "bat3.png",
+                            "4" => "bat4.png",
+                            _ => "na.png",
+                        };
+                    }
                 }
             }
             catch (Exception ex)
@@ -108,7 +94,7 @@ namespace WeatherThingy.Sources.ViewModels
         }
 
         // Get nodes filtered by location
-        private Task GetNodeByLocationCommand(string location)
+        private Task GetNodeByLocationAsync(string location)
         {
             if (string.IsNullOrEmpty(location))
                 return Task.CompletedTask;

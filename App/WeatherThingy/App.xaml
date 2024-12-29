@@ -12,15 +12,18 @@
 
             <!-- Enhanced Color Palette -->
             <!-- Colors -->
-            <Color x:Key="Background">#A2CFFE</Color> 
-            <Color x:Key="Navigation">#0288D1</Color>
-            <!--<Color x:Key="Frame">#F0FAFF</Color>-->
-            <Color x:Key="Frame">#E6F7FF</Color>
-            <Color x:Key="Button">#03A9F4</Color>
-            <Color x:Key="ButtonPressed">#0288D1</Color>
-            <Color x:Key="TextLabel">#212121</Color>
-            <Color x:Key="SubText">#FAFAFA</Color>
-            <Color x:Key="EmptyText">#9E9E9E</Color>
+            <Color x:Key="Primary">#007AFF</Color>
+            <Color x:Key="PrimaryDark">#005BB5</Color>
+            <Color x:Key="PrimaryLight">#66B2FF</Color>
+            <Color x:Key="Accent">#FF9500</Color>
+            <Color x:Key="Background">#F2F2F7</Color>
+            <Color x:Key="Navigation">#007AFF</Color>
+            <Color x:Key="Frame">#FFFFFF</Color>
+            <Color x:Key="Button">#007AFF</Color>
+            <Color x:Key="ButtonPressed">#005BB5</Color>
+            <Color x:Key="TextLabel">#1C1C1E</Color>
+            <Color x:Key="SubText">#FFFFFF</Color>
+            <Color x:Key="EmptyText">#C7C7CC</Color>
 
             <!-- Page Style -->
             <Style x:Key="PageStyle" TargetType="Page">
@@ -30,18 +33,18 @@
             <!-- Frame Style -->
             <Style TargetType="Frame" x:Key="CardFrameStyle">
                 <Setter Property="BackgroundColor" Value="{StaticResource Frame}" />
-                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="CornerRadius" Value="15" />
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="{StaticResource Navigation}" Opacity="0.1" Offset="1,0" Radius="10" />
+                        <Shadow Brush="{StaticResource Navigation}" Opacity="0.7" Offset="10,10" Radius="25" />
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Margin" Value="10" />
-                <Setter Property="Padding" Value="10" />
-                <Setter Property="Opacity" Value="0.8"/>
+                <Setter Property="Margin" Value="15" />
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="Opacity" Value="1"/>
             </Style>
+            
             <!-- Label Styles -->
-            <!--x:Key="DefaultLabelStyle-->
             <Style TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource TextLabel}" />
                 <Setter Property="FontSize" Value="16" />
@@ -88,8 +91,8 @@
                 </Setter>
                 <Setter Property="Opacity" Value="0.8"/>
             </Style>
-            <!--x:Key="LocationButtonStyle"-->
-            <Style TargetType="Button"  BasedOn="{StaticResource DefaultButtonStyle}">
+
+            <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
                 <Setter Property="CornerRadius" Value="5" />
             </Style>
 

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Monitoring Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <!-- Moved styles to external stylesheet, keeping only critical styles inline -->
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --primary-dark: #174ea6;
+            --success: #0f9d58;
+            --warning: #f4b400;
+            --danger: #d93025;
+            --text-primary: #202124;
+            --text-secondary: #ffffff;
+            --background: #f8f9fa;
+            --card-shadow: 0 2px 6px rgba(26, 115, 232, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .nav-container {
+            background-color: var(--primary);
+            padding: 1rem;
+            position: static;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background-color: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                gap: 0.5rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .controls {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .location-selector {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .sensor-selector {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--primary-light);
+        }
+
+        .location-button {
+            background-color: var(--background);
+            border: 2px solid var(--primary-light);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .location-button:hover {
+            background-color: var(--primary-light);
+        }
+
+        .location-button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .data-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .data-card:hover::before {
+            opacity: 1;
+        }
+
+        .data-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--primary-light);
+        }
+
+        .card-header h3 {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-top: 2rem;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--primary-light);
+            border-radius: 4px;
+            background-color: white;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .refresh-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .refresh-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .loading-spinner {
+            border: 3px solid var(--primary-light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-message {
+            background-color: #fce8e6;
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .last-update {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .date-range-selector {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--primary-light);
+        }
+
+        .date-range-selector label {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+
+        .date-range-selector input[type="datetime-local"] {
+            padding: 0.5rem;
+            border: 1px solid var(--primary-light);
+            border-radius: 4px;
+            color: var(--text-primary);
+            background-color: white;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .date-range-selector input[type="datetime-local"]:hover {
+            border-color: var(--primary);
+        }
+
+        .date-range-selector input[type="datetime-local"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        @media (max-width: 768px) {
+            .date-range-selector {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
+</head>
+
+<body>
+    <header>
+        <nav class="nav-container">
+            <div class="nav-content">
+                <h1>Weather Monitoring System</h1>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="detail.html" class="nav-link active">Details</a>
+                </div>
+                <div class="status-indicators">
+                    <span class="last-update" id="lastUpdate"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <div class="location-selector">
+                <h2>Sensor Selection</h2>
+                <select id="sensorSelect"></select>
+            </div>
+            <div class="date-range-selector">
+                <label for="startDate">Start Date:</label>
+                <input type="datetime-local" id="startDate">
+
+                <label for="endDate">End Date:</label>
+                <input type="datetime-local" id="endDate">
+            </div>
+            <div class="status-bar">
+                <button class="refresh-button" id="refreshButton">Refresh Data</button>
+                <div class="status-indicators">
+                    <span class="loading-indicator hidden" id="loadingIndicator">
+                        <!-- <div class="loading-spinner"></div>
+                        Updating... -->
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div id="sensorGrid" class="grid-container"></div>
+
+        <div class="chart-container">
+            <div class="chart-controls">
+                <select id="sensorMetric"></select>
+            </div>
+            <canvas id="weatherChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Constants and configurations
+        const CONFIG = {
+            API_URL: 'http://84.85.32.192:7086/api/Nodes/node_location',
+            REFRESH_INTERVAL: 5 * 60 * 1000,
+            METRICS: [
+                { value: 'humidity', label: 'Humidity' },
+                { value: 'illumination', label: 'Illumination' },
+                { value: 'pressure', label: 'Pressure' },
+                { value: 'temperature_indoor', label: 'Indoor Temperature' },
+                { value: 'temperature_outdoor', label: 'Outdoor Temperature' }
+            ],
+            CHART_OPTIONS: {
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: false } }
+            }
+        };
+
+        // State management
+        const state = {
+            chartInstance: null,
+            currentSensor: 'all',
+            sensorData: {},
+            selectedLocation: new URLSearchParams(window.location.search).get('location')
+        };
+
+        // DOM Elements cache
+        const elements = {
+            startDate: document.getElementById('startDate'),
+            endDate: document.getElementById('endDate'),
+            sensorSelect: document.getElementById('sensorSelect'),
+            sensorMetric: document.getElementById('sensorMetric'),
+            sensorGrid: document.getElementById('sensorGrid'),
+            loadingIndicator: document.getElementById('loadingIndicator'),
+            lastUpdate: document.getElementById('lastUpdate'),
+            weatherChart: document.getElementById('weatherChart')
+        };
+
+        // Utility functions
+        const utils = {
+            formatDateTime: (date) => {
+                if (!date) return 'N/A';
+                const d = new Date(date);
+                return d.toLocaleString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            },
+
+            formatNumber: (value, unit, decimals = 1) => {
+                return value != null ? `${parseFloat(value).toFixed(decimals)}${unit}` : 'N/A';
+            },
+
+            formatDateForAPI: (date) => date.toISOString().split('T')[0],
+
+            debounce: (func, wait) => {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+        };
+
+        // Initialize application
+        function initializeApp() {
+            setupEventListeners();
+            initializeMetricSelect();
+            initializeDateInputs();
+            fetchWeatherData();
+            setInterval(fetchWeatherData, CONFIG.REFRESH_INTERVAL);
+        }
+
+        // Event listeners setup
+        function setupEventListeners() {
+            elements.sensorSelect.addEventListener('change', () => {
+                state.currentSensor = elements.sensorSelect.value;
+                updateDashboard();
+            });
+
+            elements.startDate.addEventListener('change', handleDateChange);
+            elements.endDate.addEventListener('change', handleDateChange);
+            elements.sensorMetric.addEventListener('change', updateChart);
+
+            const refreshButton = document.getElementById('refreshButton');
+
+            refreshButton.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    refreshButton.disabled = true;
+                    refreshButton.textContent = 'Refreshing...';
+                    elements.loadingIndicator.classList.remove('hidden');
+
+                    await fetchWeatherData();
+
+                    // Update last refresh time
+                    elements.lastUpdate.textContent = `Last updated: ${new Date().toLocaleString()}`;
+                } catch (error) {
+                    console.error('Refresh failed:', error);
+                    alert('Failed to refresh data. Please try again.');
+                } finally {
+                    refreshButton.disabled = false;
+                    refreshButton.textContent = 'Refresh Data';
+                    elements.loadingIndicator.classList.add('hidden');
+                }
+            });
+        }
+
+        // Initialize metric select options
+        function initializeMetricSelect() {
+            elements.sensorMetric.innerHTML = CONFIG.METRICS.map(metric =>
+                `<option value="${metric.value}">${metric.label}</option>`
+            ).join('');
+        }
+
+        // Initialize date inputs
+        function initializeDateInputs() {
+            const endDate = new Date();
+            const startDate = new Date(endDate);
+            startDate.setDate(startDate.getDate() - 1);
+
+            elements.startDate.value = startDate.toISOString().slice(0, 16);
+            elements.endDate.value = endDate.toISOString().slice(0, 16);
+        }
+
+        // Data fetching
+        async function fetchWeatherData() {
+            try {
+                elements.loadingIndicator.classList.remove('hidden');
+                const startDate = new Date(elements.startDate.value);
+                const endDate = new Date(elements.endDate.value);
+
+                // Build base URL
+                let apiUrl = `${CONFIG.API_URL}?`;
+
+                // Add location parameter only if it exists
+                if (state.selectedLocation) {
+                    apiUrl += `location=${state.selectedLocation}&`;
+                }
+
+                // Add other parameters
+                apiUrl += `start_time=${utils.formatDateForAPI(startDate)}&` +
+                    `end_time=${utils.formatDateForAPI(endDate)}&` +
+                    `page=1&page_size=5000`;
+
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const data = await response.json();
+                state.sensorData = data.data.reduce((acc, item) => {
+                    (acc[item.node_id] = acc[item.node_id] || []).push(item);
+                    return acc;
+                }, {});
+
+                updateSensorList();
+                updateDashboard();
+                updateLastUpdateTime();
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to fetch weather data');
+            } finally {
+                elements.loadingIndicator.classList.add('hidden');
+            }
+        }
+
+        // Update functions
+        function updateSensorList() {
+            const currentSensors = new Set(Array.from(elements.sensorSelect.options).map(opt => opt.value));
+            const sensorOptions = ['<option value="all">All Sensors</option>'];
+
+            Object.keys(state.sensorData).forEach(sensorId => {
+                if (!currentSensors.has(sensorId)) {
+                    sensorOptions.push(`<option value="${sensorId}">Sensor: ${sensorId}</option>`);
+                }
+            });
+
+            elements.sensorSelect.innerHTML = sensorOptions.join('');
+        }
+
+        function updateDashboard() {
+            const sensorCards = state.currentSensor === 'all'
+                ? Object.entries(state.sensorData).map(([id, data]) => createSensorCard(id, data))
+                : [createSensorCard(state.currentSensor, state.sensorData[state.currentSensor])];
+
+            elements.sensorGrid.innerHTML = sensorCards.join('');
+            updateChart();
+        }
+
+        function updateChart() {
+            const metric = elements.sensorMetric.value;
+            const ctx = elements.weatherChart.getContext('2d');
+
+            if (state.chartInstance) {
+                state.chartInstance.destroy();
+            }
+
+            const datasets = state.currentSensor === 'all'
+                ? Object.entries(state.sensorData).map(([sensorId, data], index) => ({
+                    label: `${sensorId} - ${metric.replace('_', ' ')}`,
+                    data: data.map(item => item[metric]),
+                    borderColor: `hsl(${index * 137.5}, 70%, 50%)`,
+                    tension: 0.4
+                }))
+                : [{
+                    label: metric.replace('_', ' '),
+                    data: state.sensorData[state.currentSensor].map(item => item[metric]),
+                    borderColor: 'var(--primary)',
+                    tension: 0.4
+                }];
+
+            state.chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: state.sensorData[Object.keys(state.sensorData)[0]]
+                        .map(item => utils.formatDateTime(item.time)),
+                    datasets
+                },
+                options: CONFIG.CHART_OPTIONS
+            });
+        }
+
+        // Template functions
+        function createSensorCard(sensorId, data) {
+            const latestData = data[0];
+            return `
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>${sensorId}</h3>
+                        <span class="location">${latestData.gateway_location}</span>
+                    </div>
+                    <div class="data-grid">
+                        ${CONFIG.METRICS.map(metric => `
+                            <div class="data-item">
+                                <span class="data-label">${metric.label}</span>
+                                <span class="data-value">
+                                    ${utils.formatNumber(latestData[metric.value], metric.value.includes('temperature') ? '°C' :
+                metric.value === 'humidity' ? '%' :
+                    metric.value === 'pressure' ? ' hPa' : ' lux')}
+                                </span>
+                            </div>
+                        `).join('')}
+                        <div class="data-item">
+                            <span class="data-label">Last Update</span>
+                            <span class="data-value">${utils.formatDateTime(latestData.time)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Error handling
+        function showError(message) {
+            elements.sensorGrid.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        // Date validation
+        const handleDateChange = utils.debounce(() => {
+            const startDate = new Date(elements.startDate.value);
+            const endDate = new Date(elements.endDate.value);
+
+            if (startDate > endDate) {
+                alert('Start date cannot be after end date');
+                return;
+            }
+            fetchWeatherData();
+        }, 300);
+
+        function updateLastUpdateTime() {
+            elements.lastUpdate.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+
+</html>

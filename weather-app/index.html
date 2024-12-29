@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <nav class="nav-container">
+            <div class="nav-content">
+                <h1>Weather Monitoring System</h1>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="detail.html" class="nav-link">Details</a>
+                </div>
+                <div class="status-indicators">
+                    <span class="last-update" id="lastUpdated"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <h2>Select Location</h2>
+            <div id="locationButtons" class="location-selector"></div>
+            <div class="status-bar">
+                <div id="sensorCount"></div>
+                <div id="viewDetailButton"></div>
+                <button class="refresh-button" onclick="updateData()">Refresh Data</button>
+            </div>
+        </div>
+        <div id="dataContainer" class="grid-container"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://84.85.32.192:7086/api/Most_Recent?page=1&page_size=10';
+        const REFRESH_INTERVAL = 60000;
+        let currentLocation = null;
+        let currentData = null;
+
+        // Fetch data from API
+        const fetchData = async () => {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return await response.json();
+        };
+
+        // Extract unique locations
+        const getUniqueLocations = (data) => [...new Set(data.data.map(item => item.location))];
+
+        // Format values with units
+        const formatValue = (value, unit) => value !== null && value !== undefined ? `${parseFloat(value).toFixed(1)}${unit}` : 'N/A';
+
+        // Time difference in human-readable format
+        const getTimeAgo = (date) => {
+            const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+            const intervals = [
+                { name: 'years', seconds: 31536000 },
+                { name: 'months', seconds: 2592000 },
+                { name: 'days', seconds: 86400 },
+                { name: 'hours', seconds: 3600 },
+                { name: 'minutes', seconds: 60 }
+            ];
+            for (const interval of intervals) {
+                const count = Math.floor(seconds / interval.seconds);
+                if (count > 1) return `${count} ${interval.name} ago`;
+            }
+            return `${seconds} seconds ago`;
+        };
+
+        // Create battery indicator
+        const createBatteryIndicator = (level) => {
+            if (level === null || level === undefined) return '';
+            const labels = ['Unknown', '1 - Very Low', '2 - Low', '3 - Medium', '4 - High'];
+            return `
+                    <div class="battery-indicator">
+                        <div class="battery-icon">
+                            <div class="battery-level" data-level="${level}"></div>
+                        </div>
+                        <div class="battery-tooltip">${labels[level] || 'Unknown'}</div>
+                    </div>
+                `;
+        };
+
+
+        // Create location buttons
+        const createLocationButtons = (locations) => {
+            const container = document.getElementById('locationButtons');
+            const viewDetailContainer = document.getElementById('viewDetailButton');
+            container.innerHTML = [
+                createLocationButton('All Locations', null),
+                ...locations.map(location => createLocationButton(location, location))
+            ].join('');
+
+            viewDetailContainer.innerHTML = currentLocation
+                ? `<button class="refresh-button" onclick="window.location.href='detail.html?location=${encodeURIComponent(currentLocation)}'">View Detail</button>`
+                : '';
+        };
+
+        const createLocationButton = (text, location) =>
+            `<button class="location-button ${currentLocation === location ? 'active' : ''}" onclick="selectLocation('${location}')">${text}</button>`;
+
+        // Filter data by location
+        const filterDataByLocation = (data, location) => location ? data.data.filter(item => item.location === location) : data.data;
+
+        // Display data in cards
+        const displayData = (data) => {
+            const container = document.getElementById('dataContainer');
+            const filteredData = filterDataByLocation(data, currentLocation);
+
+            document.getElementById('sensorCount').textContent = `${filteredData.length} sensors ${currentLocation ? `in ${currentLocation}` : 'total'}`;
+            container.innerHTML = filteredData.map(createDataCard).join('');
+            document.getElementById('lastUpdated').textContent = `Last updated: ${new Date().toLocaleString()}`;
+        };
+
+        const createDataCard = (item) => `
+            <div class="data-card">
+                <div class="card-header">
+                    <h3>${item.node_id}</h3>
+                    ${item.battery_status !== null && item.battery_status !== undefined ? createBatteryIndicator(item.battery_status) : ''}
+                    <span class="location-badge">${item.location}</span>
+                </div>
+                <div class="data-grid">
+                    <div class="data-item"><span class="data-label">Indoor Temperature</span><span class="data-value">${formatValue(item.temperature_indoor, '°C')}</span></div>
+                    <div class="data-item"><span class="data-label">Outdoor Temperature</span><span class="data-value">${formatValue(item.temperature_outdoor, '°C')}</span></div>
+                    <div class="data-item"><span class="data-label">Humidity</span><span class="data-value">${formatValue(item.humidity, '%')}</span></div>
+                    <div class="data-item"><span class="data-label">Pressure</span><span class="data-value">${formatValue(item.pressure, ' hPa')}</span></div>
+                    <div class="data-item"><span class="data-label">Illumination</span><span class="data-value">${formatValue(item.illumination, ' lux')}</span></div>
+                    <div class="data-item"><span class="data-label">Last Updated</span><span class="data-value">${getTimeAgo(item.time)}</span></div>
+                </div>
+            </div>
+        `;
+
+
+        // Select location and update UI
+        const selectLocation = (location) => {
+            currentLocation = location === 'null' ? null : location;
+            if (currentData) {
+                createLocationButtons(getUniqueLocations(currentData));
+                displayData(currentData);
+            }
+        };
+
+        // Show loading spinner
+        const showLoading = () => {
+            document.getElementById('dataContainer').innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <span>Loading sensor data...</span>
+                </div>
+            `;
+        };
+
+        // Show error message
+        const showError = (message) => {
+            document.getElementById('dataContainer').innerHTML = `<div class="error-message"><strong>Error:</strong> ${message}</div>`;
+        };
+
+        // Fetch and update data
+        const updateData = async () => {
+            try {
+                showLoading();
+                currentData = await fetchData();
+                createLocationButtons(getUniqueLocations(currentData));
+                displayData(currentData);
+            } catch (error) {
+                showError('Failed to fetch sensor data. Please try again later.');
+                console.error(error);
+            }
+        };
+
+        // Initial load and periodic refresh
+        updateData();
+        setInterval(updateData, REFRESH_INTERVAL);
+    </script>
+</body>
+
+</html>

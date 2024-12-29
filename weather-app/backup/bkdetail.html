@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Monitoring Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --primary-dark: #174ea6;
+            --success: #0f9d58;
+            --warning: #f4b400;
+            --danger: #d93025;
+            --text-primary: #202124;
+            --text-secondary: #ffffff;
+            --background: #f8f9fa;
+            --card-shadow: 0 2px 6px rgba(26, 115, 232, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .nav-container {
+            background-color: var(--primary);
+            padding: 0 1rem;
+            position: static;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .controls {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .location-selector {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .sensor-selector {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--primary-light);
+        }
+
+        .location-button {
+            background-color: var(--background);
+            border: 2px solid var(--primary-light);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .location-button:hover {
+            background-color: var(--primary-light);
+        }
+
+        .location-button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .data-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .data-card:hover::before {
+            opacity: 1;
+        }
+
+        .data-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--primary-light);
+        }
+
+        .card-header h3 {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-top: 2rem;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--primary-light);
+            border-radius: 4px;
+            background-color: white;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .refresh-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .refresh-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .loading-spinner {
+            border: 3px solid var(--primary-light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-message {
+            background-color: #fce8e6;
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .last-update {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav-container">
+        <div class="nav-content">
+            <h1>Weather Monitoring System</h1>
+            <div class="status-indicators">
+                <span class="last-update" id="lastUpdate"></span>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="controls">
+            <div class="location-selector">
+                <h2>Sensor Selection</h2>
+                <select id="sensorSelect" onchange="changeSensor()">
+                    <option value="all">All Sensors</option>
+                </select>
+            </div>
+            <div class="status-bar">
+                <button class="refresh-button" onclick="refreshData()">
+                    Refresh Data
+                </button>
+                <div class="status-indicators">
+                    <span class="loading-indicator hidden" id="loadingIndicator">
+                        <div class="loading-spinner"></div>
+                        Updating...
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div id="sensorGrid" class="grid-container">
+            <!-- Sensor cards will be dynamically inserted here -->
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-controls">
+                <select id="sensorMetric" onchange="updateChart()">
+                    <option value="humidity">Humidity</option>
+                    <option value="illumination">Illumination</option>
+                    <option value="pressure">Pressure</option>
+                    <option value="temperature_indoor">Indoor Temperature</option>
+                    <option value="temperature_outdoor">Outdoor Temperature</option>
+                </select>
+            </div>
+            <canvas id="weatherChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let chartInstance = null;
+        let currentSensor = 'all';
+        let sensorData = {};
+        const API_URL = 'https://localhost:7086/api/Nodes/node_location';
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedLocation = urlParams.get('location');
+
+        async function fetchWeatherData() {
+            try {
+                showLoading(true);
+                const response = await fetch(`${API_URL}?location=${selectedLocation}&start_time=2024-12-22&end_time=2024-12-23&page=1&page_size=50`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+
+                // Group data by node_id
+                sensorData = data.data.reduce((acc, item) => {
+                    if (!acc[item.node_id]) {
+                        acc[item.node_id] = [];
+                    }
+                    acc[item.node_id].push(item);
+                    return acc;
+                }, {});
+
+                updateSensorList();
+                updateDashboard();
+                updateLastUpdateTime();
+                showLoading(false);
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to fetch weather data');
+                showLoading(false);
+            }
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingIndicator').classList.toggle('hidden', !show);
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.getElementById('sensorGrid').appendChild(errorDiv);
+        }
+
+        function updateLastUpdateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent =
+                `Last updated: ${now.toLocaleTimeString()}`;
+        }
+
+        function updateSensorList() {
+            const select = document.getElementById('sensorSelect');
+            const currentSensors = Array.from(select.options).map(opt => opt.value);
+
+            Object.keys(sensorData).forEach(sensorId => {
+                if (!currentSensors.includes(sensorId)) {
+                    const option = document.createElement('option');
+                    option.value = sensorId;
+                    option.textContent = `Sensor: ${sensorId}`;
+                    select.appendChild(option);
+                }
+            });
+        }
+
+        function formatTime(timeString) {
+            if (!timeString) return 'N/A';
+
+            try {
+                const date = new Date(timeString);
+                if (isNaN(date.getTime())) return 'Invalid Date';
+
+                const pad = (num) => String(num).padStart(2, '0');
+
+                const day = pad(date.getDate());
+                const month = pad(date.getMonth() + 1);
+                const year = date.getFullYear();
+                const hours = pad(date.getHours());
+                const minutes = pad(date.getMinutes());
+                const seconds = pad(date.getSeconds());
+
+                return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+            } catch (error) {
+                console.error('Error formatting date:', error);
+                return 'Invalid Date';
+            }
+        }
+
+        function formatSafeNumber(value, unit, decimals = 1) {
+            if (value === null || value === undefined || isNaN(value)) {
+                return 'N/A';
+            }
+            return `${parseFloat(value).toFixed(decimals)}${unit}`;
+        }
+
+        function formatTime(timestamp) {
+            if (!timestamp) return 'N/A';
+            return new Date(timestamp).toLocaleTimeString();
+        }
+
+        function createSensorCard(sensorId, data) {
+            const latestData = data[0];
+            return `
+                <div class="data-card">
+                    <div class="card-header">
+                        <h3>${sensorId}</h3>
+                        <span class="location">${latestData.gateway_location}</span>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-item">
+                            <span class="data-label">Humidity</span>
+                            <span class="data-value">${formatSafeNumber(latestData?.humidity, '%')}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Illumination</span>
+                            <span class="data-value">${formatSafeNumber(latestData?.illumination, ' lux')}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Pressure</span>
+                            <span class="data-value">${formatSafeNumber(latestData?.pressure, ' hPa')}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Indoor Temperature</span>
+                            <span class="data-value">${formatSafeNumber(latestData?.temperature_indoor, '°C')}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Outdoor Temperature</span>
+                            <span class="data-value">${formatSafeNumber(latestData?.temperature_outdoor, '°C')}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Last Update</span>
+                            <span class="data-value">${formatTime(latestData.time)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateDashboard() {
+            const grid = document.getElementById('sensorGrid');
+            grid.innerHTML = '';
+
+            if (currentSensor === 'all') {
+                Object.entries(sensorData).forEach(([sensorId, data]) => {
+                    grid.innerHTML += createSensorCard(sensorId, data);
+                });
+            } else if (sensorData[currentSensor]) {
+                grid.innerHTML = createSensorCard(currentSensor, sensorData[currentSensor]);
+            }
+
+            updateChart();
+        }
+
+        function updateChart() {
+            const metric = document.getElementById('sensorMetric').value;
+            const ctx = document.getElementById('weatherChart').getContext('2d');
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            let datasets = [];
+            if (currentSensor === 'all') {
+                Object.entries(sensorData).forEach(([sensorId, data], index) => {
+                    datasets.push({
+                        label: `${sensorId} - ${metric.replace('_', ' ')}`,
+                        data: data.map(item => item[metric]),
+                        borderColor: `hsl(${index * 137.5}, 70%, 50%)`,
+                        tension: 0.4
+                    });
+                });
+            } else {
+                const data = sensorData[currentSensor];
+                datasets = [{
+                    label: `${metric.replace('_', ' ')}`,
+                    data: data.map(item => item[metric]),
+                    borderColor: 'var(--primary)',
+                    tension: 0.4
+                }];
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sensorData[Object.keys(sensorData)[0]].map(item =>
+                        formatTime(item.time)
+                    ),
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function changeSensor() {
+            currentSensor = document.getElementById('sensorSelect').value;
+            updateDashboard();
+        }
+
+        function refreshData() {
+            fetchWeatherData();
+        }
+
+        // Initial load
+        fetchWeatherData();
+
+        // Auto refresh every 5 minutes
+        setInterval(fetchWeatherData, 5 * 60 * 1000);
+    </script>
+</body>
+
+</html>

@@ -84,7 +84,7 @@
 
                                 <!-- Illumination -->
                                 <Image Grid.Row="3" Grid.Column="0" Source="illumination.png"/>
-                                <Label Grid.Row="3" Grid.Column="1" Text="Illumination (lux):" FontAttributes="Bold" />
+                                <Label Grid.Row="3" Grid.Column="1" Text="Illumination (%):" FontAttributes="Bold" />
                                 <Label Grid.Row="3" Grid.Column="2" Text="{Binding illumination, TargetNullValue='N/A', FallbackValue='ERROR'}" />
 
                                 <!-- Humidity -->

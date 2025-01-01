@@ -70,7 +70,7 @@ namespace WeatherThingy.Sources.ViewModels
                         YAxes[0].Labeler = value => value.ToString("N2"); // Percentage format
                         break;
                     case "illumination":
-                        YAxes[0].Name = "Illumination (lux)";
+                        YAxes[0].Name = "Illumination (%)";
                         YAxes[0].Labeler = value => value.ToString("N2"); // Default formatting
                         break;
                     case "pressure":
@@ -204,6 +204,7 @@ namespace WeatherThingy.Sources.ViewModels
                                 //For some reason could not make the newer version work
                                 //WeakReferenceMessenger.Default.Send("One or more of the chosen nodes do not support the chosen sensor", "NoSensorLabel");
                                 MessagingCenter.Send(this, "NoSensorLabel", "One or more of the chosen nodes do not support the chosen sensor");
+                                break;
                             }
                         }
                     }

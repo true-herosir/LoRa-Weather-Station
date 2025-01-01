@@ -52,8 +52,8 @@
                 <Button x:Name="OneWeekButton" Text="1 Week" Clicked="OnWeekDataClicked"/>
                 <Button x:Name="TwoWeeksButton" Text="2 Weeks" Clicked="OnTwoWeekDataClicked"/>
                 <Button x:Name="OneMonthButton" Text="1 Month" Clicked="OnMonthDataClicked"/>
-                <DatePicker MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Date="{Binding LowDate}"/>
-                <DatePicker MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Date="{Binding HighDate}"/>
+                <DatePicker MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Date="{Binding LowDate}" BackgroundColor="LightGray" TextColor="Black"/>
+                <DatePicker MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}" Date="{Binding HighDate}" BackgroundColor="LightGray" TextColor="Black"/>
                 <Button x:Name="SearchButton" Text="Search" Clicked="OnCustomRangeClicked"/>
             </HorizontalStackLayout>
 

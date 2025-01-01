@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using CommunityToolkit.Mvvm.Messaging;
 
 
 namespace WeatherThingy.Sources.ViewModels
@@ -24,6 +25,7 @@ namespace WeatherThingy.Sources.ViewModels
 
     public partial class DetailViewModel : ObservableObject
     {
+
         private string _selectedParameter;
         public string SelectedParameter
         {
@@ -111,12 +113,9 @@ namespace WeatherThingy.Sources.ViewModels
         // ObservableCollection for chart data
         public ObservableCollection<ISeries> Series { get; } = new ObservableCollection<ISeries>();
 
-        public DetailViewModel()
-        {
-            InitializePlotsAsync();
-        }
+        public ObservableCollection<String> AvailableNodes { get; } = new ObservableCollection<string>();
 
-        private async Task InitializePlotsAsync()
+        public async Task InitializePlotsAsync()
         {
             var data = await new WeatherThingyService().GetNodeData();
             foreach (var item in data.data)
@@ -127,6 +126,7 @@ namespace WeatherThingy.Sources.ViewModels
                     var retrievedMin = new Plot { NodeId = item.node_id + "_min" };
                     Plots.Add(retrieved);
                     Plots.Add(retrievedMin);
+                    if(!AvailableNodes.Contains(item.node_id)) AvailableNodes.Add(item.node_id);
                 }
             }
         }
@@ -198,6 +198,12 @@ namespace WeatherThingy.Sources.ViewModels
                             if (filteredValue != null)
                             {
                                 plot?.Datapoints.Add(new DateTimePoint(timeStamp, filteredValue));
+                            }
+                            else
+                            {
+                                //For some reason could not make the newer version work
+                                //WeakReferenceMessenger.Default.Send("One or more of the chosen nodes do not support the chosen sensor", "NoSensorLabel");
+                                MessagingCenter.Send(this, "NoSensorLabel", "One or more of the chosen nodes do not support the chosen sensor");
                             }
                         }
                     }

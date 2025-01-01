@@ -3,9 +3,13 @@ using LiveChartsCore.SkiaSharpView;
 using System.Collections.ObjectModel;
 using WeatherThingy.Sources.ViewModels;
 using static WeatherThingy.Sources.ViewModels.HomeViewModel;
+using Microsoft.Maui.Controls;  // For ContentPage, etc.
+using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace WeatherThingy.Sources.Views
 {
+
     public partial class DetailPage : ContentPage
     {
         private DetailViewModel ViewModel => BindingContext as DetailViewModel;
@@ -19,20 +23,49 @@ namespace WeatherThingy.Sources.Views
         {
             InitializeComponent();
             BindingContext = new DetailViewModel();
-            // Initializing the default graph to be shown (humidity for one day only for lht gronau sensor)
-            nodeIds.Add("lht-gronau");
             currentlyShowing = "humidity";
             ViewModel.SelectedParameter = "Humidity";
             start = DateTime.Now.AddDays(-1);
             end = DateTime.Now;
+            prevClickedTimeDuration = OneDayButton;
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            // Trigger data fetching when the page appears
-            prevClickedTimeDuration = OneDayButton;
-            await UpdateChart();
+
+            MessagingCenter.Subscribe<DetailViewModel, string>(this, "NoSensorLabel", async (sender, message) =>
+            {
+                NoSensorLabel.IsVisible = true;
+                await DisplayAlert("Some data is missing!", "One or more of the chosen nodes do not support the sensor data currently displayed on the graph.", "OK");
+            });
+
+            await ViewModel.InitializePlotsAsync(); // Ensure that the nodes are initialized
+
+            //if (ViewModel.AvailableNodes.Any()) // Check if there are any available nodes
+            //{
+            //    // Add the first available node to the list
+            //    nodeIds.Add(ViewModel.AvailableNodes.First());
+
+            //    // Hide the "No Data" label and update the chart
+            //    NoDataLabel.IsVisible = false;
+            //    await UpdateChart();
+
+            //    if (nodeIds.Count() == 1)
+            //    {
+            //        Task.WaitAll();
+            //        //ChangeButtonColors(this.FindByName<Button>(nodeIds.First()), true);
+            //    }
+
+            //}
+            //else
+            //{
+            //    // Show the "No Data" label and disable chart visibility
+            //    NoDataLabel.IsVisible = true;
+            //    Chart.IsVisible = false;
+            //    await DisplayAlert("No Data", "No available nodes found.", "OK");
+            //}
+
         }
 
         private async Task UpdateChart()
@@ -76,11 +109,13 @@ namespace WeatherThingy.Sources.Views
 
                 if (start <= end)
                 {
+                    WrongDateLabel.IsVisible = false;
                     await UpdateChart();
                 }
                 else
                 {
-                    // TODO: ADD LABEL FOR ERROR TEXT AND BIND IT
+                    WrongDateLabel.IsVisible = true;
+                    await DisplayAlert("Invalid time period", "The end date has to be bigger than start date", "OK");
                 }
             }
         }

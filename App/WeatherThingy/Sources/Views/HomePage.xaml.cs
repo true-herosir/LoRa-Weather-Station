@@ -10,7 +10,7 @@ public partial class HomePage : ContentPage
     {
         InitializeComponent();
         // Create an instance of the service
-        var weatherThingyService = new WeatherThingyService(); // Replace this with your actual service initialization
+        var weatherThingyService = new WeatherThingyService();
         BindingContext = new HomeViewModel(weatherThingyService);
     }
 }

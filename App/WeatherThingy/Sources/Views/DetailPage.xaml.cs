@@ -38,7 +38,7 @@ namespace WeatherThingy.Sources.Views
             MessagingCenter.Subscribe<DetailViewModel, string>(this, "NoSensorLabel", async (sender, message) =>
             {
                 NoSensorLabel.IsVisible = true;
-                await DisplayAlert("Some data is missing!", "One or more of the chosen nodes do not support the sensor data currently displayed on the graph.", "OK");
+                await DisplayAlert("Some data is missing!", message, "OK");
             });
 
             await ViewModel.InitializePlotsAsync(); // Ensure that the nodes are initialized

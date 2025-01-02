@@ -6,6 +6,7 @@ using static WeatherThingy.Sources.ViewModels.HomeViewModel;
 using Microsoft.Maui.Controls;  // For ContentPage, etc.
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
+using System.Linq.Expressions;
 
 namespace WeatherThingy.Sources.Views
 {
@@ -72,11 +73,62 @@ namespace WeatherThingy.Sources.Views
         {
             if (ViewModel != null)
             {
+                Chart.IsVisible = false;
+                
                 await ViewModel.ShowDataAsync(start, end, currentlyShowing, nodeIds);
+
+                RebuildAxes();
                 Chart.CoreChart.Update();
+
                 Chart.IsVisible = true;
             }
         }
+
+        
+        private void RebuildAxes()
+        {
+            // Rebuild the X-axis
+            Axis[] XAxes = new Axis[]
+        {
+                new Axis
+                {
+                    //MaxLimit = null, MinLimit = null,
+
+                    Labeler = value =>
+                    {
+                        if (value < DateTime.MinValue.Ticks || value > DateTime.MaxValue.Ticks)
+                        {
+                            return "0";
+                        }
+                        var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
+                        return dateTime.ToString("dd-MM HH:mm");    // Display only day, hour, minute
+                    },
+                    UnitWidth = TimeSpan.FromMinutes(1).Ticks, // Adjust the spacing for your data
+                    LabelsRotation = 120
+                } };
+
+
+            string y_value;
+
+            if (currentlyShowing.Contains("ressure")) y_value = currentlyShowing + " hPa";
+            else if (currentlyShowing.Contains("door")) y_value = currentlyShowing + " °C";
+            else y_value = currentlyShowing + " %";
+
+            // Optionally, rebuild Y-axis if needed
+            Axis[] YAxes =
+                    {
+                new Axis
+                {
+                    Name = y_value,
+                    NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
+                }
+            };
+
+            // Bind the rebuilt axes to the chart
+            Chart.XAxes = XAxes;
+            Chart.YAxes = YAxes;
+        }
+
 
         private async void OnTimeDurationClicked(object sender, EventArgs e, int days)
         {

@@ -136,6 +136,8 @@ namespace WeatherThingy.Sources.ViewModels
         {
                 new Axis
                 {
+                    //MaxLimit = null, MinLimit = null,
+
                     Labeler = value =>
                     {
                         if (value < DateTime.MinValue.Ticks || value > DateTime.MaxValue.Ticks)
@@ -162,6 +164,7 @@ namespace WeatherThingy.Sources.ViewModels
         public async Task ShowDataAsync(DateTime start, DateTime end, string value, List<string> nodes)
         {
             Series.Clear();
+            
 
             try
             {

@@ -1,3 +1,5 @@
+using LiveChartsCore.Kernel;
+
 namespace WeatherThingy.Sources.Services
 {
     internal class WeatherThingyService : IWeatherThingyService
@@ -26,139 +28,148 @@ namespace WeatherThingy.Sources.Services
         }
         public async Task<Root> callAPI()
         {
-            string urlData = _api_complete;
-            var responseData = await _httpClient.GetStringAsync(urlData);
-            var rootData = JsonDocument.Parse(responseData).RootElement;
-
-            var node = new Root
+            try
             {
-                total_items = Convert.ToInt16(rootData.GetProperty("total_items").ToString()),
-                total_pages = Convert.ToInt16(rootData.GetProperty("total_pages").ToString()),
-                current_page = Convert.ToInt16(rootData.GetProperty("current_page").ToString()),
-                page_size = Convert.ToInt16(rootData.GetProperty("page_size").ToString()),
-                data = new List<Datum>()
-            };
+                string urlData = _api_complete;
+                var responseData = await _httpClient.GetStringAsync(urlData);
+                var rootData = JsonDocument.Parse(responseData).RootElement;
 
-
-            if (rootData.TryGetProperty($"data", out var Data))
-            {
-                foreach (var item in Data.EnumerateArray())
+                var node = new Root
                 {
-                    var datum = new Datum
+                    total_items = Convert.ToInt16(rootData.GetProperty("total_items").ToString()),
+                    total_pages = Convert.ToInt16(rootData.GetProperty("total_pages").ToString()),
+                    current_page = Convert.ToInt16(rootData.GetProperty("current_page").ToString()),
+                    page_size = Convert.ToInt16(rootData.GetProperty("page_size").ToString()),
+                    data = new List<Datum>()
+                };
+
+
+                if (rootData.TryGetProperty($"data", out var Data))
+                {
+                    foreach (var item in Data.EnumerateArray())
                     {
-                        time = item.TryGetProperty("time", out var timeElement) &&
-           DateTime.TryParse(timeElement.ToString(), out var parsedTime)
-        ? (DateTime?)parsedTime
+                        var datum = new Datum
+                        {
+                            time = item.TryGetProperty("time", out var timeElement) &&
+               DateTime.TryParse(timeElement.ToString(), out var parsedTime)
+            ? (DateTime?)parsedTime
+            : null,
+
+                            the_day = item.TryGetProperty("the_day", out var dayElement) &&
+        DateTime.TryParse(dayElement.ToString(), out var parsedDay)
+        ? (item.TryGetProperty("the_hour", out var hourElement) &&
+           int.TryParse(hourElement.ToString(), out var parsedHour)
+            ? parsedDay.AddHours(parsedHour)
+            : (DateTime?)parsedDay)
         : null,
 
-                        the_day = item.TryGetProperty("the_day", out var dayElement) &&
-    DateTime.TryParse(dayElement.ToString(), out var parsedDay)
-    ? (item.TryGetProperty("the_hour", out var hourElement) &&
-       int.TryParse(hourElement.ToString(), out var parsedHour)
-        ? parsedDay.AddHours(parsedHour)
-        : (DateTime?)parsedDay)
-    : null,
+                            node_id = item.TryGetProperty("node_id", out var nodeElement)
+            ? nodeElement.ToString()
+            : null,
 
-                        node_id = item.TryGetProperty("node_id", out var nodeElement)
-        ? nodeElement.ToString()
-        : null,
+                            pressure = item.TryGetProperty("pressure", out var pressureElement) &&
+                   double.TryParse(pressureElement.ToString(), out var parsedPressure)
+            ? (double?)parsedPressure
+            : null,
 
-                        pressure = item.TryGetProperty("pressure", out var pressureElement) &&
-               double.TryParse(pressureElement.ToString(), out var parsedPressure)
-        ? (double?)parsedPressure
-        : null,
+                            illumination = item.TryGetProperty("illumination", out var illuminationElement) &&
+                       double.TryParse(illuminationElement.ToString(), out var parsedIllumination)
+            ? (double?)parsedIllumination
+            : null,
 
-                        illumination = item.TryGetProperty("illumination", out var illuminationElement) &&
-                   double.TryParse(illuminationElement.ToString(), out var parsedIllumination)
-        ? (double?)parsedIllumination
-        : null,
+                            humidity = item.TryGetProperty("humidity", out var humidityElement) &&
+                   double.TryParse(humidityElement.ToString(), out var parsedHumidity)
+            ? (double?)parsedHumidity
+            : null,
 
-                        humidity = item.TryGetProperty("humidity", out var humidityElement) &&
-               double.TryParse(humidityElement.ToString(), out var parsedHumidity)
-        ? (double?)parsedHumidity
-        : null,
+                            temperature_indoor = item.TryGetProperty("temperature_indoor", out var tempIndoorElement) &&
+                             double.TryParse(tempIndoorElement.ToString(), out var parsedTempIndoor)
+            ? (double?)parsedTempIndoor
+            : null,
 
-                        temperature_indoor = item.TryGetProperty("temperature_indoor", out var tempIndoorElement) &&
-                         double.TryParse(tempIndoorElement.ToString(), out var parsedTempIndoor)
-        ? (double?)parsedTempIndoor
-        : null,
+                            temperature_outdoor = item.TryGetProperty("temperature_outdoor", out var tempOutdoorElement) &&
+                              double.TryParse(tempOutdoorElement.ToString(), out var parsedTempOutdoor)
+            ? (double?)parsedTempOutdoor
+            : null,
 
-                        temperature_outdoor = item.TryGetProperty("temperature_outdoor", out var tempOutdoorElement) &&
-                          double.TryParse(tempOutdoorElement.ToString(), out var parsedTempOutdoor)
-        ? (double?)parsedTempOutdoor
-        : null,
+                            gateway_Location = item.TryGetProperty("gateway_Location", out var gatewayLocationElement)
+            ? gatewayLocationElement.ToString()
+            : null,
 
-                        gateway_Location = item.TryGetProperty("gateway_Location", out var gatewayLocationElement)
-        ? gatewayLocationElement.ToString()
-        : null,
+                            location = item.TryGetProperty("location", out var locationElement)
+            ? locationElement.ToString()
+            : null,
 
-                        location = item.TryGetProperty("location", out var locationElement)
-        ? locationElement.ToString()
-        : null,
-
-                        battery_status = item.TryGetProperty("battery_status", out var batteryStatusElement) &&
-                     short.TryParse(batteryStatusElement.ToString(), out var parsedBatteryStatus)
-        ? parsedBatteryStatus.ToString()
-        : null,
+                            battery_status = item.TryGetProperty("battery_status", out var batteryStatusElement) &&
+                         short.TryParse(batteryStatusElement.ToString(), out var parsedBatteryStatus)
+            ? parsedBatteryStatus.ToString()
+            : null,
 
 
 
-                        min_pressure = item.TryGetProperty("min_pressure", out var minPressureElement) &&
-                   double.TryParse(minPressureElement.ToString(), out var parsedMinPressure)
-        ? (double?)parsedMinPressure
-        : null,
+                            min_pressure = item.TryGetProperty("min_pressure", out var minPressureElement) &&
+                       double.TryParse(minPressureElement.ToString(), out var parsedMinPressure)
+            ? (double?)parsedMinPressure
+            : null,
 
-                        min_illumination = item.TryGetProperty("min_illumination", out var minIlluminationElement) &&
-                       double.TryParse(minIlluminationElement.ToString(), out var parsedMinIllumination)
-        ? (double?)parsedMinIllumination
-        : null,
+                            min_illumination = item.TryGetProperty("min_illumination", out var minIlluminationElement) &&
+                           double.TryParse(minIlluminationElement.ToString(), out var parsedMinIllumination)
+            ? (double?)parsedMinIllumination
+            : null,
 
-                        min_humidity = item.TryGetProperty("min_humidity", out var minHumidityElement) &&
-                   double.TryParse(minHumidityElement.ToString(), out var parsedMinHumidity)
-        ? (double?)parsedMinHumidity
-        : null,
+                            min_humidity = item.TryGetProperty("min_humidity", out var minHumidityElement) &&
+                       double.TryParse(minHumidityElement.ToString(), out var parsedMinHumidity)
+            ? (double?)parsedMinHumidity
+            : null,
 
-                        min_temperature_indoor = item.TryGetProperty("min_temperature_indoor", out var minTempIndoorElement) &&
-                             double.TryParse(minTempIndoorElement.ToString(), out var parsedMinTempIndoor)
-        ? (double?)parsedMinTempIndoor
-        : null,
+                            min_temperature_indoor = item.TryGetProperty("min_temperature_indoor", out var minTempIndoorElement) &&
+                                 double.TryParse(minTempIndoorElement.ToString(), out var parsedMinTempIndoor)
+            ? (double?)parsedMinTempIndoor
+            : null,
 
-                        min_temperature_outdoor = item.TryGetProperty("min_temperature_outdoor", out var minTempOutdoorElement) &&
-                              double.TryParse(minTempOutdoorElement.ToString(), out var parsedMinTempOutdoor)
-        ? (double?)parsedMinTempOutdoor
-        : null,
+                            min_temperature_outdoor = item.TryGetProperty("min_temperature_outdoor", out var minTempOutdoorElement) &&
+                                  double.TryParse(minTempOutdoorElement.ToString(), out var parsedMinTempOutdoor)
+            ? (double?)parsedMinTempOutdoor
+            : null,
 
-                        max_pressure = item.TryGetProperty("max_pressure", out var maxPressureElement) &&
-                   double.TryParse(maxPressureElement.ToString(), out var parsedMaxPressure)
-        ? (double?)parsedMaxPressure
-        : null,
+                            max_pressure = item.TryGetProperty("max_pressure", out var maxPressureElement) &&
+                       double.TryParse(maxPressureElement.ToString(), out var parsedMaxPressure)
+            ? (double?)parsedMaxPressure
+            : null,
 
-                        max_illumination = item.TryGetProperty("max_illumination", out var maxIlluminationElement) &&
-                       double.TryParse(maxIlluminationElement.ToString(), out var parsedMaxIllumination)
-        ? (double?)parsedMaxIllumination
-        : null,
+                            max_illumination = item.TryGetProperty("max_illumination", out var maxIlluminationElement) &&
+                           double.TryParse(maxIlluminationElement.ToString(), out var parsedMaxIllumination)
+            ? (double?)parsedMaxIllumination
+            : null,
 
-                        max_humidity = item.TryGetProperty("max_humidity", out var maxHumidityElement) &&
-                   double.TryParse(maxHumidityElement.ToString(), out var parsedMaxHumidity)
-        ? (double?)parsedMaxHumidity
-        : null,
+                            max_humidity = item.TryGetProperty("max_humidity", out var maxHumidityElement) &&
+                       double.TryParse(maxHumidityElement.ToString(), out var parsedMaxHumidity)
+            ? (double?)parsedMaxHumidity
+            : null,
 
-                        max_temperature_indoor = item.TryGetProperty("max_temperature_indoor", out var maxTempIndoorElement) &&
-                             double.TryParse(maxTempIndoorElement.ToString(), out var parsedMaxTempIndoor)
-        ? (double?)parsedMaxTempIndoor
-        : null,
+                            max_temperature_indoor = item.TryGetProperty("max_temperature_indoor", out var maxTempIndoorElement) &&
+                                 double.TryParse(maxTempIndoorElement.ToString(), out var parsedMaxTempIndoor)
+            ? (double?)parsedMaxTempIndoor
+            : null,
 
-                        max_temperature_outdoor = item.TryGetProperty("max_temperature_outdoor", out var maxTempOutdoorElement) &&
-                              double.TryParse(maxTempOutdoorElement.ToString(), out var parsedMaxTempOutdoor)
-        ? (double?)parsedMaxTempOutdoor
-        : null
+                            max_temperature_outdoor = item.TryGetProperty("max_temperature_outdoor", out var maxTempOutdoorElement) &&
+                                  double.TryParse(maxTempOutdoorElement.ToString(), out var parsedMaxTempOutdoor)
+            ? (double?)parsedMaxTempOutdoor
+            : null
 
-                    };
+                        };
 
-                    node.data.Add(datum);
+                        node.data.Add(datum);
+                    }
                 }
+                return node;
             }
-            return node;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching data: {ex.Message}");
+                return new Root();
+            }
+
         }
 
 

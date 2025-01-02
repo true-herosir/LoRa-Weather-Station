@@ -43,6 +43,14 @@
                                     VerticalOptions="Center"/>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+
+                <!-- Empty View -->
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                        <Image Source="empty_location.png" HeightRequest="100" WidthRequest="100" AutomationProperties.Name="Empty Locations Image" />
+                        <Label Text="No nodes available." FontSize="16" AutomationProperties.Name="Empty Locations Message" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
             </CollectionView>
 
             <!-- Date Range Buttons -->
@@ -58,8 +66,12 @@
             </HorizontalStackLayout>
 
             <!-- Label -->
-            <HorizontalStackLayout Grid.Row="3" Spacing="10">
+            <HorizontalStackLayout x:Name="GraphTitle" Grid.Row="3" Spacing="10" IsVisible="false">
                 <Label Text="{Binding SelectedParameter, StringFormat='The graph showing {0}'}" Style="{StaticResource SectionHeaderStyle}"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout x:Name="NoGraph" Grid.Row="3" Spacing="10" IsVisible="true">
+                <Label Text="No data to display" Style="{StaticResource SectionHeaderStyle}"/>
             </HorizontalStackLayout>
 
             <!-- Chart -->
@@ -68,10 +80,6 @@
                                 IsVisible="False" Grid.Row="4" Grid.ColumnSpan="2" LegendPosition="Bottom">
             </lvc:CartesianChart>
 
-
-            <Label x:Name="NoSensorLabel" IsVisible="False" HorizontalOptions="Center" VerticalOptions="Center" />
-            <Label x:Name="NoDataLabel" IsVisible="False" HorizontalOptions="Center" VerticalOptions="Center" />
-            <Label x:Name="WrongDateLabel" IsVisible="False" HorizontalOptions="Center" VerticalOptions="Center" />
         </Grid>
     </ScrollView>
 

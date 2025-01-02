@@ -37,42 +37,61 @@ namespace WeatherThingy.Sources.Views
 
             MessagingCenter.Subscribe<DetailViewModel, string>(this, "NoSensorLabel", async (sender, message) =>
             {
-                NoSensorLabel.IsVisible = true;
                 await DisplayAlert("Some data is missing!", "One or more of the chosen nodes do not support the sensor data currently displayed on the graph.", "OK");
+            });
+
+            MessagingCenter.Subscribe<DetailViewModel, string>(this, "FailedToFetchData", async (sender, message) =>
+            {
+                await DisplayAlert("No data to display", message , "OK");
+                GraphTitle.IsVisible = false;
+                NoGraph.IsVisible = true;
             });
 
             await ViewModel.InitializePlotsAsync(); // Ensure that the nodes are initialized
 
-            //if (ViewModel.AvailableNodes.Any()) // Check if there are any available nodes
-            //{
-            //    // Add the first available node to the list
-            //    nodeIds.Add(ViewModel.AvailableNodes.First());
+            if (!ViewModel.AvailableNodes.Any()) // Check if there are any available nodes
+            {
+                GraphTitle.IsVisible = false;
+                NoGraph.IsVisible = true;
+                await DisplayAlert("No Data", "No available nodes found. Please make sure you have a stable internet connection.", "OK");
+                //// Add the first available node to the list
+                //nodeIds.Add(ViewModel.AvailableNodes.First());
 
-            //    // Hide the "No Data" label and update the chart
-            //    NoDataLabel.IsVisible = false;
-            //    await UpdateChart();
+                //// Hide the "No Data" label and update the chart
+                //NoDataLabel.IsVisible = false;
 
-            //    if (nodeIds.Count() == 1)
-            //    {
-            //        Task.WaitAll();
-            //        //ChangeButtonColors(this.FindByName<Button>(nodeIds.First()), true);
-            //    }
+                //if (nodeIds.Count() == 1)
+                //{
+                //    Task.WaitAll();
+                //    //ChangeButtonColors(this.FindByName<Button>(nodeIds.First()), true);
+                //}
 
-            //}
-            //else
-            //{
-            //    // Show the "No Data" label and disable chart visibility
-            //    NoDataLabel.IsVisible = true;
-            //    Chart.IsVisible = false;
-            //    await DisplayAlert("No Data", "No available nodes found.", "OK");
-            //}
+            }
+            else
+            {
+                GraphTitle.IsVisible = true;
+                NoGraph.IsVisible = false;
+                await UpdateChart();
+                //await DisplayAlert("No Data", "No available nodes found. Please make sure you have a stable internet connection.", "OK");
+            }
 
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            MessagingCenter.Unsubscribe<DetailViewModel, string>(this, "NoSensorLabel");
+            MessagingCenter.Unsubscribe<DetailViewModel, string>(this, "FailedToFetchData");
         }
 
         private async Task UpdateChart()
         {
             if (ViewModel != null)
             {
+                GraphTitle.IsVisible = true;
+                NoGraph.IsVisible = false;
+
                 Chart.IsVisible = false;
                 
                 await ViewModel.ShowDataAsync(start, end, currentlyShowing, nodeIds);
@@ -161,12 +180,10 @@ namespace WeatherThingy.Sources.Views
 
                 if (start <= end)
                 {
-                    WrongDateLabel.IsVisible = false;
                     await UpdateChart();
                 }
                 else
                 {
-                    WrongDateLabel.IsVisible = true;
                     await DisplayAlert("Invalid time period", "The end date has to be bigger than start date", "OK");
                 }
             }

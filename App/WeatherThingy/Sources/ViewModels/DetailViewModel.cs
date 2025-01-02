@@ -117,17 +117,28 @@ namespace WeatherThingy.Sources.ViewModels
 
         public async Task InitializePlotsAsync()
         {
-            var data = await new WeatherThingyService().GetNodeData();
-            foreach (var item in data.data)
+            try
             {
-                if (item.time.HasValue) // Ensure time is not null
+                var data = await new WeatherThingyService().GetNodeData();
+                if (data == null || data.data == null)
                 {
-                    var retrieved = new Plot { NodeId = item.node_id };
-                    var retrievedMin = new Plot { NodeId = item.node_id + "_min" };
-                    Plots.Add(retrieved);
-                    Plots.Add(retrievedMin);
-                    if(!AvailableNodes.Contains(item.node_id)) AvailableNodes.Add(item.node_id);
+                    throw new ArgumentNullException(nameof(data));
                 }
+                foreach (var item in data.data)
+                {
+                    if (item.time.HasValue) // Ensure time is not null
+                    {
+                        var retrieved = new Plot { NodeId = item.node_id };
+                        var retrievedMin = new Plot { NodeId = item.node_id + "_min" };
+                        Plots.Add(retrieved);
+                        Plots.Add(retrievedMin);
+                        if (!AvailableNodes.Contains(item.node_id)) AvailableNodes.Add(item.node_id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching data: {ex.Message}");
             }
         }
 
@@ -147,7 +158,7 @@ namespace WeatherThingy.Sources.ViewModels
                         var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
                         return dateTime.ToString("dd-MM HH:mm");    // Display only day, hour, minute
                     },
-                    UnitWidth = TimeSpan.FromMinutes(1).Ticks, // Adjust the spacing for your data
+                    UnitWidth = TimeSpan.FromMinutes(1).Ticks,
                     LabelsRotation = 120
                 }
         };
@@ -171,10 +182,17 @@ namespace WeatherThingy.Sources.ViewModels
                 double? filteredValue;
                 TimeSpan timeDiff = end - start;
                 int daysDifference = timeDiff.Days;
-
+                bool DataFetchFailed = false;
+                bool FoundNullNode = false;
                 foreach (var node in nodes)
                 {
                     var data = await new WeatherThingyService().GetNodeData(node, start, end, 1);
+                    if ((data == null || data.data == null) && !DataFetchFailed)
+                    {
+                        MessagingCenter.Send(this, "FailedToFetchData", "Failed to fetch the data! Please make sure you have a stable internet connection.");
+                        DataFetchFailed = true;
+                        throw new ArgumentNullException(nameof(data));
+                    }
                     var plot = Plots.FirstOrDefault(p => p.NodeId == node);
                     var plotMin = Plots.FirstOrDefault(p => p.NodeId == node + "_min");
 
@@ -183,7 +201,7 @@ namespace WeatherThingy.Sources.ViewModels
 
                     foreach (var item in data.data)
                     {
-                        if (item.time.HasValue || item.the_day.HasValue) // Ensure time is not null
+                        if (item.time.HasValue || item.the_day.HasValue) // Ensuring time is not null
                         {
                             var timeStamp = item.time ?? item.the_day.Value;
 
@@ -202,12 +220,12 @@ namespace WeatherThingy.Sources.ViewModels
                             {
                                 plot?.Datapoints.Add(new DateTimePoint(timeStamp, filteredValue));
                             }
-                            else
+                            else if (!FoundNullNode)
                             {
                                 //For some reason could not make the newer version work
                                 //WeakReferenceMessenger.Default.Send("One or more of the chosen nodes do not support the chosen sensor", "NoSensorLabel");
                                 MessagingCenter.Send(this, "NoSensorLabel", "One or more of the chosen nodes do not support the chosen sensor");
-                                break;
+                                FoundNullNode = true;
                             }
                         }
                     }
@@ -235,7 +253,6 @@ namespace WeatherThingy.Sources.ViewModels
             }
             catch (Exception ex)
             {
-                // Handle exceptions, such as network errors or invalid data
                 Console.WriteLine($"Error fetching data: {ex.Message}");
             }
         }

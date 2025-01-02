@@ -64,6 +64,11 @@ namespace WeatherThingy.Sources.ViewModels
             try
             {
                 var data = await _weatherThingyService.GetNodeData();
+                if (data == null || data.data == null)
+                {
+                    throw new ArgumentNullException(nameof(data));
+                }
+
                 MostRecent.Clear();
                 NodeId.Clear();
 
@@ -88,7 +93,6 @@ namespace WeatherThingy.Sources.ViewModels
             }
             catch (Exception ex)
             {
-                // Replace with proper logging
                 Console.WriteLine($"Error fetching data: {ex.Message}");
             }
         }

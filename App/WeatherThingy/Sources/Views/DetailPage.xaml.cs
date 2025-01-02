@@ -178,6 +178,12 @@ namespace WeatherThingy.Sources.Views
                 ChangeButtonColors((Button)sender, true);
                 prevClickedTimeDuration = (Button)sender;
 
+                if (start.Date == end.Date)
+                {
+                    start = start.Date;
+                    end = end.Date.AddHours(23).AddMinutes(59);
+                }
+
                 if (start <= end)
                 {
                     await UpdateChart();

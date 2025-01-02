@@ -37,7 +37,7 @@ namespace WeatherThingy.Sources.Views
 
             MessagingCenter.Subscribe<DetailViewModel, string>(this, "NoSensorLabel", async (sender, message) =>
             {
-                await DisplayAlert("Some data is missing!", "One or more of the chosen nodes do not support the sensor data currently displayed on the graph.", "OK");
+                await DisplayAlert("Some data is missing!", message, "OK");
             });
 
             MessagingCenter.Subscribe<DetailViewModel, string>(this, "FailedToFetchData", async (sender, message) =>
@@ -130,7 +130,7 @@ namespace WeatherThingy.Sources.Views
             string y_value;
 
             if (currentlyShowing.Contains("ressure")) y_value = currentlyShowing + " hPa";
-            else if (currentlyShowing.Contains("door")) y_value = currentlyShowing + " °C";
+            else if (currentlyShowing.Contains("door")) y_value = currentlyShowing + " Â°C";
             else y_value = currentlyShowing + " %";
 
             // Optionally, rebuild Y-axis if needed

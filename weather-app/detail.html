@@ -6,309 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Monitoring Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <!-- Moved styles to external stylesheet, keeping only critical styles inline -->
-    <style>
-        :root {
-            --primary: #1a73e8;
-            --primary-light: #e8f0fe;
-            --primary-dark: #174ea6;
-            --success: #0f9d58;
-            --warning: #f4b400;
-            --danger: #d93025;
-            --text-primary: #202124;
-            --text-secondary: #ffffff;
-            --background: #f8f9fa;
-            --card-shadow: 0 2px 6px rgba(26, 115, 232, 0.1);
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--background);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
-        .nav-container {
-            background-color: var(--primary);
-            padding: 1rem;
-            position: static;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            align-items: center;
-            color: white;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            width: 100%;
-            justify-content: center;
-            padding: 0.5rem 0;
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: var(--transition);
-        }
-
-        .nav-link:hover {
-            background-color: var(--primary-dark);
-        }
-
-        @media (max-width: 768px) {
-            .nav-content {
-                gap: 0.5rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-                flex-wrap: wrap;
-            }
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .controls {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 2rem;
-        }
-
-        .location-selector {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .sensor-selector {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--primary-light);
-        }
-
-        .location-button {
-            background-color: var(--background);
-            border: 2px solid var(--primary-light);
-            color: var(--primary);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-        }
-
-        .location-button:hover {
-            background-color: var(--primary-light);
-        }
-
-        .location-button.active {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .data-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .data-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-light), var(--primary));
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .data-card:hover::before {
-            opacity: 1;
-        }
-
-        .data-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--primary-light);
-        }
-
-        .card-header h3 {
-            color: var(--primary);
-            font-weight: 500;
-        }
-
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1rem;
-        }
-
-        .chart-container {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: var(--card-shadow);
-            margin-top: 2rem;
-        }
-
-        .chart-controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        select {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--primary-light);
-            border-radius: 4px;
-            background-color: white;
-            color: var(--text-primary);
-            cursor: pointer;
-        }
-
-        .refresh-button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .refresh-button:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .loading-spinner {
-            border: 3px solid var(--primary-light);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            margin-right: 1rem;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .error-message {
-            background-color: #fce8e6;
-            color: var(--danger);
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            margin: 1rem 0;
-        }
-
-        .last-update {
-            color: var(--text-secondary);
-            font-size: 0.9em;
-        }
-
-        .date-range-selector {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--primary-light);
-        }
-
-        .date-range-selector label {
-            color: var(--text-primary);
-            font-weight: 500;
-            margin-right: 0.5rem;
-        }
-
-        .date-range-selector input[type="datetime-local"] {
-            padding: 0.5rem;
-            border: 1px solid var(--primary-light);
-            border-radius: 4px;
-            color: var(--text-primary);
-            background-color: white;
-            font-family: inherit;
-            transition: var(--transition);
-        }
-
-        .date-range-selector input[type="datetime-local"]:hover {
-            border-color: var(--primary);
-        }
-
-        .date-range-selector input[type="datetime-local"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px var(--primary-light);
-        }
-
-        @media (max-width: 768px) {
-            .date-range-selector {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="css/style.css" media="print" onload="this.media='all'">
 </head>
 
 <body>
@@ -362,6 +60,8 @@
     </div>
 
     <script>
+
+
         // Constants and configurations
         const CONFIG = {
             API_URL: 'http://84.85.32.192:7086/api/Nodes/node_location',
@@ -431,6 +131,23 @@
                     clearTimeout(timeout);
                     timeout = setTimeout(later, wait);
                 };
+            },
+
+            // Time difference in human-readable format
+            getTimeAgo: (date) => {
+                const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+                const intervals = [
+                    { name: 'years', seconds: 31536000 },
+                    { name: 'months', seconds: 2592000 },
+                    { name: 'days', seconds: 86400 },
+                    { name: 'hours', seconds: 3600 },
+                    { name: 'minutes', seconds: 60 }
+                ];
+                for (const interval of intervals) {
+                    const count = Math.floor(seconds / interval.seconds);
+                    if (count > 1) return `${count} ${interval.name} ago`;
+                }
+                return `${seconds} seconds ago`;
             }
         };
 
@@ -614,7 +331,7 @@
                         `).join('')}
                         <div class="data-item">
                             <span class="data-label">Last Update</span>
-                            <span class="data-value">${utils.formatDateTime(latestData.time)}</span>
+                            <span class="data-value">${utils.getTimeAgo(latestData.time)}</span>
                         </div>
                     </div>
                 </div>
@@ -639,7 +356,7 @@
         }, 300);
 
         function updateLastUpdateTime() {
-            elements.lastUpdate.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+            elements.lastUpdate.textContent = `Last updated: ${new Date().toLocaleString()}`;
         }
 
         // Initialize the application

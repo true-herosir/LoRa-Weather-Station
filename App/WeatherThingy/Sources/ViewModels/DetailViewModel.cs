@@ -224,7 +224,7 @@ namespace WeatherThingy.Sources.ViewModels
                             {
                                 //For some reason could not make the newer version work
                                 //WeakReferenceMessenger.Default.Send("One or more of the chosen nodes do not support the chosen sensor", "NoSensorLabel");
-                                MessagingCenter.Send(this, "NoSensorLabel", "One or more of the chosen nodes do not support the chosen sensor");
+                                MessagingCenter.Send(this, "NoSensorLabel",  $"The node ({node}) does not support a sensor for ({value}).\nPlease unselect that node.");
                                 FoundNullNode = true;
                             }
                         }

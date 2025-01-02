@@ -11,7 +11,6 @@
 
     <ScrollView>
         <Grid Margin="20">
-            <!-- Define rows for the layout -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -30,17 +29,13 @@
             </HorizontalStackLayout>
 
             <!-- Node Buttons -->
-            <!--<HorizontalStackLayout Grid.Row="1" Spacing="10">-->
             <CollectionView ItemsSource="{Binding AvailableNodes}" Grid.Row="1">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="5"/>
+                    <LinearItemsLayout Orientation="Horizontal"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Button x:Name="{Binding .}"  Text="{Binding .}" 
-                                    Clicked="OnNodeButtonClicked"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Center"/>
+                        <Button x:Name="{Binding .}" Text="{Binding .}" Clicked="OnNodeButtonClicked" HorizontalOptions="Start" VerticalOptions="Center"/>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
@@ -68,7 +63,7 @@
                                 IsVisible="False" Grid.Row="4" Grid.ColumnSpan="2" LegendPosition="Bottom">
             </lvc:CartesianChart>
 
-
+            <!-- Status Labels -->
             <Label x:Name="NoSensorLabel" IsVisible="False" HorizontalOptions="Center" VerticalOptions="Center" />
             <Label x:Name="NoDataLabel" IsVisible="False" HorizontalOptions="Center" VerticalOptions="Center" />
             <Label x:Name="WrongDateLabel" IsVisible="False" HorizontalOptions="Center" VerticalOptions="Center" />

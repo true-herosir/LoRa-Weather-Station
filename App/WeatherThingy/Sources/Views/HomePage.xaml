@@ -21,6 +21,9 @@
                     <DataTemplate>
                         <Button Text="{Binding .}" Style="{StaticResource HomeButtonStyle}">
                             <Button.GestureRecognizers>
+                                <PointerGestureRecognizer 
+                                    PointerEntered="OnPointerEntered"
+                                    PointerExited="OnPointerExited"/>
                                 <TapGestureRecognizer 
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:HomeViewModel}}, Path=LoadLocationCommand}" 
                                     CommandParameter="{Binding .}"/>

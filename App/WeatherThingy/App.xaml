@@ -96,11 +96,8 @@
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup>
-                            <VisualState x:Name="Pressed">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource ButtonPressed}" />
-                                </VisualState.Setters>
-                            </VisualState>
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Hover" />
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>

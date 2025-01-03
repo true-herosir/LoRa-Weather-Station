@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using CommunityToolkit.Mvvm.Messaging;
+//using Org.W3c.Dom;
 
 
 namespace WeatherThingy.Sources.ViewModels
@@ -177,6 +178,7 @@ namespace WeatherThingy.Sources.ViewModels
         public async Task ShowDataAsync(DateTime start, DateTime end, string value, List<string> nodes)
         {
             Series.Clear();
+            List<string> null_nodes = new List<string>();
             
 
             try
@@ -222,12 +224,14 @@ namespace WeatherThingy.Sources.ViewModels
                             {
                                 plot?.Datapoints.Add(new DateTimePoint(timeStamp, filteredValue));
                             }
-                            else if (!FoundNullNode)
+                            else 
                             {
                                 //For some reason could not make the newer version work
                                 //WeakReferenceMessenger.Default.Send("One or more of the chosen nodes do not support the chosen sensor", "NoSensorLabel");
-                                MessagingCenter.Send(this, "NoSensorLabel",  $"The node ({node}) does not support a sensor for ({value}).\nPlease unselect that node.");
+                                
+                                null_nodes.Add($"({node})");
                                 FoundNullNode = true;
+                                break;
                             }
                         }
                     }
@@ -251,6 +255,17 @@ namespace WeatherThingy.Sources.ViewModels
                             GeometrySize = 0,
                         });
                     }
+                }
+                if (FoundNullNode)
+                {
+                    string null_nodes_text = "";
+                    null_nodes_text = String.Join(", ", null_nodes.ToArray());
+
+                    string p_s = null_nodes.Count() > 1 ? "s" : "";
+                    string p_es = null_nodes.Count() > 1 ? "" : "es";
+                    string p_th = null_nodes.Count() > 1 ? "those" : "that";
+
+                    MessagingCenter.Send(this, "NoSensorLabel", $"The node{p_s} {null_nodes_text} do{p_es} not support a sensor for ({value}).\nPlease unselect {p_th} node{p_s}.");
                 }
             }
             catch (Exception ex)

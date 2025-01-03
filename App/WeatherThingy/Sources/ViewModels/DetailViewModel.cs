@@ -143,7 +143,9 @@ namespace WeatherThingy.Sources.ViewModels
         }
 
         // X-Axis configuration with DateTime label formatting
-        public Axis[] XAxes { get; set; } = new Axis[]
+        public Axis[] XAxes { get; set; }
+            /*
+            = new Axis[]
         {
                 new Axis
                 {
@@ -162,8 +164,8 @@ namespace WeatherThingy.Sources.ViewModels
                     LabelsRotation = 120
                 }
         };
-
-        public Axis[] YAxes { get; set; } =
+            */
+        public Axis[] YAxes { get; set; }/* =
         {
                 new Axis
                 {
@@ -171,7 +173,7 @@ namespace WeatherThingy.Sources.ViewModels
                     NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
                 }
             };
-
+        */
         public async Task ShowDataAsync(DateTime start, DateTime end, string value, List<string> nodes)
         {
             Series.Clear();

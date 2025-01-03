@@ -127,8 +127,8 @@ public class NodesController : ControllerBase
         [FromQuery] string? location,
         [FromQuery] DateTime? start_time,
         [FromQuery] DateTime? end_time,
-        [FromQuery] int page,
-        [FromQuery] int page_size)
+        [FromQuery] int page = 1,
+        [FromQuery] int page_size = 10)
     {
         if (page <= 0 || page_size <= 0)
         {
@@ -168,7 +168,7 @@ public class NodesController : ControllerBase
 
 
 
-        var nodes = await nodesQuery.OrderBy(n => n.Time).ToListAsync();
+        var nodes = await nodesQuery.ToListAsync();
 
         // Load sensor locations from SensorContext
         var sensorsQuery = _scontext.Node_locations.AsQueryable();

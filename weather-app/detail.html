@@ -48,8 +48,8 @@
                 </div>
             </div>
         </div>
-
-        <div id="sensorGrid" class="grid-container"></div>
+<!-- 
+        <div id="sensorGrid" class="grid-container"></div> -->
 
         <div class="chart-container">
             <div class="chart-controls">
@@ -230,7 +230,7 @@
                 // Add other parameters
                 apiUrl += `start_time=${utils.formatDateForAPI(startDate)}&` +
                     `end_time=${utils.formatDateForAPI(endDate)}&` +
-                    `page=1&page_size=5000`;
+                    `page=1&page_size=6000`;
 
                 const response = await fetch(apiUrl);
 
@@ -268,11 +268,11 @@
         }
 
         function updateDashboard() {
-            const sensorCards = state.currentSensor === 'all'
-                ? Object.entries(state.sensorData).map(([id, data]) => createSensorCard(id, data))
-                : [createSensorCard(state.currentSensor, state.sensorData[state.currentSensor])];
+            // const sensorCards = state.currentSensor === 'all'
+            //     ? Object.entries(state.sensorData).map(([id, data]) => createSensorCard(id, data))
+            //     : [createSensorCard(state.currentSensor, state.sensorData[state.currentSensor])];
 
-            elements.sensorGrid.innerHTML = sensorCards.join('');
+            // elements.sensorGrid.innerHTML = sensorCards.join('');
             updateChart();
         }
 

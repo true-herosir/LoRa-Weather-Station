@@ -19,7 +19,7 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Button Text="{Binding .}" Style="{StaticResource DefaultButtonStyle}">
+                        <Button Text="{Binding .}" Style="{StaticResource HomeButtonStyle}">
                             <Button.GestureRecognizers>
                                 <TapGestureRecognizer 
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:HomeViewModel}}, Path=LoadLocationCommand}" 

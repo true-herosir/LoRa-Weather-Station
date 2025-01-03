@@ -130,8 +130,8 @@
                     <div class="data-item"><span class="data-label">Outdoor Temperature</span><span class="data-value">${formatValue(item.temperature_outdoor, '°C')}</span></div>
                     <div class="data-item"><span class="data-label">Humidity</span><span class="data-value">${formatValue(item.humidity, '%')}</span></div>
                     <div class="data-item"><span class="data-label">Pressure</span><span class="data-value">${formatValue(item.pressure, ' hPa')}</span></div>
-                    <div class="data-item"><span class="data-label">Illumination</span><span class="data-value">${formatValue(item.illumination, ' lux')}</span></div>
-                    <div class="data-item"><span class="data-label">Last Updated</span><span class="data-value">${item.time}</span></div>
+                    <div class="data-item"><span class="data-label">Illumination</span><span class="data-value">${formatValue(item.illumination, '%')}</span></div>
+                    <div class="data-item"><span class="data-label">Last Updated</span><span class="data-value">${getTimeAgo(item.time)}</span></div>
                 </div>
             </div>
         `;

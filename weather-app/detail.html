@@ -48,8 +48,6 @@
                 </div>
             </div>
         </div>
-<!-- 
-        <div id="sensorGrid" class="grid-container"></div> -->
 
         <div class="chart-container">
             <div class="chart-controls">
@@ -60,25 +58,33 @@
     </div>
 
     <script>
-
-
         // Constants and configurations
         const CONFIG = {
-            API_URL: 'http://84.85.32.192:7086/api/Nodes/node_location',
+            // API_URL: 'http://84.85.32.192:7086/api/',
+            API_URL: 'https://localhost:7086/api/',
             REFRESH_INTERVAL: 5 * 60 * 1000,
             METRICS: [
                 { value: 'humidity', label: 'Humidity' },
                 { value: 'illumination', label: 'Illumination' },
                 { value: 'pressure', label: 'Pressure' },
                 { value: 'temperature_indoor', label: 'Indoor Temperature' },
-                { value: 'temperature_outdoor', label: 'Outdoor Temperature' }
+                { value: 'temperature_outdoor', label: 'Outdoor Temperature' },
             ],
             CHART_OPTIONS: {
                 responsive: true,
                 plugins: { legend: { position: 'top' } },
                 scales: { y: { beginAtZero: false } }
-            }
+            },
+            API_TABLES: [
+                "most_recent",
+                "Nodes/node_location",
+                "Hours_AVG",
+                "Max_Min",
+                "Node_location"
+            ]
         };
+        // Global variable to track the current API table index
+        let currentApiTableIndex = 0;
 
         // State management
         const state = {
@@ -131,23 +137,6 @@
                     clearTimeout(timeout);
                     timeout = setTimeout(later, wait);
                 };
-            },
-
-            // Time difference in human-readable format
-            getTimeAgo: (date) => {
-                const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-                const intervals = [
-                    { name: 'years', seconds: 31536000 },
-                    { name: 'months', seconds: 2592000 },
-                    { name: 'days', seconds: 86400 },
-                    { name: 'hours', seconds: 3600 },
-                    { name: 'minutes', seconds: 60 }
-                ];
-                for (const interval of intervals) {
-                    const count = Math.floor(seconds / interval.seconds);
-                    if (count > 1) return `${count} ${interval.name} ago`;
-                }
-                return `${seconds} seconds ago`;
             }
         };
 
@@ -159,41 +148,95 @@
             fetchWeatherData();
             setInterval(fetchWeatherData, CONFIG.REFRESH_INTERVAL);
         }
+        // Function to enable or disable the refresh button and handle loading indicator
+        function toggleRefreshButtonState(isLoading) {
+            const refreshButton = document.getElementById('refreshButton');
+            const loadingIndicator = elements.loadingIndicator;
 
-        // Event listeners setup
+            refreshButton.disabled = isLoading;
+            refreshButton.textContent = isLoading ? 'Refreshing...' : 'Refresh Data';
+            loadingIndicator.classList.toggle('hidden', !isLoading);
+        }
+
+        // Refactored setupEventListeners function
         function setupEventListeners() {
-            elements.sensorSelect.addEventListener('change', () => {
-                state.currentSensor = elements.sensorSelect.value;
-                updateDashboard();
+            // Cache DOM elements for reuse
+            const { sensorSelect, startDate, endDate, sensorMetric } = elements;
+            const refreshButton = document.getElementById('refreshButton');
+
+            // Set up event listeners
+            sensorSelect.addEventListener('change', () => {
+                state.currentSensor = sensorSelect.value;
+                updateChart();
             });
 
-            elements.startDate.addEventListener('change', handleDateChange);
-            elements.endDate.addEventListener('change', handleDateChange);
-            elements.sensorMetric.addEventListener('change', updateChart);
-
-            const refreshButton = document.getElementById('refreshButton');
+            startDate.addEventListener('change', handleDateChange);
+            endDate.addEventListener('change', handleDateChange);
+            sensorMetric.addEventListener('change', updateChart);
 
             refreshButton.addEventListener('click', async (e) => {
                 e.preventDefault();
+                toggleRefreshButtonState(true);
+
                 try {
-                    refreshButton.disabled = true;
-                    refreshButton.textContent = 'Refreshing...';
-                    elements.loadingIndicator.classList.remove('hidden');
-
                     await fetchWeatherData();
-
                     // Update last refresh time
                     elements.lastUpdate.textContent = `Last updated: ${new Date().toLocaleString()}`;
                 } catch (error) {
                     console.error('Refresh failed:', error);
                     alert('Failed to refresh data. Please try again.');
                 } finally {
-                    refreshButton.disabled = false;
-                    refreshButton.textContent = 'Refresh Data';
-                    elements.loadingIndicator.classList.add('hidden');
+                    toggleRefreshButtonState(false);
                 }
             });
         }
+
+        // Refactored updateSensorList function
+        function updateSensorList() {
+            const sensorOptions = ['<option value="all">All Sensors</option>'];
+
+            Object.keys(state.sensorData).forEach(sensorId => {
+            sensorOptions.push(`<option value="${sensorId}">Sensor: ${sensorId}</option>`);
+            });
+
+            elements.sensorSelect.innerHTML = sensorOptions.join('');
+        }
+
+
+        // // Event listeners setup
+        // function setupEventListeners() {
+        //     elements.sensorSelect.addEventListener('change', () => {
+        //         state.currentSensor = elements.sensorSelect.value;
+        //         updateChart();
+        //     });
+
+        //     elements.startDate.addEventListener('change', handleDateChange);
+        //     elements.endDate.addEventListener('change', handleDateChange);
+        //     elements.sensorMetric.addEventListener('change', updateChart);
+
+        //     const refreshButton = document.getElementById('refreshButton');
+
+        //     refreshButton.addEventListener('click', async (e) => {
+        //         e.preventDefault();
+        //         try {
+        //             refreshButton.disabled = true;
+        //             refreshButton.textContent = 'Refreshing...';
+        //             elements.loadingIndicator.classList.remove('hidden');
+
+        //             await fetchWeatherData();
+
+        //             // Update last refresh time
+        //             elements.lastUpdate.textContent = `Last updated: ${new Date().toLocaleString()}`;
+        //         } catch (error) {
+        //             console.error('Refresh failed:', error);
+        //             alert('Failed to refresh data. Please try again.');
+        //         } finally {
+        //             refreshButton.disabled = false;
+        //             refreshButton.textContent = 'Refresh Data';
+        //             elements.loadingIndicator.classList.add('hidden');
+        //         }
+        //     });
+        // }
 
         // Initialize metric select options
         function initializeMetricSelect() {
@@ -219,18 +262,8 @@
                 const startDate = new Date(elements.startDate.value);
                 const endDate = new Date(elements.endDate.value);
 
-                // Build base URL
-                let apiUrl = `${CONFIG.API_URL}?`;
-
-                // Add location parameter only if it exists
-                if (state.selectedLocation) {
-                    apiUrl += `location=${state.selectedLocation}&`;
-                }
-
-                // Add other parameters
-                apiUrl += `start_time=${utils.formatDateForAPI(startDate)}&` +
-                    `end_time=${utils.formatDateForAPI(endDate)}&` +
-                    `page=1&page_size=6000`;
+                const apiUrl = buildApiUrl(startDate, endDate, state.selectedLocation);
+                console.log(apiUrl);
 
                 const response = await fetch(apiUrl);
 
@@ -243,7 +276,7 @@
                 }, {});
 
                 updateSensorList();
-                updateDashboard();
+                updateChart();
                 updateLastUpdateTime();
             } catch (error) {
                 console.error('Error:', error);
@@ -253,90 +286,212 @@
             }
         }
 
-        // Update functions
-        function updateSensorList() {
-            const currentSensors = new Set(Array.from(elements.sensorSelect.options).map(opt => opt.value));
-            const sensorOptions = ['<option value="all">All Sensors</option>'];
+        // Function to build the API URL with the selected table index
+        function buildApiUrl(startDate, endDate, location) {
+            const timeDiff = (endDate - startDate) / (1000 * 60 * 60 * 24);
 
-            Object.keys(state.sensorData).forEach(sensorId => {
-                if (!currentSensors.has(sensorId)) {
-                    sensorOptions.push(`<option value="${sensorId}">Sensor: ${sensorId}</option>`);
-                }
-            });
+            let tableIndex = 0;
+            let startParam, endParam;
+            let pageSize = 5000;
 
-            elements.sensorSelect.innerHTML = sensorOptions.join('');
+
+            if (timeDiff < 0) {
+                throw new Error("End date cannot be before start date");
+            } else if (timeDiff <= 3) {
+                tableIndex = 1;
+                startParam = ['start_time', utils.formatDateForAPI(startDate)];
+                endParam = ['end_time', utils.formatDateForAPI(endDate, true)];
+            } else if (timeDiff > 3 && timeDiff <= 14) {
+                tableIndex = 2;
+                startParam = ['start_date', utils.formatDateForAPI(startDate)];
+                endParam = ['end_date', utils.formatDateForAPI(endDate)];
+            } else {
+                tableIndex = 3;
+                startParam = ['start_date', utils.formatDateForAPI(startDate)];
+                endParam = ['end_date', utils.formatDateForAPI(endDate)];
+            }
+
+            // Update the global variable with the selected table index
+            currentApiTableIndex = tableIndex;
+
+            // Log the selected API table index for debugging
+            console.log(`Using API_TABLE index: ${currentApiTableIndex}`);
+
+            const url = new URL(CONFIG.API_TABLES[tableIndex], CONFIG.API_URL);
+            url.searchParams.append(startParam[0], startParam[1]);
+            url.searchParams.append(endParam[0], endParam[1]);
+            url.searchParams.append('page', '1');
+            url.searchParams.append('page_size', pageSize.toString());
+
+            if (location) {
+                url.searchParams.append('location', location);
+            }
+
+            return url.toString();
         }
 
-        function updateDashboard() {
-            // const sensorCards = state.currentSensor === 'all'
-            //     ? Object.entries(state.sensorData).map(([id, data]) => createSensorCard(id, data))
-            //     : [createSensorCard(state.currentSensor, state.sensorData[state.currentSensor])];
+        // function updateSensorList() {
+        //     console.log(elements.sensorSelect);
+        //     const currentSensors = new Set(Array.from(elements.sensorSelect.options).map(opt => opt.value));
+        //     const sensorOptions = ['<option value="all">All Sensors</option>'];
 
-            // elements.sensorGrid.innerHTML = sensorCards.join('');
-            updateChart();
-        }
+        //     Object.keys(state.sensorData).forEach(sensorId => {
+        //         if (!currentSensors.has(sensorId)) {
+        //             sensorOptions.push(`<option value="${sensorId}">Sensor: ${sensorId}</option>`);
+        //         }
+        //     });
+
+        //     elements.sensorSelect.innerHTML = sensorOptions.join('');
+        // }
+
+
+
 
         function updateChart() {
             const metric = elements.sensorMetric.value;
             const ctx = elements.weatherChart.getContext('2d');
 
+            // Destroy existing chart if it exists
             if (state.chartInstance) {
                 state.chartInstance.destroy();
             }
 
-            const datasets = state.currentSensor === 'all'
-                ? Object.entries(state.sensorData).map(([sensorId, data], index) => ({
-                    label: `${sensorId} - ${metric.replace('_', ' ')}`,
-                    data: data.map(item => item[metric]),
-                    borderColor: `hsl(${index * 137.5}, 70%, 50%)`,
-                    tension: 0.4
-                }))
-                : [{
-                    label: metric.replace('_', ' '),
-                    data: state.sensorData[state.currentSensor].map(item => item[metric]),
-                    borderColor: 'var(--primary)',
-                    tension: 0.4
-                }];
+            // Prepare datasets based on selected sensors
+            const datasets = [];
 
+            const addSensorDataset = (sensorId, data) => {
+                const colorHue = Object.keys(state.sensorData).indexOf(sensorId) * 137.5;
+                const baseColor = `hsl(${colorHue}, 70%, 30%)`;
+                const lightColor = `hsl(${colorHue}, 70%, 70%)`;
+
+                if (currentApiTableIndex === 3 && (metric === 'humidity' || metric === 'temperature_indoor' || metric === 'temperature_outdoor' || metric === 'pressure' || metric === 'illumination')) {
+                    // Create a dataset for the max values
+                    datasets.push({
+                        label: `${sensorId} - Max ${metric.replace('_', ' ')}`,
+                        data: data.map(item => item[`max_${metric}`]),
+                        borderColor: baseColor,
+                        tension: 0,
+                        borderWidth: 2
+                    });
+
+                    // Create a dataset for the min values
+                    datasets.push({
+                        label: `${sensorId} - Min ${metric.replace('_', ' ')}`,
+                        data: data.map(item => item[`min_${metric}`]),
+                        borderColor: lightColor,
+                        tension: 0,
+                        borderWidth: 2
+                    });
+                } else {
+                    // Standard metric dataset
+                    datasets.push({
+                        label: `${sensorId} - ${metric.replace('_', ' ')}`,
+                        data: data.map(item => item[metric]),
+                        borderColor: baseColor,
+                        tension: 0,
+                        borderWidth: 3
+                    });
+                }
+            };
+
+            // Add datasets based on sensor selection
+            if (state.currentSensor === 'all') {
+                Object.entries(state.sensorData).forEach(([sensorId, data]) => {
+                    addSensorDataset(sensorId, data);
+                });
+            } else {
+                addSensorDataset(state.currentSensor, state.sensorData[state.currentSensor]);
+            }
+
+            // Enhanced chart options for better visualization
+            const enhancedOptions = {
+                ...CONFIG.CHART_OPTIONS,
+                plugins: {
+                    ...CONFIG.CHART_OPTIONS.plugins,
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function (context) {
+                                const value = context.raw;
+                                const metric = elements.sensorMetric.value;
+                                let unit = '';
+
+                                switch (metric) {
+                                    case 'temperature_indoor':
+                                    case 'temperature_outdoor':
+                                        unit = '°C';
+                                        break;
+                                    case 'humidity':
+                                        unit = '%';
+                                        break;
+                                    case 'pressure':
+                                        unit = 'hPa';
+                                        break;
+                                    case 'illumination':
+                                        unit = '%';
+                                        break;
+                                }
+
+                                return `${context.dataset.label}: ${value.toFixed(1)}${unit}`;
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function (value) {
+                                const metric = elements.sensorMetric.value;
+                                let unit = '';
+                                switch (metric) {
+                                    case 'temperature_indoor':
+                                    case 'temperature_outdoor':
+                                        unit = '°C';
+                                        break;
+                                    case 'humidity':
+                                        unit = '%';
+                                        break;
+                                    case 'pressure':
+                                        unit = 'hPa';
+                                        break;
+                                    case 'illumination':
+                                        unit = '%';
+                                        break;
+                                }
+                                return `${value}${unit}`;
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Create the chart with labels
             state.chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: state.sensorData[Object.keys(state.sensorData)[0]]
-                        .map(item => utils.formatDateTime(item.time)),
+                        .map(item => {
+                            if (item.time) {
+                                return utils.formatDateTime(item.time);
+                            } else if (item.the_day) {
+                                const hour = item.the_hour ? `${item.the_hour}:00:00` : '00:00:00';
+                                return utils.formatDateTime(`${item.the_day} ${hour}`);
+                            }
+                        }),
                     datasets
                 },
-                options: CONFIG.CHART_OPTIONS
+                options: enhancedOptions
             });
         }
 
-        // Template functions
-        function createSensorCard(sensorId, data) {
-            const latestData = data[0];
-            return `
-                <div class="data-card">
-                    <div class="card-header">
-                        <h3>${sensorId}</h3>
-                        <span class="location">${latestData.gateway_location}</span>
-                    </div>
-                    <div class="data-grid">
-                        ${CONFIG.METRICS.map(metric => `
-                            <div class="data-item">
-                                <span class="data-label">${metric.label}</span>
-                                <span class="data-value">
-                                    ${utils.formatNumber(latestData[metric.value], metric.value.includes('temperature') ? '°C' :
-                metric.value === 'humidity' ? '%' :
-                    metric.value === 'pressure' ? ' hPa' : ' lux')}
-                                </span>
-                            </div>
-                        `).join('')}
-                        <div class="data-item">
-                            <span class="data-label">Last Update</span>
-                            <span class="data-value">${utils.getTimeAgo(latestData.time)}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+
 
         // Error handling
         function showError(message) {

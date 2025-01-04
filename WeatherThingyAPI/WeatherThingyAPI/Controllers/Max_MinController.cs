@@ -38,7 +38,10 @@ public class Max_MinController : ControllerBase
         {
             query = query.Where(n => n.Node_ID == id);
         }
-        
+
+        if (!string.IsNullOrWhiteSpace(location))
+            query = query.Where(n => n.Location == location);
+
         if (start_date.HasValue && !end_date.HasValue)
         {
             query = query.Where(n => n.the_day == start_date.Value);
@@ -82,7 +85,7 @@ public class Max_MinController : ControllerBase
                 min_humidity = n.min_Humidity,
                 max_temperature_indoor = n.max_Temperature_indoor,
                 min_temperature_indoor = n.min_Temperature_indoor,
-                max_emperature_outdoor = n.max_Temperature_outdoor,
+                max_temperature_outdoor = n.max_Temperature_outdoor,
                 min_temperature_outdoor = n.min_Temperature_outdoor
 
             })

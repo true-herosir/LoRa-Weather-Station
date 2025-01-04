@@ -19,6 +19,7 @@ namespace WeatherThingy.Sources.Services
             _httpClient = new HttpClient();
             //_api_base = $"http://84.85.32.192:7086/api/Nodes/lht-gronau?page=1&pageSize=1000";
             _api_IP = $"http://84.85.32.192";
+            //_api_IP = $"https://localhost";
             _api_PORT = ":7086/api/";
             _api_table.Add("most_recent");
             _api_table.Add("Nodes/node_location");

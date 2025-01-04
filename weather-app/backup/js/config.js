@@ -1,27 +1,47 @@
 export const CONFIG = {
-    API_BASE_URL: 'http://84.85.32.192:7086/api',
-    REFRESH_INTERVAL: 300000,
-    DEFAULT_LOCATION: 'Gronau',
-    CACHE_DURATION: 60000
+    // API Configuration
+    API_URL: 'http://84.85.32.192:7086/api',
+    API_TIMEOUT: 5000,
+    API_TABLES: [
+        "most_recent",
+        "Nodes/node_location",
+        "Hours_AVG",
+        "Max_Min",
+        "Node_location"
+    ],
+
+    // Time Ranges (in days)
+    TIME_RANGES: {
+        SHORT: 3,
+        MEDIUM: 14
+    },
+
+    // Page Sizes
+    PAGE_SIZE: {
+        LHT: 350,
+        DEFAULT: 900
+    },
+
+    // Date Formats
+    DATE_FORMAT: {
+        WITH_TIME: true,
+        WITHOUT_TIME: false
+    },
+
+    // Error Messages
+    ERRORS: {
+        NETWORK: 'Network response was not ok',
+        TIMEOUT: 'Request timeout',
+        DATE_INVALID: 'End date cannot be before start date',
+        FETCH_FAILED: 'Failed to fetch weather data'
+    },
+
+    // // Chart Configuration
+    // CHART: {
+    //     COLORS: ['#1a73e8', '#34a853', '#fbbc04', '#ea4335'],
+    //     LINE_TENSION: 0.4,
+    //     POINT_RADIUS: 2
+    // }
 };
 
-export const CHART_CONFIG = {
-    responsive: true,
-    interaction: { intersect: false, mode: 'index' },
-    plugins: {
-        tooltip: {
-            enabled: true,
-            callbacks: {
-                label: (context) => `${context.dataset.label}: ${context.parsed.y.toFixed(1)}`
-            }
-        }
-    },
-    scales: {
-        x: {
-            type: 'time',
-            time: { unit: 'hour', displayFormats: { hour: 'HH:mm' } },
-            ticks: { maxRotation: 45 }
-        },
-        y: { beginAtZero: true }
-    }
-};
+export default CONFIG;

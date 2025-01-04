@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeatherThingyAPI.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WeatherThingyAPI.Controllers;
 
@@ -107,11 +108,11 @@ public class Most_RecentController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<object>>> GetNodesWithSensorLocations(
         [FromQuery] string? id,
-       [FromQuery] string? location,
-       [FromQuery] DateTime? start_time,
-       [FromQuery] DateTime? end_time,
-       [FromQuery] int page = 1,
-       [FromQuery] int page_size = 10)
+        [FromQuery] string? location,
+        [FromQuery] DateTime? start_time,
+        [FromQuery] DateTime? end_time,
+        [FromQuery] int page = 1,
+        [FromQuery] int page_size = 10)
     {
         if (page <= 0 || page_size <= 0)
         {
@@ -124,6 +125,8 @@ public class Most_RecentController : ControllerBase
         if (!string.IsNullOrWhiteSpace(id))
             nodesQuery = nodesQuery.Where(n => n.Node_ID == id);
 
+        if (!string.IsNullOrWhiteSpace(location))
+            nodesQuery = nodesQuery.Where(n => n.Location == location);
 
         if (start_time.HasValue && !end_time.HasValue)
         {

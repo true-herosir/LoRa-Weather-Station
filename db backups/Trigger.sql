@@ -164,9 +164,9 @@ INSERT INTO lr2.hours_avg (Node_ID, Location, the_day, the_hour, AVG_Pressure, A
                 ROUND(AVG(N.Temperature_indoor),2) AS AVG_Temperature_indoor,
                 ROUND(AVG(N.Temperature_outdoor),2) AS AVG_Temperature_outdoor
 FROM lr2.Node AS N
-INNER JOIN lr2.Sensor_location AS s
+INNER JOIN lr2.Node_location AS s
 ON N.Node_id = s.Node_ID
-WHERE N.Time < '2024-12-06 10:00:00.000' AND N.Time > '2024-12-05 11:00:00.000'
+WHERE N.Time < '2025-01-04 21:00:00.000' 
 GROUP BY
 	N.Node_id
 	, s.Location
@@ -249,7 +249,7 @@ FOREIGN KEY (Node_ID) REFERENCES lr2.Sensor_location(Node_ID)
 
 
 /*
---delete lr2.max_min
+delete lr2.max_min
 BEGIN
 INSERT INTO lr2.max_min (Node_ID, Location, the_day, max_Pressure, min_Pressure, max_Illumination, min_Illumination,
 							max_Humidity, min_Humidity, max_Temperature_indoor, min_Temperature_indoor,
@@ -269,9 +269,9 @@ INSERT INTO lr2.max_min (Node_ID, Location, the_day, max_Pressure, min_Pressure,
 	, MAX(N.Temperature_outdoor) AS 'max_Temperature_outdoor'
 	, MIN(N.Temperature_outdoor) AS 'min_Temperature_outdoor'
 FROM lr2.Node AS N
-INNER JOIN lr2.Sensor_location AS s
+INNER JOIN lr2.Node_location AS s
 ON N.Node_id = s.Node_ID
-WHERE N.Time < '2024-12-06 00:00:00.000'
+WHERE N.Time < '2025-01-04 00:00:00.000'
 GROUP BY
 	N.Node_id
 	, s.Location
@@ -322,7 +322,7 @@ BEGIN
 			, MAX(N.Temperature_outdoor) AS 'max_Temperature_outdoor'
 			, MIN(N.Temperature_outdoor) AS 'min_Temperature_outdoor'
 		FROM lr2.Node AS N
-		INNER JOIN lr2.Sensor_location AS s
+		INNER JOIN lr2.Node_location AS s
 		ON N.Node_id = s.Node_ID
 		WHERE CONVERT(DATE, N.[Time]) = @previous_date
 		--Where N.Time >= '2024-12-03 00:00:00.000' AND N.Time < '2024-12-04 00:00:00.000' 

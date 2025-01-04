@@ -71,9 +71,10 @@
                 { value: 'temperature_outdoor', label: 'Outdoor Temperature' },
             ],
             CHART_OPTIONS: {
+                type: 'line',
                 responsive: true,
                 plugins: { legend: { position: 'top' } },
-                scales: { y: { beginAtZero: false } }
+                scales: { y: { beginAtZero: false } },
             },
             API_TABLES: [
                 "most_recent",
@@ -111,13 +112,16 @@
             formatDateTime: (date) => {
                 if (!date) return 'N/A';
                 const d = new Date(date);
+                if (isNaN(d.getTime())) return 'Invalid Date';
+
                 return d.toLocaleString('en-GB', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit',
-                    second: '2-digit'
+                    second: '2-digit',
+                    hour12: false // Use 24-hour format
                 });
             },
 
@@ -125,7 +129,25 @@
                 return value != null ? `${parseFloat(value).toFixed(decimals)}${unit}` : 'N/A';
             },
 
-            formatDateForAPI: (date) => date.toISOString().split('T')[0],
+            formatDateForAPI: (date, includeTime = false) => {
+                if (!date) return '';
+                const d = new Date(date);
+                if (isNaN(d.getTime())) return '';
+
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const baseDate = `${year}-${month}-${day}`;
+
+                if (includeTime) {
+                    const hours = String(d.getHours()).padStart(2, '0');
+                    const minutes = String(d.getMinutes()).padStart(2, '0');
+                    const seconds = String(d.getSeconds()).padStart(2, '0');
+                    return `${baseDate}T${hours}:${minutes}:${seconds}`;
+                }
+
+                return baseDate;
+            },
 
             debounce: (func, wait) => {
                 let timeout;
@@ -196,7 +218,7 @@
             const sensorOptions = ['<option value="all">All Sensors</option>'];
 
             Object.keys(state.sensorData).forEach(sensorId => {
-            sensorOptions.push(`<option value="${sensorId}">Sensor: ${sensorId}</option>`);
+                sensorOptions.push(`<option value="${sensorId}">Sensor: ${sensorId}</option>`);
             });
 
             elements.sensorSelect.innerHTML = sensorOptions.join('');
@@ -270,6 +292,7 @@
                 if (!response.ok) throw new Error('Network response was not ok');
 
                 const data = await response.json();
+                console.log(data);
                 state.sensorData = data.data.reduce((acc, item) => {
                     (acc[item.node_id] = acc[item.node_id] || []).push(item);
                     return acc;
@@ -288,23 +311,22 @@
 
         // Function to build the API URL with the selected table index
         function buildApiUrl(startDate, endDate, location) {
-            const timeDiff = (endDate - startDate) / (1000 * 60 * 60 * 24);
+            const timeDiff = (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24);
 
             let tableIndex = 0;
             let startParam, endParam;
             let pageSize = 5000;
 
-
             if (timeDiff < 0) {
                 throw new Error("End date cannot be before start date");
             } else if (timeDiff <= 3) {
                 tableIndex = 1;
-                startParam = ['start_time', utils.formatDateForAPI(startDate)];
+                startParam = ['start_time', utils.formatDateForAPI(startDate, true)];
                 endParam = ['end_time', utils.formatDateForAPI(endDate, true)];
             } else if (timeDiff > 3 && timeDiff <= 14) {
                 tableIndex = 2;
-                startParam = ['start_date', utils.formatDateForAPI(startDate)];
-                endParam = ['end_date', utils.formatDateForAPI(endDate)];
+                startParam = ['start_date', utils.formatDateForAPI(startDate, true)];
+                endParam = ['end_date', utils.formatDateForAPI(endDate, true)];
             } else {
                 tableIndex = 3;
                 startParam = ['start_date', utils.formatDateForAPI(startDate)];
@@ -351,56 +373,125 @@
             const metric = elements.sensorMetric.value;
             const ctx = elements.weatherChart.getContext('2d');
 
-            // Destroy existing chart if it exists
             if (state.chartInstance) {
                 state.chartInstance.destroy();
             }
 
-            // Prepare datasets based on selected sensors
             const datasets = [];
 
             const addSensorDataset = (sensorId, data) => {
                 const colorHue = Object.keys(state.sensorData).indexOf(sensorId) * 137.5;
                 const baseColor = `hsl(${colorHue}, 70%, 30%)`;
-                const lightColor = `hsl(${colorHue}, 70%, 70%)`;
+                const lightColor = `hsla(${colorHue}, 70%, 70%)`;
 
-                if (currentApiTableIndex === 3 && (metric === 'humidity' || metric === 'temperature_indoor' || metric === 'temperature_outdoor' || metric === 'pressure' || metric === 'illumination')) {
-                    // Create a dataset for the max values
+                // Sort data by timestamp first
+                const sortedData = [...data].sort((a, b) => {
+                    const timeA = a.time ? new Date(a.time) : new Date(`${a.the_day} ${a.the_hour || '00'}:00:00`);
+                    const timeB = b.time ? new Date(b.time) : new Date(`${b.the_day} ${b.the_hour || '00'}:00:00`);
+                    return timeA - timeB;
+                });
+
+                const normalizedData = [];
+                const labels = [];
+
+                if (sortedData.length > 0) {
+                    const startTime = sortedData[0].time ? 
+                        new Date(sortedData[0].time) : 
+                        new Date(`${sortedData[0].the_day} ${sortedData[0].the_hour || '00'}:00:00`);
+                    const endTime = sortedData[sortedData.length - 1].time ?
+                        new Date(sortedData[sortedData.length - 1].time) :
+                        new Date(`${sortedData[sortedData.length - 1].the_day} ${sortedData[sortedData.length - 1].the_hour || '00'}:00:00`);
+
+                    // Different handling based on API table index
+                    if (currentApiTableIndex === 1) {
+                        // For detailed data, normalize every 5 minutes
+                        for (let currentTime = startTime; currentTime <= endTime; currentTime.setMinutes(currentTime.getMinutes() + 5)) {
+                            const nearestDataPoint = sortedData.find(item => {
+                                const itemTime = item.time ? new Date(item.time) : new Date(`${item.the_day} ${item.the_hour || '00'}:00:00`);
+                                const timeDiff = Math.abs(itemTime - currentTime);
+                                return timeDiff <= 1000 * 60 * 5; // Within 5 minutes
+                            });
+
+                            labels.push(utils.formatDateTime(currentTime));
+                            normalizedData.push(nearestDataPoint ? nearestDataPoint[metric] : NaN);
+                        }
+                    } else if (currentApiTableIndex === 2) {
+                        // For hourly data, use data as is
+                        sortedData.forEach(item => {
+                            const itemTime = new Date(`${item.the_day} ${item.the_hour}:00:00`);
+                            labels.push(utils.formatDateForAPI(itemTime));
+                            normalizedData.push(item[metric]);
+                        });
+                    } else if (currentApiTableIndex === 3) {
+                        // For daily max/min data, use data as is
+                        sortedData.forEach(item => {
+                            const itemTime = new Date(`${item.the_day} 00:00:00`);
+                            labels.push(utils.formatDateForAPI(itemTime));
+                            normalizedData.push({
+                                max: item[`max_${metric}`],
+                                min: item[`min_${metric}`]
+                            });
+                        });
+                    }
+                }
+
+                // Create dataset configuration based on API table index
+                if (currentApiTableIndex === 3) {
                     datasets.push({
                         label: `${sensorId} - Max ${metric.replace('_', ' ')}`,
-                        data: data.map(item => item[`max_${metric}`]),
+                        data: normalizedData.map(d => d.max),
                         borderColor: baseColor,
-                        tension: 0,
-                        borderWidth: 2
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointStyle: 'circle',
+                        pointRadius: 5,
+                        pointHoverRadius: 15,
+                        fill: false,
+                        backgroundColor: lightColor,
+                        stepped: true
                     });
-
-                    // Create a dataset for the min values
                     datasets.push({
                         label: `${sensorId} - Min ${metric.replace('_', ' ')}`,
-                        data: data.map(item => item[`min_${metric}`]),
+                        data: normalizedData.map(d => d.min),
                         borderColor: lightColor,
-                        tension: 0,
-                        borderWidth: 2
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointStyle: 'circle',
+                        pointRadius: 5,
+                        pointHoverRadius: 15,
+                        fill: false,
+                        backgroundColor: lightColor,
+                        stepped: true
                     });
                 } else {
-                    // Standard metric dataset
                     datasets.push({
                         label: `${sensorId} - ${metric.replace('_', ' ')}`,
-                        data: data.map(item => item[metric]),
+                        data: normalizedData,
                         borderColor: baseColor,
-                        tension: 0,
-                        borderWidth: 3
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointStyle: 'circle',
+                        pointRadius: 5,
+                        pointHoverRadius: 15,
+                        fill: false,
+                        backgroundColor: lightColor,
+                        stepped: true
                     });
                 }
+
+                return labels;
             };
 
-            // Add datasets based on sensor selection
+            let chartLabels = [];
             if (state.currentSensor === 'all') {
                 Object.entries(state.sensorData).forEach(([sensorId, data]) => {
-                    addSensorDataset(sensorId, data);
+                    const labels = addSensorDataset(sensorId, data);
+                    if (labels.length > chartLabels.length) {
+                        chartLabels = labels;
+                    }
                 });
             } else {
-                addSensorDataset(state.currentSensor, state.sensorData[state.currentSensor]);
+                chartLabels = addSensorDataset(state.currentSensor, state.sensorData[state.currentSensor]);
             }
 
             // Enhanced chart options for better visualization
@@ -472,19 +563,11 @@
                 }
             };
 
-            // Create the chart with labels
+            // Create the chart with normalized labels
             state.chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: state.sensorData[Object.keys(state.sensorData)[0]]
-                        .map(item => {
-                            if (item.time) {
-                                return utils.formatDateTime(item.time);
-                            } else if (item.the_day) {
-                                const hour = item.the_hour ? `${item.the_hour}:00:00` : '00:00:00';
-                                return utils.formatDateTime(`${item.the_day} ${hour}`);
-                            }
-                        }),
+                    labels: chartLabels,
                     datasets
                 },
                 options: enhancedOptions

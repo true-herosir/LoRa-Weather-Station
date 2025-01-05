@@ -6,7 +6,7 @@ namespace WeatherThingy.Sources.ViewModels
 
     public partial class HomeViewModel : ObservableObject
     {
-        private string lastlocation = new string("gronau");
+        private string lastlocation = new string("Gronau");
         private System.Timers.Timer RefreshTimer = new System.Timers.Timer(300000);
         public ObservableCollection<Datum> MostRecent { get; } = new();
         public ObservableCollection<Datum> FilteredNode { get; set; } = new();
@@ -46,7 +46,7 @@ namespace WeatherThingy.Sources.ViewModels
         private async Task InitializeDataAsync()
         {
             await GetMostRecentDataAsync();
-            await GetNodeByLocationAsync(lastlocation);
+            await GetNodeByLocationAsync(NodeId.FirstOrDefault());
         }
 
         private async void OnClickedLocation(string location)

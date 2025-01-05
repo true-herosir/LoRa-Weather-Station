@@ -6,6 +6,8 @@ namespace WeatherThingy.Sources.ViewModels
 
     public partial class HomeViewModel : ObservableObject
     {
+        private string lastlocation = new string("gronau");
+        private System.Timers.Timer RefreshTimer = new System.Timers.Timer(300000);
         public ObservableCollection<Datum> MostRecent { get; } = new();
         public ObservableCollection<Datum> FilteredNode { get; set; } = new();
         public ObservableCollection<string> NodeId { get; } = new();
@@ -44,12 +46,13 @@ namespace WeatherThingy.Sources.ViewModels
         private async Task InitializeDataAsync()
         {
             await GetMostRecentDataAsync();
-            await GetNodeByLocationAsync(NodeId.FirstOrDefault());
+            await GetNodeByLocationAsync(lastlocation);
         }
 
         private async void OnClickedLocation(string location)
         {
             Console.WriteLine("click button " + location);
+            lastlocation = location;
             // Refresh data for a specific location
             if (!string.IsNullOrEmpty(location))
             {
@@ -95,6 +98,23 @@ namespace WeatherThingy.Sources.ViewModels
             {
                 Console.WriteLine($"Error fetching data: {ex.Message}");
             }
+            RefreshTimer.Elapsed += OnRefreshTimerElapsed;
+            RefreshTimer.AutoReset = true;
+            RefreshTimer.Start();
+        }
+
+        // Refresh after timer elapsed
+        private void OnRefreshTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            _ = HandleTimerElapsedAsync();
+        }
+
+        private async Task HandleTimerElapsedAsync()
+        {
+            MostRecent.Clear();
+            NodeId.Clear();
+            await GetMostRecentDataAsync();
+            OnClickedLocation(lastlocation);
         }
 
         // Get nodes filtered by location

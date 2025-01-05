@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Weather Thingy - Group 4</title>    
+    <!-- Load TomTom resources with defer -->
+    <script defer src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.16.0/maps/maps-web.min.js"></script>
+    <link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.16.0/maps/maps.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <!-- https://developer.tomtom.com/blog/build-different/add-tomtom-maps-website-30-seconds/ -->
+</head>
+
+<body>
+    <header>
+        <nav class="nav-container">
+            <div class="nav-content">
+                <h1>Weather Monitoring System</h1>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="detail.html" class="nav-link">Details</a>
+                    <a href="map.html" class="nav-link active">Map</a>
+                    <a href="about.html" class="nav-link">About</a>
+                </div>
+                <div class="status-indicators">
+                    <div id="loadingIndicator" class="loading-spinner hidden"></div>
+                    <span class="last-update" id="lastUpdated"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div id="map" aria-label="Interactive map of Enschede"></div>
+        <div id="error-message" class="error-message hidden"></div>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Weather Monitoring System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        'use strict';
+
+        // Constants
+        const ENSCHEDE_COORDINATES = {
+            lng: 6.8937,
+            lat: 52.2215
+        };
+
+        // Config should be in a separate config file in production
+        const CONFIG = {
+            apiKey: 'R9fdHcaZHmIvYs76MGqaRMRMl3cGGxhc', // Better to use environment variable
+            zoom: 12
+        };
+
+        class MapController {
+            constructor() {
+                this.map = null;
+                this.markers = new Map(); // Store markers with unique IDs
+                this.loadingIndicator = document.getElementById('loadingIndicator');
+                this.errorMessage = document.getElementById('error-message');
+            }
+
+            async initialize() {
+                try {
+                    this.showLoading();
+
+                    this.map = tt.map({
+                        key: CONFIG.apiKey,
+                        container: 'map',
+                        center: [ENSCHEDE_COORDINATES.lng, ENSCHEDE_COORDINATES.lat],
+                        zoom: CONFIG.zoom
+                    });
+
+                    // Add controls
+                    this.map.addControl(new tt.NavigationControl());
+
+                    // Add event listeners
+                    this.map.on('load', () => this.onMapLoaded());
+                    this.map.on('error', (error) => this.handleError(error));
+
+                    this.updateTimestamp();
+                    this.startPeriodicUpdates();
+                } catch (error) {
+                    this.handleError(error);
+                }
+            }
+
+            showLoading() {
+                this.loadingIndicator.classList.remove('hidden');
+            }
+
+            hideLoading() {
+                this.loadingIndicator.classList.add('hidden');
+            }
+
+            handleError(error) {
+                console.error('Map error:', error);
+                this.errorMessage.textContent = 'An error occurred while loading the map';
+                this.errorMessage.classList.remove('hidden');
+                this.hideLoading();
+            }
+
+            onMapLoaded() {
+                this.hideLoading();
+                this.updateTimestamp();
+            }
+
+            updateTimestamp() {
+                const timestamp = new Intl.DateTimeFormat('default', {
+                    dateStyle: 'medium',
+                    timeStyle: 'medium'
+                }).format(new Date());
+
+                document.getElementById('lastUpdated').textContent = `Last updated: ${new Date().toLocaleString()}`;
+            }
+
+            startPeriodicUpdates() {
+                // Update timestamp every minute
+                setInterval(() => this.updateTimestamp(), 60000);
+            }
+
+            /**
+             * Add a marker to the map
+             * @param {Object} location - Location object
+             * @param {number} location.lat - Latitude
+             * @param {number} location.lng - Longitude
+             * @param {string} location.id - Unique identifier for the marker
+             * @param {string} location.title - Title for the popup
+             * @param {string} location.description - Description for the popup
+             * @param {string} location.type - Type of the marker (gateway or device)
+             */
+            addMarker({ lat, lng, id, title, description, type }) {
+                // Create marker element
+                const markerElement = document.createElement('div');
+                markerElement.className = `marker ${type}`; // Add type class (gateway or device)
+
+                // Create and add the marker
+                const marker = new tt.Marker({ element: markerElement })
+                    .setLngLat([lng, lat])
+                    .addTo(this.map);
+
+                // Add popup if title or description exists
+                if (title || description) {
+                    const popup = new tt.Popup({ offset: 30 }).setHTML(`
+                        <h3>${title || ''}</h3>
+                        <p>${description || ''}</p>
+                    `);
+                    marker.setPopup(popup);
+                }
+
+                // Store marker reference
+                this.markers.set(id, marker);
+
+                return marker;
+            }
+
+            /**
+             * Remove a marker from the map
+             * @param {string} id - Marker identifier
+             */
+            removeMarker(id) {
+                const marker = this.markers.get(id);
+                if (marker) {
+                    marker.remove();
+                    this.markers.delete(id);
+                }
+            }
+
+            /**
+             * Update marker position
+             * @param {string} id - Marker identifier
+             * @param {number} lat - New latitude
+             * @param {number} lng - New longitude
+             */
+            updateMarkerPosition(id, lat, lng) {
+                const marker = this.markers.get(id);
+                if (marker) {
+                    marker.setLngLat([lng, lat]);
+                }
+            }
+
+            /**
+             * Center map on a specific location
+             * @param {number} lat - Latitude
+             * @param {number} lng - Longitude
+             * @param {number} zoom - Zoom level (optional)
+             */
+            centerOn(lat, lng, zoom) {
+                this.map.flyTo({
+                    center: [lng, lat],
+                    zoom: zoom || CONFIG.zoom
+                });
+            }
+        }
+
+        // Initialize map when DOM is loaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            const mapController = new MapController();
+            await mapController.initialize();
+
+            // Define gateways
+            const gateways = [
+                {
+                    lat: 52.23997,
+                    lng: 6.85014,
+                    id: 'kerlink-awm-ut',
+                    title: 'Gateway Location - Kerlink AWM UT',
+                    description: `
+                        <b>Gateway ID:</b> kerlink-awm-ut<br>
+                        <b>Altitude:</b> 52m<br>
+                        <b>Device ID:</b> lht-saxion
+                    `,
+                    type: 'gateway'
+                },
+                {
+                    lat: 52.36891310514845,
+                    lng: 6.602898538112641,
+                    id: 'slot-wierden',
+                    title: 'Gateway Location - Slot Wierden',
+                    description: `
+                        <b>Gateway ID:</b> slot-wierden<br>
+                        <b>Altitude:</b> 10m<br>
+                        <b>Device ID:</b> lht-wierden<br>
+                        <b>Device ID:</b> mkr-wierden
+                    `,
+                    type: 'gateway'
+                },
+                {
+                    lat: 52.2212025684184,
+                    lng: 6.88635438680649,
+                    id: 'centrum-enschede',
+                    title: 'Gateway Location - Centrum Enschede',
+                    description: `
+                        <b>Gateway ID:</b> centrum-enschede<br>
+                        <b>Altitude:</b> 70m<br>
+                        <b>Device ID:</b> mkr-saxion
+                    `,
+                    type: 'gateway'
+                },
+                {
+                    lat: 52.212645202154,
+                    lng: 7.03965711534693,
+                    id: 'lora-gronau-centrum',
+                    title: 'Gateway Location - Gronau Centrum',
+                    description: `
+                        <b>Gateway ID:</b> lora-gronau-centrum<br>
+                        <b>Altitude:</b> 41m<br>
+                        <b>Device ID:</b> lht-gronau
+                    `,
+                    type: 'gateway'
+                },
+                {
+                    lat: 52.22127532,
+                    lng: 6.90716252,
+                    id: 'eui-000080029c09ded1',
+                    title: 'Gateway Location - EUI',
+                    description: `
+                        <b>Gateway ID:</b> eui-000080029c09ded1<br>
+                        <b>Altitude:</b> 60m<br>
+                        <b>Device ID:</b> weather-thingy-g4-2024
+                    `,
+                    type: 'gateway'
+                }
+            ];
+
+            // // Define devices
+            // const devices = [
+            //     {
+            //         lat: 52.23997,
+            //         lng: 6.85111,
+            //         id: 'device-saxion',
+            //         title: 'Device Location - LHT Saxion',
+            //         description: `
+            //             <b>Device ID:</b> lht-saxion<br>
+            //             <b>RSSI:</b> -114<br>
+            //             <b>SNR:</b> -4.5<br>
+            //             <b>Altitude:</b> 52m
+            //         `,
+            //         type: 'device'
+            //     }
+            // ];
+
+            // Add all gateways
+            gateways.forEach(gateway => mapController.addMarker(gateway));
+
+            // Add all devices
+            // devices.forEach(device => mapController.addMarker(device));
+
+            // Center map on Saxion location
+            mapController.centerOn(52.2212025684184, 6.88635438680649, 9);
+        });
+    </script>
+</body>
+
+</html>

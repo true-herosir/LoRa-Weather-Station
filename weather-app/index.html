@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Dashboard</title>
+    <title>Weather Thingy - Group 4</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -16,6 +16,8 @@
                 <div class="nav-links">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="detail.html" class="nav-link active">Details</a>
+                    <a href="map.html" class="nav-link active">Map</a>
+                    <a href="about.html" class="nav-link">About</a>
                 </div>
                 <div class="status-indicators">
                     <span class="last-update" id="lastUpdated"></span>
@@ -36,6 +38,12 @@
         </div>
         <div id="dataContainer" class="grid-container"></div>
     </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Weather Monitoring System. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script>
         const API_URL = 'http://84.85.32.192:7086/api/Most_Recent?page=1&page_size=10';

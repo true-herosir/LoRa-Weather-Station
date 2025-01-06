@@ -119,7 +119,7 @@ class Program
                         Console.WriteLine($"{item.Key}: {item.Value}");
                         logger.log($"{item.Key}: {item.Value}");
                     }
-                    /*
+                    
                     //ISQL_QueryBuilder database = new Inserter();
                     ISQL_communicator database = new sql_com($"log({day}).txt");
                     await database.build((string)MKR["Node_ID"], (string)MKR["Location"], (double?)MKR["Battery_status"]);
@@ -129,7 +129,7 @@ class Program
                         (string)MKR["Location"], (double?)MKR["Temperature_indoor"], (double?)MKR["Temperature_outdoor"]);
 
                     await database.coord_update((string)MKR["Node_ID"], (double?)MKR["lat"], (double?)MKR["lng"], (double?)MKR["alt"]);
-                    */
+                    
                 }
 
                 if (received.Contains("lht-"))
@@ -144,7 +144,7 @@ class Program
                         Console.WriteLine($"{item.Key}: {item.Value}");
                         logger.log($"{item.Key}: {item.Value}");
                     }
-                    /*
+                    
                     //ISQL_QueryBuilder database = new Inserter();
                     ISQL_communicator database = new sql_com($"log({day}).txt");
                     await database.build((string)LHT["Node_ID"], (string)LHT["Location"], (double?)LHT["Battery_status"]);
@@ -154,7 +154,7 @@ class Program
                         (string)LHT["Location"], (double?)LHT["Temperature_indoor"], (double?)LHT["Temperature_outdoor"]);
 
                     await database.coord_update((string)LHT["Node_ID"], (double?)LHT["lat"], (double?)LHT["lng"], (double?)LHT["alt"]);
-                    */
+                    
 
                 }
 

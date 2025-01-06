@@ -37,6 +37,11 @@ namespace WeatherThingy.Sources.Views
 
             MessagingCenter.Subscribe<DetailViewModel, string>(this, "NoSensorLabel", async (sender, message) =>
             {
+                await DisplayAlert("Some sensors are missing!", message, "OK");
+            });
+
+            MessagingCenter.Subscribe<DetailViewModel, string>(this, "TimeIssues", async (sender, message) =>
+            {
                 await DisplayAlert("Some data is missing!", message, "OK");
             });
 

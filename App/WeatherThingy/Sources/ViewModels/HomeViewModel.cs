@@ -89,7 +89,7 @@ namespace WeatherThingy.Sources.ViewModels
                             "2" => "bat2.png",
                             "3" => "bat3.png",
                             "4" => "bat4.png",
-                            _ => "na.png",
+                            _ => "batt_na.png",
                         };
                     }
                 }

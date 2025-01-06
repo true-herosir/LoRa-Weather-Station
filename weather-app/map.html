@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Weather Thingy - Group 4</title>    
+    <title>Weather Thingy - Group 4</title>
     <!-- Load TomTom resources with defer -->
-    <script defer src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.16.0/maps/maps-web.min.js"></script>
-    <link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.16.0/maps/maps.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css" />
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
     <!-- https://developer.tomtom.com/blog/build-different/add-tomtom-maps-website-30-seconds/ -->
 </head>
@@ -36,7 +37,7 @@
         <div id="map" aria-label="Interactive map of Enschede"></div>
         <div id="error-message" class="error-message hidden"></div>
     </main>
-    
+
     <footer class="footer">
         <div class="footer-content">
             <p>&copy; 2024 Weather Monitoring System. All rights reserved.</p>
@@ -54,10 +55,22 @@
 
         // Config should be in a separate config file in production
         const CONFIG = {
-            apiKey: 'R9fdHcaZHmIvYs76MGqaRMRMl3cGGxhc', // Better to use environment variable
+            API_URL: 'http://84.85.32.192:7086/api/Most_Recent?page=1&page_size=50',    
+            REFRESH_INTERVAL: 5 * 60 * 1000, // 5 minutes in milliseconds
+            API_KEY: 'R9fdHcaZHmIvYs76MGqaRMRMl3cGGxhc', // Better to use environment variable
             zoom: 12
         };
 
+
+        // Fetch data from API
+        const fetchData = async () => {
+            const response = await fetch(CONFIG.API_URL);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const result = await response.json();
+            return result.data;
+        };
+
+        // Map controller
         class MapController {
             constructor() {
                 this.map = null;
@@ -71,10 +84,11 @@
                     this.showLoading();
 
                     this.map = tt.map({
-                        key: CONFIG.apiKey,
+                        key: CONFIG.API_KEY,
                         container: 'map',
                         center: [ENSCHEDE_COORDINATES.lng, ENSCHEDE_COORDINATES.lat],
-                        zoom: CONFIG.zoom
+                        zoom: CONFIG.zoom,
+                        workerUrl: 'https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.16.0/maps/worker.js'
                     });
 
                     // Add controls
@@ -148,7 +162,6 @@
                 // Add popup if title or description exists
                 if (title || description) {
                     const popup = new tt.Popup({ offset: 30 }).setHTML(`
-                        <h3>${title || ''}</h3>
                         <p>${description || ''}</p>
                     `);
                     marker.setPopup(popup);
@@ -197,104 +210,222 @@
                     zoom: zoom || CONFIG.zoom
                 });
             }
+
+            createMarker(data) {
+                const el = document.createElement('div');
+                el.className = `marker ${data.type || 'device'}`;
+                
+                // Create the marker
+                const marker = new tt.Marker({
+                    element: el,
+                    anchor: 'center'
+                })
+                .setLngLat([data.longitude, data.latitude]);
+
+                // Add click handler
+                marker.getElement().addEventListener('click', () => {
+                    // Remove active class from all markers
+                    document.querySelectorAll('.marker').forEach(m => m.classList.remove('active'));
+                    // Add active class to clicked marker
+                    el.classList.add('active');
+                    
+                    // Create and show popup
+                    const popup = this.createPopup(data);
+                    marker.setPopup(popup);
+                    popup.addTo(this.map);
+                });
+
+                // Remove active class when popup is closed
+                marker.getElement().addEventListener('popupclose', () => {
+                    el.classList.remove('active');
+                });
+
+                return marker;
+            }
         }
 
         // Initialize map when DOM is loaded
         document.addEventListener('DOMContentLoaded', async () => {
             const mapController = new MapController();
-            await mapController.initialize();
+            
+            const updateMapData = async () => {
+                try {
+                    const currentData = await fetchData();
+                    console.log('Fetched data:', currentData);
 
-            // Define gateways
-            const gateways = [
-                {
-                    lat: 52.23997,
-                    lng: 6.85014,
-                    id: 'kerlink-awm-ut',
-                    title: 'Gateway Location - Kerlink AWM UT',
-                    description: `
-                        <b>Gateway ID:</b> kerlink-awm-ut<br>
-                        <b>Altitude:</b> 52m<br>
-                        <b>Device ID:</b> lht-saxion
-                    `,
-                    type: 'gateway'
-                },
-                {
-                    lat: 52.36891310514845,
-                    lng: 6.602898538112641,
-                    id: 'slot-wierden',
-                    title: 'Gateway Location - Slot Wierden',
-                    description: `
-                        <b>Gateway ID:</b> slot-wierden<br>
-                        <b>Altitude:</b> 10m<br>
-                        <b>Device ID:</b> lht-wierden<br>
-                        <b>Device ID:</b> mkr-wierden
-                    `,
-                    type: 'gateway'
-                },
-                {
-                    lat: 52.2212025684184,
-                    lng: 6.88635438680649,
-                    id: 'centrum-enschede',
-                    title: 'Gateway Location - Centrum Enschede',
-                    description: `
-                        <b>Gateway ID:</b> centrum-enschede<br>
-                        <b>Altitude:</b> 70m<br>
-                        <b>Device ID:</b> mkr-saxion
-                    `,
-                    type: 'gateway'
-                },
-                {
-                    lat: 52.212645202154,
-                    lng: 7.03965711534693,
-                    id: 'lora-gronau-centrum',
-                    title: 'Gateway Location - Gronau Centrum',
-                    description: `
-                        <b>Gateway ID:</b> lora-gronau-centrum<br>
-                        <b>Altitude:</b> 41m<br>
-                        <b>Device ID:</b> lht-gronau
-                    `,
-                    type: 'gateway'
-                },
-                {
-                    lat: 52.22127532,
-                    lng: 6.90716252,
-                    id: 'eui-000080029c09ded1',
-                    title: 'Gateway Location - EUI',
-                    description: `
-                        <b>Gateway ID:</b> eui-000080029c09ded1<br>
-                        <b>Altitude:</b> 60m<br>
-                        <b>Device ID:</b> weather-thingy-g4-2024
-                    `,
-                    type: 'gateway'
+                    // Clear existing markers
+                    mapController.markers.forEach((marker, id) => {
+                        mapController.removeMarker(id);
+                    });
+
+                    // Only proceed if we have data
+                    if (Array.isArray(currentData)) {
+                        // Define gateways from the data
+                        const gateways = currentData.map(item => ({
+                            lat: parseFloat(item.lat) || 0,
+                            lng: parseFloat(item.lng) || 0,
+                            alt: parseFloat(item.alt) || 0,
+                            gateway_id: item.gateway_id,
+                            node_id: item.node_id,
+                            time: item.time,
+                            temperature_indoor: item.temperature_indoor,
+                            temperature_outdoor: item.temperature_outdoor,
+                            humidity: item.humidity,
+                            pressure: item.pressure,
+                            illumination: item.illumination,
+                            type: 'gateway'
+                        }));
+
+                        // Group markers by location
+                        const groupedMarkers = new Map();
+                        gateways.forEach(gateway => {
+                            const key = `${gateway.lat},${gateway.lng}`;
+                            if (!groupedMarkers.has(key)) {
+                                groupedMarkers.set(key, []);
+                            }
+                            groupedMarkers.get(key).push(gateway);
+                        });
+
+                        // Add markers with combined popups if overlapping
+                        groupedMarkers.forEach((markersAtLocation, location) => {
+                            try {
+                                console.log(markersAtLocation);
+                                const markerInfo = {
+                                    lat: markersAtLocation[0].lat,
+                                    lng: markersAtLocation[0].lng,
+                                    id: markersAtLocation[0].gateway_id,
+                                    type: 'gateway',
+                                    title: markersAtLocation.length > 1 ?
+                                        `Gateway - ${markersAtLocation[0].gateway_id} | Sensors (${markersAtLocation.length})` :
+                                        `Gateway - ${markersAtLocation[0].gateway_id}`,
+                                    description: createPopupContent(markersAtLocation)
+                                };
+                                mapController.addMarker(markerInfo);
+                            } catch (error) {
+                                console.warn(`Failed to add markers at location ${location}:`, error);
+                            }
+                        });
+
+                        // Center map on first gateway or default location
+                        const enschedeGateway = gateways[2];
+                        if (enschedeGateway) {
+                            mapController.centerOn(enschedeGateway.lat, enschedeGateway.lng, 9);
+                        }
+                    }
+                    
+                    mapController.updateTimestamp();
+                } catch (error) {
+                    console.error('Failed to update map data:', error);
+                    document.getElementById('error-message').textContent = 'Failed to refresh map data';
+                    document.getElementById('error-message').classList.remove('hidden');
                 }
-            ];
+            };
 
-            //// Define devices
-            // const devices = [
-            //     {
-            //         lat: 52.23997,
-            //         lng: 6.85111,
-            //         id: 'device-saxion',
-            //         title: 'Device Location - LHT Saxion',
-            //         description: `
-            //             <b>Device ID:</b> lht-saxion<br>
-            //             <b>RSSI:</b> -114<br>
-            //             <b>SNR:</b> -4.5<br>
-            //             <b>Altitude:</b> 52m
-            //         `,
-            //         type: 'device'
-            //     }
-            // ];
+            const initializeAndUpdate = async () => {
+                try {
+                    await mapController.initialize();
+                    await updateMapData(); // Initial data load
+                } catch (error) {
+                    console.error('Failed to initialize map:', error);
+                    document.getElementById('error-message').textContent = 'Failed to load map';
+                    document.getElementById('error-message').classList.remove('hidden');
+                }
+            };
 
-            // Add all gateways
-            gateways.forEach(gateway => mapController.addMarker(gateway));
-
-            // Add all devices
-            // devices.forEach(device => mapController.addMarker(device));
-
-            // Center map on Saxion location
-            mapController.centerOn(52.2212025684184, 6.88635438680649, 9);
+            // Initial setup
+            await initializeAndUpdate();
+            
+            // Set up periodic complete reload
+            setInterval(() => {
+                // Remove the existing map
+                if (mapController.map) {
+                    mapController.map.remove();
+                }
+                // Reinitialize the map
+                initializeAndUpdate();
+            }, CONFIG.REFRESH_INTERVAL);
         });
+
+        const createPopupContent = (gateways) => `
+            <div class="popup-container">
+                <div class="popup-header">
+                    <h3>${gateways.length > 1 ? `Gateway - ${gateways[0].gateway_id} <br> Number of sensors: (${gateways.length})` : `Gateway - ${gateways[0].gateway_id}`}</h3>
+                </div>
+                <div class="popup-content">
+                    ${gateways.map(gateway => createGatewayInfo(gateway)).join('')}
+                </div>
+            </div>
+        `;
+
+        // Calculate human-readable time difference
+        const getTimeAgo = (date) => {
+            const diff = Math.floor((new Date() - new Date(date)) / 1000);
+            
+            // Define time intervals in descending order
+            const intervals = {
+                year:   31536000,
+                month:  2592000,
+                day:    86400,
+                hour:   3600,
+                minute: 60,
+                second: 1
+            };
+
+            // Find the largest applicable time unit
+            for (const [unit, seconds] of Object.entries(intervals)) {
+                const count = Math.floor(diff / seconds);
+                
+                if (count >= 1) {
+                    // Handle plural/singular forms
+                    return `${count} ${unit}${count !== 1 ? 's' : ''} ago`;
+                }
+            }
+
+            return 'just now'; // Fallback for very recent times
+        };
+
+        const createGatewayInfo = (gateway) => `
+            <div class="gateway-info">
+                <div class="data-row">
+                    <span class="data-label">Node ID:</span>
+                    <span class="data-value">${gateway.node_id}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Last Update:</span>
+                    <span class="data-value">${getTimeAgo(gateway.time)}</span>
+                </div>
+                ${gateway.temperature_indoor ? `
+                    <div class="data-row" data-type="temperature">
+                        <span class="data-label">Temperature Indoor:</span>
+                        <span class="data-value">${gateway.temperature_indoor}°C</span>
+                    </div>
+                ` : ''}
+                ${gateway.temperature_outdoor ? `
+                    <div class="data-row" data-type="temperature">
+                        <span class="data-label">Temperature Outdoor:</span>
+                        <span class="data-value">${gateway.temperature_outdoor}°C</span>
+                    </div>
+                ` : ''}
+                ${gateway.humidity ? `
+                    <div class="data-row" data-type="humidity">
+                        <span class="data-label">Humidity:</span>
+                        <span class="data-value">${gateway.humidity}%</span>
+                    </div>
+                ` : ''}
+                ${gateway.pressure ? `
+                    <div class="data-row" data-type="pressure">
+                        <span class="data-label">Pressure:</span>
+                        <span class="data-value">${gateway.pressure} hPa</span>
+                    </div>
+                ` : ''}
+                ${gateway.illumination ? `
+                    <div class="data-row" data-type="illumination">
+                        <span class="data-label">Illumination:</span>
+                        <span class="data-value">${gateway.illumination}%</span>
+                    </div>
+                ` : ''}
+            </div>
+        `;
     </script>
 </body>
 

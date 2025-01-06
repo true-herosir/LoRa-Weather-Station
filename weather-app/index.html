@@ -46,7 +46,7 @@
     </footer>
 
     <script>
-        const API_URL = 'http://84.85.32.192:7086/api/Most_Recent?page=1&page_size=10';
+        const API_URL = 'http://84.85.32.192:7086/api/Most_Recent?page=1&page_size=50';
         const REFRESH_INTERVAL = 60000;
         let currentLocation = null;
         let currentData = null;
@@ -144,12 +144,12 @@
                     <span class="location-badge">${item.location}</span>
                 </div>
                 <div class="data-grid">
-                    <div class="data-item"><span class="data-label">Indoor Temperature</span><span class="data-value">${formatValue(item.temperature_indoor, '°C')}</span></div>
-                    <div class="data-item"><span class="data-label">Outdoor Temperature</span><span class="data-value">${formatValue(item.temperature_outdoor, '°C')}</span></div>
-                    <div class="data-item"><span class="data-label">Humidity</span><span class="data-value">${formatValue(item.humidity, '%')}</span></div>
-                    <div class="data-item"><span class="data-label">Pressure</span><span class="data-value">${formatValue(item.pressure, ' hPa')}</span></div>
-                    <div class="data-item"><span class="data-label">Illumination</span><span class="data-value">${formatValue(item.illumination, '%')}</span></div>
-                    <div class="data-item"><span class="data-label">Last Updated</span><span class="data-value">${getTimeAgo(item.time)}</span></div>
+                    <div class="data-item" data-type="temperature"><span class="data-label">Indoor Temperature</span><span class="data-value">${formatValue(item.temperature_indoor, '°C')}</span></div>
+                    <div class="data-item" data-type="temperature"><span class="data-label">Outdoor Temperature</span><span class="data-value">${formatValue(item.temperature_outdoor, '°C')}</span></div>
+                    <div class="data-item" data-type="humidity"><span class="data-label">Humidity</span><span class="data-value">${formatValue(item.humidity, '%')}</span></div>
+                    <div class="data-item" data-type="pressure"><span class="data-label">Pressure</span><span class="data-value">${formatValue(item.pressure, ' hPa')}</span></div>
+                    <div class="data-item" data-type="illumination"><span class="data-label">Illumination</span><span class="data-value">${formatValue(item.illumination, '%')}</span></div>
+                    <div class="data-item" data-type="time"><span class="data-label">Last Updated</span><span class="data-value">${getTimeAgo(item.time)}</span></div>
                 </div>
             </div>
         `;

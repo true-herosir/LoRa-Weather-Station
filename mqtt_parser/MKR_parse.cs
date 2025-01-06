@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using mkr = mqtt_JSON;
 using static mqtt_parser.interfaces;
+using System;
 
 namespace mqtt_parser
 {
@@ -29,40 +30,21 @@ namespace mqtt_parser
 
             parsed.Add("Humidity", results_mkr.humidity);
 
-            string city = "unavailable";
+            string gateway_id ;
             double? lat = null;
             double? lng = null;
             double? alt = null;
+            lat = location_mkr[0].location.latitude;
+            lng = location_mkr[0].location.longitude;
+            alt = location_mkr[0].location.altitude;
             try
             {
-                int index = location_mkr[0].gateway_ids.gateway_id == "packetbroker" ? 1 : 0;
-
-                city = location_mkr[index].gateway_ids.gateway_id;
-                lat = location_mkr[index].location.latitude;
-                lng = location_mkr[index].location.longitude;
-                alt = location_mkr[index].location.altitude;
-
+                gateway_id = location_mkr[0].gateway_ids.gateway_id;
             }
-            catch
-            {
-                city = loc.device_id;
-                if (city == "weather-thingy-g4-2024") city = "Enschede";
-            }
-            
+            catch { gateway_id = "unavailable"; }
 
-            string[] gibberish = { "mkr-", "lht-" };
+            parsed.Add("Location", gateway_id);
 
-            // Remove substrings
-            foreach (var item in gibberish)
-            {
-                city = city.Replace(item, "", StringComparison.OrdinalIgnoreCase);
-            }
-            
-
-            parsed.Add("Location", city);
-            //parsed.Add("time_stamp", DateTime.Parse(location_lht[0].time));
-            //parsed.Add("Gateway lon", location_mkr[0].location.longitude);
-            //parsed.Add("Gateway lat", location_mkr[0].location.latitude);
 
 
             parsed.Add("Temperature_indoor", results_mkr.temperature);

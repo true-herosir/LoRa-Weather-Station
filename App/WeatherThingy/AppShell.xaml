@@ -28,6 +28,11 @@
      ContentTemplate="{DataTemplate views:DetailPage}"
      Route="DetailPage"
      Icon="graph.png"/>
+
+        <ShellContent
+Title="About"
+ContentTemplate="{DataTemplate views:AboutPage}"
+Route="AboutPage"/>
     </TabBar>
     <!--<FlyoutItem Title="Navigation">
         <FlyoutItem.Icon>

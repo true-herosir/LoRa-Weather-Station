@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Thingy - Group 4</title>
+    <link rel="icon" href="images/icon.ico">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -94,7 +95,7 @@
         // Create battery indicator
         const createBatteryIndicator = (level) => {
             if (level === null || level === undefined) return '';
-            const labels = ['Unknown', '1 - Very Low', '2 - Low', '3 - Medium', '4 - High'];
+            const labels = ['0 - Very Low', '1 - Low', '2 - Medium', '3 - High'];
             return `
                     <div class="battery-indicator">
                         <div class="battery-icon">

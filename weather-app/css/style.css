@@ -345,10 +345,10 @@ header {
   transition: var(--transition);
 }
 
-.battery-level[data-level="1"] { width: 25%; background-color: var(--danger); }
-.battery-level[data-level="2"] { width: 50%; background-color: var(--warning); }
+.battery-level[data-level="0"] { width: 10%; background-color: var(--danger); }
+.battery-level[data-level="1"] { width: 25%; background-color: var(--warning); }
+.battery-level[data-level="2"] { width: 50%; background-color: var(--success); }
 .battery-level[data-level="3"] { width: 75%; background-color: var(--success); }
-.battery-level[data-level="4"] { width: 100%; background-color: var(--success); }
 
 .battery-tooltip {
   position: absolute;

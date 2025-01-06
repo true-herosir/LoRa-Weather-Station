@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WeatherThingy.Sources.Views.AboutPage"
+             xmlns:vm="clr-namespace:WeatherThingy.Sources.ViewModels;assembly=WeatherThingy"
+             Style="{StaticResource PageStyle}">
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            <!-- Hero Section -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Weather Monitoring System"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"/>
+
+                <Label Text="Our state-of-the-art Weather Monitoring System leverages cutting-edge IoT technology and LoRaWAN infrastructure to deliver precise environmental data monitoring. The system architecture comprises distributed sensor nodes that collect real-time atmospheric measurements, seamlessly transmitting data through The Things Network's secure infrastructure."
+                       TextType="Text"
+                       LineBreakMode="WordWrap"/>
+
+                <Label Text="Key System Features:"
+                       FontAttributes="Bold"
+                       Margin="0,10,0,0"/>
+
+                <VerticalStackLayout Margin="20,0,0,0">
+                    <Label Text="• High-precision environmental sensors for accurate data collection"/>
+                    <Label Text="• Secure data transmission via LoRaWAN protocol"/>
+                    <Label Text="• Robust SQL database integration through MQTT messaging"/>
+                    <Label Text="• Multi-platform accessibility:"/>
+                    <Label Text="   - Responsive web interface" Margin="20,0,0,0"/>
+                    <Label Text="   - .NET MAUI cross-platform application" Margin="20,0,0,0"/>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Features Section -->
+            <VerticalStackLayout Spacing="15">
+                <Label Text="Key Features"
+                       FontSize="20"
+                       FontAttributes="Bold"/>
+
+                <Grid ColumnDefinitions="*,*" RowSpacing="20" ColumnSpacing="20">
+                    <Frame Grid.Column="0" Padding="10" Style="{StaticResource CardFrameStyle}">
+                        <VerticalStackLayout>
+                            <Label Text="📡" FontSize="32" HorizontalOptions="Center"/>
+                            <Label Text="Real-time Monitoring" 
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Get instant updates on temperature, humidity, and air quality from multiple locations."
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame Grid.Column="1" Padding="10" Style="{StaticResource CardFrameStyle}">
+                        <VerticalStackLayout>
+                            <Label Text="📊" FontSize="32" HorizontalOptions="Center"/>
+                            <Label Text="Data Analytics"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Advanced analytics and visualization tools for better decision making."
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- Team Section -->
+            <VerticalStackLayout Spacing="15">
+                <Label Text="Our Team"
+                       FontSize="20"
+                       FontAttributes="Bold"/>
+
+                <CollectionView ItemsSource="{Binding TeamMembers}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Style="{StaticResource CardFrameStyle}">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15">
+                                    <Image Grid.Column="0"
+                                           Source="{Binding ImageUrl}"
+                                           HeightRequest="100"
+                                           WidthRequest="100"
+                                           Aspect="AspectFill"/>
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                        <Label Text="{Binding Name}"
+                                               FontAttributes="Bold"/>
+                                        <Label Text="{Binding Role}"/>
+                                        <Label Text="{Binding Education}"/>
+                                        <HorizontalStackLayout Spacing="10">
+                                            <ImageButton Source="mail.png"
+                                                         MaximumHeightRequest="35"
+                                                         MaximumWidthRequest="35"
+                                                          Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AboutViewModel}}, Path=EmailCommand}"
+ CommandParameter="{Binding Email}"/>
+                                            <ImageButton Source="linkedin.png"
+                                                         MaximumHeightRequest="35"
+                                                         MaximumWidthRequest="35"
+                                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AboutViewModel}}, Path=LinkedInUrlCommand}"
+                                                         CommandParameter="{Binding LinkedInUrl}"/>
+                                            <ImageButton Source="github.png"
+                                                         MaximumHeightRequest="35"
+                                                         MaximumWidthRequest="35"
+                                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AboutViewModel}}, Path=GitHubUrlCommand}"
+                                                         CommandParameter="{Binding GitHubUrl}"/>
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

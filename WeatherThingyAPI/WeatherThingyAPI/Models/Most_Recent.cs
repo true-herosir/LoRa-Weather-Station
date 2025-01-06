@@ -13,5 +13,9 @@ namespace WeatherThingyAPI.Models
         public string? Location { get; set; }
         public double? Temperature_indoor { get; set; }
         public double? Temperature_outdoor { get; set; }
+        public string? gateway_id { get; set; }
+        public double? lat { get; set; }
+        public double? lng { get; set; }
+        public double? alt { get; set; }
     }
 }

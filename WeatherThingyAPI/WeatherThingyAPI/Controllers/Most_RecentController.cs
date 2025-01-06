@@ -176,7 +176,11 @@ public class Most_RecentController : ControllerBase
                              location = node.Location,
                              temperature_indoor = node.Temperature_indoor,
                              temperature_outdoor = node.Temperature_outdoor,
-                             battery_status = sensor.Battery_status
+                             battery_status = sensor.Battery_status,
+                             node.gateway_id,
+                             node.lat,
+                             node.lng,
+                             node.alt
                          };
 
         var total_items = joinedData.Count();

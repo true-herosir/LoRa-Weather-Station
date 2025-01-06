@@ -30,26 +30,34 @@ namespace mqtt_parser
             parsed.Add("Humidity", results_mkr.humidity);
 
             string city = "unavailable";
+            double? lat = null;
+            double? lng = null;
+            double? alt = null;
             try
             {
                 int index = location_mkr[0].gateway_ids.gateway_id == "packetbroker" ? 1 : 0;
+
                 city = location_mkr[index].gateway_ids.gateway_id;
+                lat = location_mkr[index].location.latitude;
+                lng = location_mkr[index].location.longitude;
+                alt = location_mkr[index].location.altitude;
 
             }
             catch
             {
                 city = loc.device_id;
+                if (city == "weather-thingy-g4-2024") city = "Enschede";
             }
-            if (loc.device_id == "weather-thingy-g4-2024") city = "Enschede";
+            
 
-            string[] gibberish = { "mkr-", "lht-", "centrum", "slot", "lora", "-" };
+            string[] gibberish = { "mkr-", "lht-" };
 
             // Remove substrings
             foreach (var item in gibberish)
             {
                 city = city.Replace(item, "", StringComparison.OrdinalIgnoreCase);
             }
-            city = char.ToUpper(city[0]) + city.Substring(1);
+            
 
             parsed.Add("Location", city);
             //parsed.Add("time_stamp", DateTime.Parse(location_lht[0].time));
@@ -64,7 +72,9 @@ namespace mqtt_parser
             parsed.Add("Bat_v", null);
             parsed.Add("Battery_status", null);
 
-
+            parsed.Add("lat", lat);
+            parsed.Add("lng", lng);
+            parsed.Add("alt", alt);
 
 
             return parsed;

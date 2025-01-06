@@ -33,24 +33,31 @@ namespace mqtt_parser
             parsed.Add("Humidity", results_lht.Hum_SHT);
 
             string city = "unavailable";
+            double? lat = null;
+            double? lng = null;
+            double? alt = null;
             try
             {
                 int index = location_lht[0].gateway_ids.gateway_id == "packetbroker" ? 1 : 0;
                 city = location_lht[index].gateway_ids.gateway_id;
+                lat = location_lht[index].location.latitude;
+                lng = location_lht[index].location.longitude;
+                alt = location_lht[index].location.altitude;
+
             }
             catch
             {                
                 city = loc.device_id;
             }
 
-            string[] gibberish = { "mkr-", "lht-", "centrum", "slot", "lora", "-" };
+            string[] gibberish = { "mkr-", "lht-" };
 
             // Remove substrings
             foreach (var item in gibberish)
             {
                 city = city.Replace(item, "", StringComparison.OrdinalIgnoreCase);
             }
-            city = char.ToUpper(city[0]) + city.Substring(1);
+            
             parsed.Add("Location", city);
             //parsed.Add("time_stamp", DateTime.Parse(location_lht[0].time));
             //parsed.Add("Gateway_lon", location_lht[0].location.longitude);
@@ -63,6 +70,9 @@ namespace mqtt_parser
             parsed.Add("Bat_v", results_lht.BatV);
             parsed.Add("Battery_status", results_lht.Bat_status);
 
+            parsed.Add("lat", lat);
+            parsed.Add("lng", lng);
+            parsed.Add("alt", alt);
 
             return parsed;
         }

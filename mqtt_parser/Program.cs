@@ -116,10 +116,10 @@ class Program
 
                     foreach (var item in MKR)
                     {
-                        //Console.WriteLine($"{item.Key}: {item.Value}");
+                        Console.WriteLine($"{item.Key}: {item.Value}");
                         logger.log($"{item.Key}: {item.Value}");
                     }
-
+                    /*
                     //ISQL_QueryBuilder database = new Inserter();
                     ISQL_communicator database = new sql_com($"log({day}).txt");
                     await database.build((string)MKR["Node_ID"], (string)MKR["Location"], (double?)MKR["Battery_status"]);
@@ -127,8 +127,9 @@ class Program
 
                     await database.build((string)MKR["Node_ID"], (DateTime)MKR["Time"], (double?)MKR["Pressure"], (double?)MKR["Illumination"], (double?)MKR["Humidity"],
                         (string)MKR["Location"], (double?)MKR["Temperature_indoor"], (double?)MKR["Temperature_outdoor"]);
-                    
 
+                    await database.coord_update((string)MKR["Node_ID"], (double?)MKR["lat"], (double?)MKR["lng"], (double?)MKR["alt"]);
+                    */
                 }
 
                 if (received.Contains("lht-"))
@@ -140,10 +141,10 @@ class Program
                     Dictionary<string, object?> LHT = LHT_Parsed.data(received);
                     foreach (var item in LHT)
                     {
-                        //Console.WriteLine($"{item.Key}: {item.Value}");
+                        Console.WriteLine($"{item.Key}: {item.Value}");
                         logger.log($"{item.Key}: {item.Value}");
                     }
-
+                    /*
                     //ISQL_QueryBuilder database = new Inserter();
                     ISQL_communicator database = new sql_com($"log({day}).txt");
                     await database.build((string)LHT["Node_ID"], (string)LHT["Location"], (double?)LHT["Battery_status"]);
@@ -151,9 +152,10 @@ class Program
 
                     await database.build( (string)LHT["Node_ID"], (DateTime)LHT["Time"], (double?)LHT["Pressure"], (double?)LHT["Illumination"], (double?)LHT["Humidity"],
                         (string)LHT["Location"], (double?)LHT["Temperature_indoor"], (double?)LHT["Temperature_outdoor"]);
-                    
 
-                    
+                    await database.coord_update((string)LHT["Node_ID"], (double?)LHT["lat"], (double?)LHT["lng"], (double?)LHT["alt"]);
+                    */
+
                 }
 
                 //Console.WriteLine("\n+++success.+++\n");
@@ -260,10 +262,10 @@ class Program
 
                 foreach (var item in MKR_g4)
                 {
-                    //Console.WriteLine($"{item.Key}: {item.Value}");
+                    Console.WriteLine($"{item.Key}: {item.Value}");
                     logger.log($"{item.Key}: {item.Value}");
                 }
-
+                
                 //ISQL_QueryBuilder database = new Inserter();
                 ISQL_communicator database = new sql_com($"log({day}).txt");
                 await database.build((string)MKR_g4["Node_ID"], (string)MKR_g4["Location"], (double?)MKR_g4["Battery_status"]);
@@ -272,9 +274,10 @@ class Program
                 await database.build((string)MKR_g4["Node_ID"], (DateTime)MKR_g4["Time"], (double?)MKR_g4["Pressure"], (double?)MKR_g4["Illumination"], (double?)MKR_g4["Humidity"],
                     (string)MKR_g4["Location"], (double?)MKR_g4["Temperature_indoor"], (double?)MKR_g4["Temperature_outdoor"]);
 
+                await database.coord_update((string)MKR_g4["Node_ID"], (double?)MKR_g4["lat"], (double?)MKR_g4["lng"], (double?)MKR_g4["alt"]);
                 //Console.WriteLine("\n+++success.+++\n");
                 logger.log_time("+++success.+++\n");
-
+                
             }
             catch (Exception ex)
             {

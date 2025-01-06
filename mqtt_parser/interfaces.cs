@@ -19,6 +19,7 @@ namespace mqtt_parser
         {
             Task build(string Node_ID, DateTime Time, double? pressure, double? Illumination, double? Humidity, string Location, double? Temperature_indor, double? Temperature_outdor);
             Task build(string Node_ID, string Location, double? Battery_status);
+            Task coord_update(string Node_ID, double? lat, double? lng, double? alt);
         }
 
         public interface ILogger

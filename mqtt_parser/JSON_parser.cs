@@ -27,8 +27,9 @@ namespace mqtt_JSON
 
     public class Location
     {
-        public double latitude { get; set; }
-        public double longitude { get; set; }
+        public double? latitude { get; set; }
+        public double? longitude { get; set; }
+        public double? altitude { get; set; }
     }
 
 
@@ -48,6 +49,7 @@ namespace mqtt_JSON
     {
         public DecodedPayload decoded_payload { get; set; }
         public List<RxMetadatum> rx_metadata { get; set; }
+
     }
 
 }

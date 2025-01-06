@@ -80,6 +80,25 @@ namespace mqtt_parser
             await communicate(query_text, "Node_location");
         }
 
+        public async Task coord_update(string Node_ID, double? lat, double? lng, double? alt)
+        {
+            List<string> coord_updates = new List<string>();
+            if (lat != null) coord_updates.Add($"lat = {lat}");
+            if (lng != null) coord_updates.Add($"lng = {lng}");
+            if (alt != null) coord_updates.Add($"alt = {alt}");
+
+            if (coord_updates.Count > 0)
+            {
+                string query_text = $"UPDATE lr2.most_recent SET {string.Join(", ", coord_updates)} WHERE Node_ID = '{Node_ID}';";
+                m_logger.log_time($"{string.Join(", ", coord_updates)} are updated");
+                await communicate(query_text, "most_recent");
+            }
+            else m_logger.log_time($"no coordinates are updated");
+
+            //Console.WriteLine(query_text);
+
+        }
+
         private static ILogger m_logger;
     }
 }

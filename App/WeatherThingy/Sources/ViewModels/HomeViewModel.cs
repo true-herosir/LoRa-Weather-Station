@@ -85,10 +85,10 @@ namespace WeatherThingy.Sources.ViewModels
 
                         datum.battery_status = datum.battery_status switch
                         {
+                            "0" => "bat01.png",
                             "1" => "bat1.png",
                             "2" => "bat2.png",
                             "3" => "bat3.png",
-                            "4" => "bat4.png",
                             _ => "batt_na.png",
                         };
                     }

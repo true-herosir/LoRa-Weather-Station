@@ -52,7 +52,7 @@
 		<MauiImage Update="Resources\Images\bat1.png" Resize="True" />
 		<MauiImage Update="Resources\Images\bat2.png" Resize="True" />
 		<MauiImage Update="Resources\Images\bat3.png" Resize="True" />
-		<MauiImage Update="Resources\Images\bat4.png" Resize="True" />
+		<MauiImage Update="Resources\Images\bat0.png" Resize="True" />
 		<MauiImage Update="Resources\Images\graph.png" Resize="True" />
 		<MauiImage Update="Resources\Images\humidity.png" Resize="True" />
 		<MauiImage Update="Resources\Images\illumination.png" Resize="True" />

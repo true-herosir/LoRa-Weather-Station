@@ -116,7 +116,7 @@ class Program
 
                     foreach (var item in MKR)
                     {
-                        Console.WriteLine($"{item.Key}: {item.Value}");
+                        //Console.WriteLine($"{item.Key}: {item.Value}");
                         logger.log($"{item.Key}: {item.Value}");
                     }
                     
@@ -141,7 +141,7 @@ class Program
                     Dictionary<string, object?> LHT = LHT_Parsed.data(received);
                     foreach (var item in LHT)
                     {
-                        Console.WriteLine($"{item.Key}: {item.Value}");
+                        //Console.WriteLine($"{item.Key}: {item.Value}");
                         logger.log($"{item.Key}: {item.Value}");
                     }
                     
@@ -262,7 +262,7 @@ class Program
 
                 foreach (var item in MKR_g4)
                 {
-                    Console.WriteLine($"{item.Key}: {item.Value}");
+                    //Console.WriteLine($"{item.Key}: {item.Value}");
                     logger.log($"{item.Key}: {item.Value}");
                 }
                 

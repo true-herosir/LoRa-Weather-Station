@@ -59,17 +59,6 @@ namespace WeatherThingy.Sources.Views
                 GraphTitle.IsVisible = false;
                 NoGraph.IsVisible = true;
                 await DisplayAlert("No Data", "No available nodes found. Please make sure you have a stable internet connection.", "OK");
-                //// Add the first available node to the list
-                //nodeIds.Add(ViewModel.AvailableNodes.First());
-
-                //// Hide the "No Data" label and update the chart
-                //NoDataLabel.IsVisible = false;
-
-                //if (nodeIds.Count() == 1)
-                //{
-                //    Task.WaitAll();
-                //    //ChangeButtonColors(this.FindByName<Button>(nodeIds.First()), true);
-                //}
 
             }
             else
@@ -77,7 +66,6 @@ namespace WeatherThingy.Sources.Views
                 GraphTitle.IsVisible = true;
                 NoGraph.IsVisible = false;
                 await UpdateChart();
-                //await DisplayAlert("No Data", "No available nodes found. Please make sure you have a stable internet connection.", "OK");
             }
 
         }
@@ -88,6 +76,7 @@ namespace WeatherThingy.Sources.Views
 
             MessagingCenter.Unsubscribe<DetailViewModel, string>(this, "NoSensorLabel");
             MessagingCenter.Unsubscribe<DetailViewModel, string>(this, "FailedToFetchData");
+            MessagingCenter.Unsubscribe<DetailViewModel, string>(this, "TimeIssues");
         }
 
         private async Task UpdateChart()

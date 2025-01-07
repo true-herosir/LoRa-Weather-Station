@@ -146,36 +146,8 @@ namespace WeatherThingy.Sources.ViewModels
 
         // X-Axis configuration with DateTime label formatting
         public Axis[] XAxes { get; set; }
-            /*
-            = new Axis[]
-        {
-                new Axis
-                {
-                    //MaxLimit = null, MinLimit = null,
 
-                    Labeler = value =>
-                    {
-                        if (value < DateTime.MinValue.Ticks || value > DateTime.MaxValue.Ticks)
-                        {
-                            return "0";
-                        }
-                        var dateTime = new DateTime((long)value); // Convert long (ticks) to DateTime
-                        return dateTime.ToString("dd-MM HH:mm");    // Display only day, hour, minute
-                    },
-                    UnitWidth = TimeSpan.FromMinutes(1).Ticks,
-                    LabelsRotation = 120
-                }
-        };
-            */
-        public Axis[] YAxes { get; set; }/* =
-        {
-                new Axis
-                {
-                    Name = "Value",
-                    NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
-                }
-            };
-        */
+        public Axis[] YAxes { get; set; }
         public async Task ShowDataAsync(DateTime start, DateTime end, string value, List<string> nodes)
         {
             Series.Clear();

@@ -245,7 +245,7 @@ namespace WeatherThingy.Sources.ViewModels
                         {
                             Values = plot.Datapoints,
                             Name = daysDifference > 14 ? plot.NodeId + "_max" : plot.NodeId,
-                            GeometrySize = 0
+                            GeometrySize = 0.5
                         });
                     }
 
@@ -255,7 +255,7 @@ namespace WeatherThingy.Sources.ViewModels
                         {
                             Values = plotMin.Datapoints,
                             Name = plotMin.NodeId,
-                            GeometrySize = 0,
+                            GeometrySize = 0.5,
                         });
                     }
                 }

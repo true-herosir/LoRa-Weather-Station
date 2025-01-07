@@ -40,7 +40,7 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\weathericon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="" />
+		<MauiIcon Include="Resources\AppIcon\weather_icon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />

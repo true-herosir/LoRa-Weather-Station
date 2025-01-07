@@ -252,7 +252,7 @@
             const updateMapData = async () => {
                 try {
                     const currentData = await fetchData();
-                    console.log('Fetched data:', currentData);
+                    // console.log('Fetched data:', currentData);
 
                     // Clear existing markers
                     mapController.markers.forEach((marker, id) => {
@@ -290,7 +290,7 @@
                         // Add markers with combined popups if overlapping
                         groupedMarkers.forEach((markersAtLocation, location) => {
                             try {
-                                console.log(markersAtLocation);
+                                // console.log(markersAtLocation);
                                 const markerInfo = {
                                     lat: markersAtLocation[0].lat,
                                     lng: markersAtLocation[0].lng,

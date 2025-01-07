@@ -2,7 +2,6 @@
 //using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using SkiaSharp.Views.Maui.Controls.Hosting;
-using WeatherThingy.Pages;
 using WeatherThingy.Sources.ViewModels;
 using WeatherThingy.Sources.Views;
 

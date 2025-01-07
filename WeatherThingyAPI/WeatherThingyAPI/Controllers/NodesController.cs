@@ -13,11 +13,6 @@ public class NodesController : ControllerBase
     private readonly NodeContext _context; 
     private readonly Node_locationContext _scontext;
 
-    //public NodesController(NodeContext context)
-    //{
-    //    _context = context;
-    //}
-
     public NodesController(NodeContext context, Node_locationContext sensorContext)
     {
         _context = context;

@@ -19,8 +19,6 @@ public class Node_locationController : ControllerBase
     public async Task<ActionResult<IEnumerable<Node_location>>> GetSensorLocations(
         [FromQuery] string? id,
         [FromQuery] string? location,
-        //[FromQuery] double? minBatteryStatus,
-        //[FromQuery] double? maxBatteryStatus,
         [FromQuery] int page = 1,
         [FromQuery] int page_size = 10)
     {
@@ -38,15 +36,6 @@ public class Node_locationController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(location))
             query = query.Where(s => s.Location == location);
-
-        //if (minBatteryStatus.HasValue && !maxBatteryStatus.HasValue)
-        //    query = query.Where(s => s.Battery_status >= minBatteryStatus.Value);
-
-        //if (maxBatteryStatus.HasValue && !minBatteryStatus.HasValue)
-        //    query = query.Where(s => s.Battery_status <= maxBatteryStatus.Value);
-
-        //if (minBatteryStatus.HasValue && maxBatteryStatus.HasValue)
-        //    query = query.Where(s => s.Battery_status >= minBatteryStatus.Value && s.Battery_status <= maxBatteryStatus.Value);
 
         // Calculate total items and pages
         var total_items = await query.CountAsync();

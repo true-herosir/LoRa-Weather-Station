@@ -222,7 +222,7 @@ namespace WeatherThingy.Sources.ViewModels
                     var first_time = data.data[0].time ?? data.data[0].the_day.Value;
                     TimeSpan first_timeDiff = first_time - start;
 
-                    if (first_timeDiff.Hours > 2)
+                    if (first_timeDiff.TotalHours >= 1.5)
                     {
                         time_issues = true;
                         time_issue_nodes.Add($"({node})", first_time.ToString("yyyy-MM-dd HH:mm"));
@@ -313,11 +313,12 @@ namespace WeatherThingy.Sources.ViewModels
 
                 if (time_issues)
                 {
+                    string addition = daysDifference > 14 ? "accumulated daily " : daysDifference > 3 ? "accumulated hourly " : "";
 
                     string error_msg = "";
                     foreach (var node in time_issue_nodes)
                     {
-                        error_msg += $"The node ({node.Key}) does not have data to show before {node.Value}.\n";
+                        error_msg += $"The node {node.Key} does not have {addition}data to show before {node.Value}.\n";
                     }
                     error_msg += "Please keep that in mind while checking data.";
                     MessagingCenter.Send(this, "TimeIssues", error_msg);

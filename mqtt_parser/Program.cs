@@ -120,7 +120,7 @@ class Program
                         logger.log($"{item.Key}: {item.Value}");
                     }
                     
-                    //ISQL_QueryBuilder database = new Inserter();
+
                     ISQL_communicator database = new sql_com($"log({day}).txt");
                     await database.build((string)MKR["Node_ID"], (string)MKR["Location"], (double?)MKR["Battery_status"]);
                     
@@ -145,7 +145,7 @@ class Program
                         logger.log($"{item.Key}: {item.Value}");
                     }
                     
-                    //ISQL_QueryBuilder database = new Inserter();
+
                     ISQL_communicator database = new sql_com($"log({day}).txt");
                     await database.build((string)LHT["Node_ID"], (string)LHT["Location"], (double?)LHT["Battery_status"]);
 
@@ -266,7 +266,7 @@ class Program
                     logger.log($"{item.Key}: {item.Value}");
                 }
                 
-                //ISQL_QueryBuilder database = new Inserter();
+
                 ISQL_communicator database = new sql_com($"log({day}).txt");
                 await database.build((string)MKR_g4["Node_ID"], (string)MKR_g4["Location"], (double?)MKR_g4["Battery_status"]);
                 

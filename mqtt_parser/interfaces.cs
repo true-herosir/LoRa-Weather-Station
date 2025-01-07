@@ -9,11 +9,6 @@ namespace mqtt_parser
 
         }
 
-        public interface ISQL_QueryBuilder
-        {
-            string build(string Node_ID, DateTime Time, double? pressure, double? Illumination, double? Humidity, string Location, double Temperature_indor, double? Temperature_outdor);
-            string build(string Node_ID, string Location, double? Battery_status);
-        }
 
         public interface ISQL_communicator
         {
